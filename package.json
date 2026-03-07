@@ -12,7 +12,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "test:contracts": "vitest run packages/domain/src/contracts.test.ts",
-    "test:epic1": "vitest run packages/domain/src/contracts.test.ts packages/domain/src/documents/invariants.test.ts",
+    "test:epic1": "vitest run packages/domain/src/contracts.test.ts packages/domain/src/documents/invariants.test.ts apps/web/lib/server/services/ingestion-order.test.ts",
     "test:e2e": "playwright test",
     "typecheck": "turbo run typecheck",
     "db:generate": "prisma generate",

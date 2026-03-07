@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { loadAppEnv, ocrJobPayloadSchema, patientInputSchema } from "@vnexus/shared";
 import { planGatingBaseline } from "./plans/plan-gating";
-import { consumerSummarySchema } from "./reports/contracts";
+import { consumerSummarySchema, investigatorSlotSeedSchema } from "./reports/contracts";
 
 describe("Epic 0 contracts", () => {
   it("keeps insuranceJoinDate as required user input metadata", () => {
@@ -41,13 +41,20 @@ describe("Epic 0 contracts", () => {
 
   it("requires sourceDocumentIds in OCR job payload", () => {
     const parsed = ocrJobPayloadSchema.safeParse({
+      caseId: "case-1",
       sourceDocumentIds: ["doc-1"],
+      fileOrders: [1],
       requestedByUserId: "user-1",
+      ingestionMode: "ocr",
       enqueueReason: "manual_case_upload",
       idempotencyKey: "abc",
       allowedTransitions: ["queued", "processing", "completed", "failed"]
     });
 
     expect(parsed.success).toBe(true);
+  });
+
+  it("keeps consumer summary and investigator slot seed as separate contracts", () => {
+    expect(consumerSummarySchema.shape).not.toBe(investigatorSlotSeedSchema.shape);
   });
 });

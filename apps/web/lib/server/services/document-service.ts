@@ -34,7 +34,7 @@ export async function createDocument(caseId: string, userId: string, role: UserR
       data: {
         caseId,
         originalFileName: input.originalFileName,
-        fileOrder: nextFileOrder + 1,
+        fileOrder: nextFileOrder,
         pageCount: input.pageCount,
         mimeType: input.mimeType,
         storagePath:
@@ -52,10 +52,7 @@ export async function createDocument(caseId: string, userId: string, role: UserR
       assertContiguousPageOrders(pages);
 
       await tx.sourcePage.createMany({
-        data: Array.from({ length: input.pageCount }, (_, index) => ({
-          sourceFileId: document.id,
-          pageOrder: index + 1
-        }))
+        data: pages
       });
     }
 
@@ -105,4 +102,28 @@ export async function deleteDocument(documentId: string, userId: string, role: U
     deleted: true,
     documentId
   };
+}
+
+export async function createDocumentForTesting(caseId: string, fileOrder: number, pageCount: number) {
+  return prisma.$transaction(async (tx) => {
+    const document = await tx.sourceDocument.create({
+      data: {
+        caseId,
+        originalFileName: `file-${fileOrder}.pdf`,
+        fileOrder,
+        pageCount,
+        mimeType: "application/pdf",
+        storagePath: `cases/${caseId}/documents/file-${fileOrder}.pdf`
+      }
+    });
+
+    await tx.sourcePage.createMany({
+      data: Array.from({ length: pageCount }, (_, index) => ({
+        sourceFileId: document.id,
+        pageOrder: index + 1
+      }))
+    });
+
+    return document;
+  });
 }

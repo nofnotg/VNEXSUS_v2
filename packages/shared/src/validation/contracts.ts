@@ -39,8 +39,11 @@ export const documentCreateSchema = z.object({
 export const ocrJobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
 
 export const ocrJobPayloadSchema = z.object({
+  caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
+  fileOrders: z.array(z.number().int().positive()).min(1),
   requestedByUserId: z.string().min(1),
+  ingestionMode: z.enum(["metadata-only", "ocr"]),
   enqueueReason: z.enum(["manual_case_upload", "retry", "system_followup"]),
   idempotencyKey: z.string().min(1),
   allowedTransitions: z.array(ocrJobStatusSchema).length(4)
@@ -53,16 +56,15 @@ export const ocrJobCreateSchema = z.object({
 
 export const jobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
 
-export const evidenceKindSchema = z.enum(["ocr_block", "block_range", "page_region"]);
+export const evidenceKindSchema = z.enum(["ocr_block", "merged_window", "page_region"]);
 
-export const evidenceRefContractSchema = z.object({
-  evidenceId: z.string(),
+export const evidenceStorageSchema = z.object({
+  caseId: z.string(),
   sourceFileId: z.string(),
-  sourcePageId: z.string().optional(),
+  sourcePageId: z.string(),
   fileOrder: z.number().int().nonnegative(),
   pageOrder: z.number().int().nonnegative(),
   evidenceKind: evidenceKindSchema,
-  blockIndex: z.number().int().nonnegative().optional(),
   blockIndexStart: z.number().int().nonnegative().optional(),
   blockIndexEnd: z.number().int().nonnegative().optional(),
   bbox: z
@@ -76,7 +78,13 @@ export const evidenceRefContractSchema = z.object({
   quote: z.string().min(1),
   contextBefore: z.string().optional(),
   contextAfter: z.string().optional(),
-  confidence: z.number().min(0).max(1).optional()
+  confidence: z.number().min(0).max(1).optional(),
+  createdAt: z.string().datetime().optional()
+});
+
+export const evidenceRefContractSchema = evidenceStorageSchema.extend({
+  evidenceId: z.string(),
+  createdAt: z.string().datetime()
 });
 
 export const consumerSummarySchema = z.object({

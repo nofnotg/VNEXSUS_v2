@@ -5,15 +5,25 @@ import { getCaseForUser } from "./case-service";
 
 export const OCR_JOB_STATUS_TRANSITIONS = ["queued", "processing", "completed", "failed"] as const;
 
-function buildOcrJobPayload(sourceDocumentIds: string[], requestedByUserId: string, enqueueReason: OcrJobCreateInput["enqueueReason"]): OcrJobPayload {
+function buildOcrJobPayload(
+  caseId: string,
+  sourceDocumentIds: string[],
+  fileOrders: number[],
+  requestedByUserId: string,
+  enqueueReason: OcrJobCreateInput["enqueueReason"]
+): OcrJobPayload {
   const normalizedIds = [...sourceDocumentIds].sort();
+  const normalizedFileOrders = [...fileOrders].sort((a, b) => a - b);
   const idempotencyKey = createHash("sha256")
-    .update(`${requestedByUserId}:${normalizedIds.join(",")}:${enqueueReason}`)
+    .update(`${caseId}:${normalizedIds.join(",")}:${enqueueReason}`)
     .digest("hex");
 
   return {
+    caseId,
     sourceDocumentIds: normalizedIds,
+    fileOrders: normalizedFileOrders,
     requestedByUserId,
+    ingestionMode: "ocr",
     enqueueReason,
     idempotencyKey,
     allowedTransitions: [...OCR_JOB_STATUS_TRANSITIONS]
@@ -40,7 +50,9 @@ export async function createOcrJob(caseId: string, userId: string, role: UserRol
   }
 
   const payload = buildOcrJobPayload(
+    caseId,
     targetDocuments.map((document) => document.id),
+    targetDocuments.map((document) => document.fileOrder),
     userId,
     input.enqueueReason
   );
@@ -115,7 +127,16 @@ export async function getJob(jobId: string, userId: string, role: UserRole) {
     throw new ApiError("NOT_FOUND", "Job not found");
   }
 
-  return job;
+  return {
+    jobId: job.id,
+    caseId: job.caseId,
+    status: job.status,
+    jobType: job.jobType,
+    requestedBy: job.requestedBy,
+    createdAt: job.createdAt,
+    updatedAt: job.updatedAt,
+    payload: job.payloadJson
+  };
 }
 
 export async function listOcrBlocks(caseId: string, userId: string, role: UserRole) {

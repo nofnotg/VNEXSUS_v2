@@ -102,7 +102,7 @@ enum EvidenceRelationType {
 
 enum EvidenceKind {
   ocr_block
-  block_range
+  merged_window
   page_region
 }
 
@@ -340,11 +340,10 @@ model EvidenceRef {
   id              String       @id @default(cuid())
   caseId          String
   sourceFileId    String
-  sourcePageId    String?
+  sourcePageId    String
   fileOrder       Int
   pageOrder       Int
   evidenceKind    EvidenceKind @default(ocr_block)
-  blockIndex      Int?
   blockIndexStart Int?
   blockIndexEnd   Int?
   bboxJson        Json?
@@ -352,9 +351,10 @@ model EvidenceRef {
   contextBefore   String?
   contextAfter    String?
   confidence      Float?
+  createdAt       DateTime     @default(now())
   case            Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
   sourceFile      SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
-  sourcePage      SourcePage?    @relation(fields: [sourcePageId], references: [id], onDelete: SetNull)
+  sourcePage      SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
   bundleLinks     EventBundleEvidenceRef[]
 
   @@index([caseId, pageOrder, blockIndexStart, blockIndexEnd])
@@ -442,6 +442,8 @@ model AnalysisJob {
   requestedBy    String?
   idempotencyKey String?
   payloadJson    Json?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
   startedAt      DateTime?
   finishedAt     DateTime?
   errorMessage   String?
