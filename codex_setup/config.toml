@@ -1,0 +1,14 @@
+# ~/.codex/config.toml 또는 <project>/.codex/config.toml
+# 공식 문서의 예시를 기준으로 한 안전한 기본값
+
+model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+file_opener = "vscode"
+
+project_doc_fallback_filenames = ["TEAM_GUIDE.md", ".agents.md"]
+project_doc_max_bytes = 65536
+project_root_markers = [".git"]
+
+[features]
+shell_snapshot = true

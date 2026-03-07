@@ -1,0 +1,474 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  consumer
+  investigator
+  admin
+}
+
+enum UserStatus {
+  pending
+  active
+  suspended
+}
+
+enum InvestigatorVerificationStatus {
+  not_requested
+  pending
+  approved
+  rejected
+}
+
+enum OrganizationMembershipRole {
+  owner
+  member
+  reviewer
+}
+
+enum PlanAudience {
+  consumer
+  investigator
+}
+
+enum PlanBillingType {
+  one_time
+  credit
+  subscription
+}
+
+enum SubscriptionStatus {
+  inactive
+  active
+  past_due
+  canceled
+  trialing
+}
+
+enum UsageMetricType {
+  ocr_page
+  precision_page
+  export
+  connection_request
+  case_helper_invocation
+}
+
+enum CaseAudience {
+  consumer
+  investigator
+}
+
+enum CaseStatus {
+  draft
+  uploaded
+  processing
+  ready
+  review_required
+  archived
+}
+
+enum EventType {
+  visit
+  exam
+  result
+  pathology
+  surgery
+  admission
+  discharge
+  prescription
+  followup
+  history
+}
+
+enum EventFamily {
+  outpatient
+  inpatient
+  surgery
+  major_exam
+  pathology
+  followup
+}
+
+enum EvidenceRelationType {
+  primary
+  supporting
+}
+
+enum ReportType {
+  consumer_summary
+  investigator_report
+}
+
+enum ReportStatus {
+  draft
+  ready
+  failed
+}
+
+enum AnalysisJobType {
+  ocr
+  extraction
+  precision
+  report
+  export
+}
+
+enum AnalysisJobStatus {
+  queued
+  processing
+  completed
+  failed
+}
+
+enum ReviewSeverity {
+  low
+  medium
+  high
+}
+
+enum ConnectionRequestStatus {
+  requested
+  reviewing
+  matched
+  closed
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String?
+  authProvider  String?
+  role          UserRole
+  status        UserStatus     @default(pending)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  profile       Profile?
+  memberships   Membership[]
+  subscriptions Subscription[]
+  usageLedger   UsageLedger[]
+  ownedCases    Case[]
+  consents      Consent[]
+  requests      ConnectionRequest[]
+}
+
+model Profile {
+  userId                         String                         @id
+  displayName                    String?
+  phone                          String?
+  roleDetail                     String?
+  investigatorVerificationStatus InvestigatorVerificationStatus @default(not_requested)
+  marketingOptIn                 Boolean                        @default(false)
+  user                           User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Organization {
+  id          String       @id @default(cuid())
+  name        String
+  type        String?
+  createdAt   DateTime     @default(now())
+  memberships Membership[]
+}
+
+model Membership {
+  id             String                     @id @default(cuid())
+  organizationId String
+  userId         String
+  role           OrganizationMembershipRole
+  createdAt      DateTime                   @default(now())
+  organization   Organization               @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+}
+
+model Plan {
+  id           String           @id @default(cuid())
+  audience     PlanAudience
+  code         String           @unique
+  name         String
+  billingType  PlanBillingType
+  isActive     Boolean          @default(true)
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                     String             @id @default(cuid())
+  userId                 String
+  planId                 String
+  status                 SubscriptionStatus
+  startedAt              DateTime?
+  endsAt                 DateTime?
+  billingProvider        String?
+  externalSubscriptionId String?
+  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                   Plan               @relation(fields: [planId], references: [id], onDelete: Restrict)
+}
+
+model UsageLedger {
+  id                           String          @id @default(cuid())
+  userId                       String
+  caseId                       String?
+  metricType                   UsageMetricType
+  quantity                     Int
+  unitCostSnapshot             Decimal?        @db.Decimal(10, 2)
+  ocrPagesUsed                 Int             @default(0)
+  precisionAnalysisPagesUsed   Int             @default(0)
+  caseHelperInvocations        Int             @default(0)
+  exportsUsed                  Int             @default(0)
+  createdAt                    DateTime        @default(now())
+  reason                       String?
+  user                         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  case                         Case?           @relation(fields: [caseId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}
+
+model Case {
+  id                 String               @id @default(cuid())
+  ownerUserId        String
+  audience           CaseAudience
+  title              String
+  status             CaseStatus           @default(draft)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  owner              User                 @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  patientInput       CasePatientInput?
+  sourceDocuments    SourceDocument[]
+  dateCandidates     DateCandidate[]
+  evidenceRefs       EvidenceRef[]
+  eventAtoms         EventAtom[]
+  eventBundles       EventBundle[]
+  reports            Report[]
+  analysisJobs       AnalysisJob[]
+  reviewFlags        ReviewFlag[]
+  usageLedgerEntries UsageLedger[]
+  connectionRequests ConnectionRequest[]
+}
+
+model CasePatientInput {
+  caseId             String   @id
+  patientName        String?
+  birthDate          DateTime?
+  insuranceJoinDate  DateTime?
+  insuranceCompany   String?
+  productType        String?
+  notes              String?
+  inputSnapshotJson  Json?
+  case               Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+}
+
+model SourceDocument {
+  id               String       @id @default(cuid())
+  caseId           String
+  originalFileName String
+  fileOrder        Int
+  pageCount        Int
+  mimeType         String
+  storagePath      String
+  uploadedAt       DateTime     @default(now())
+  case             Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  pages            SourcePage[]
+  ocrBlocks        OcrBlock[]
+  dateCandidates   DateCandidate[]
+  evidenceRefs     EvidenceRef[]
+
+  @@unique([caseId, fileOrder])
+}
+
+model SourcePage {
+  id            String        @id @default(cuid())
+  sourceFileId  String
+  pageOrder     Int
+  imagePath     String?
+  width         Int?
+  height        Int?
+  sourceFile    SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  ocrBlocks     OcrBlock[]
+  evidenceRefs  EvidenceRef[]
+
+  @@unique([sourceFileId, pageOrder])
+}
+
+model OcrBlock {
+  id             String       @id @default(cuid())
+  sourceFileId   String
+  sourcePageId   String
+  fileOrder      Int
+  pageOrder      Int
+  blockIndex     Int
+  textRaw        String
+  textNormalized String
+  bboxJson       Json?
+  confidence     Float?
+  sourceFile     SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  sourcePage     SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceFileId, pageOrder, blockIndex])
+  @@index([sourceFileId, pageOrder, blockIndex])
+}
+
+model DateCandidate {
+  id                String       @id @default(cuid())
+  caseId            String
+  sourceFileId      String
+  pageOrder         Int
+  blockIndex        Int
+  rawDateText       String
+  normalizedDate    DateTime?
+  dateTypeCandidate String?
+  confidence        Float
+  metadataJson      Json?
+  case              Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  sourceFile        SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, normalizedDate])
+}
+
+model EvidenceRef {
+  id             String       @id @default(cuid())
+  caseId         String
+  sourceFileId   String
+  sourcePageId   String?
+  fileOrder      Int
+  pageOrder      Int
+  blockIndex     Int?
+  bboxJson       Json?
+  quote          String
+  contextBefore  String?
+  contextAfter   String?
+  confidence     Float?
+  case           Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  sourceFile     SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  sourcePage     SourcePage?    @relation(fields: [sourcePageId], references: [id], onDelete: SetNull)
+  bundleLinks    EventBundleEvidenceRef[]
+
+  @@index([caseId, pageOrder, blockIndex])
+}
+
+model EventAtom {
+  id             String     @id @default(cuid())
+  caseId         String
+  eventBundleId  String?
+  canonicalDate  DateTime?
+  eventType      EventType
+  hospital       String?
+  department     String?
+  payloadJson    Json
+  confidence     Float
+  createdAt      DateTime   @default(now())
+  case           Case       @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  eventBundle    EventBundle? @relation(fields: [eventBundleId], references: [id], onDelete: SetNull)
+
+  @@index([caseId, canonicalDate])
+}
+
+model EventBundle {
+  id                String                 @id @default(cuid())
+  caseId            String
+  canonicalDate     DateTime
+  eventFamily       EventFamily
+  hospital          String?
+  slotSeedJson      Json?
+  ambiguityScore    Float                  @default(0)
+  requiresReview    Boolean                @default(false)
+  groupingStrategy  String?
+  bundleReason      String?
+  createdAt         DateTime               @default(now())
+  case              Case                   @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  atoms             EventAtom[]
+  evidenceRefs      EventBundleEvidenceRef[]
+  reportSlots       ReportSlot[]
+  reviewFlags       ReviewFlag[]
+
+  @@index([caseId, canonicalDate])
+}
+
+model EventBundleEvidenceRef {
+  eventBundleId   String
+  evidenceRefId   String
+  relationType    EvidenceRelationType
+  eventBundle     EventBundle @relation(fields: [eventBundleId], references: [id], onDelete: Cascade)
+  evidenceRef     EvidenceRef @relation(fields: [evidenceRefId], references: [id], onDelete: Cascade)
+
+  @@id([eventBundleId, evidenceRefId])
+}
+
+model Report {
+  id           String       @id @default(cuid())
+  caseId        String
+  reportType    ReportType
+  version       Int
+  status        ReportStatus
+  reportJson    Json?
+  reportText    String?
+  generatedAt   DateTime?
+  case          Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  slots         ReportSlot[]
+
+  @@unique([caseId, reportType, version])
+}
+
+model ReportSlot {
+  id            String      @id @default(cuid())
+  reportId       String
+  bundleId       String?
+  slotName       String
+  slotValue      Json
+  metadataJson   Json?
+  report         Report      @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  bundle         EventBundle? @relation(fields: [bundleId], references: [id], onDelete: SetNull)
+}
+
+model AnalysisJob {
+  id            String            @id @default(cuid())
+  caseId         String
+  jobType        AnalysisJobType
+  status         AnalysisJobStatus
+  requestedBy    String?
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  errorMessage   String?
+  case           Case              @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, status, jobType])
+}
+
+model ReviewFlag {
+  id            String         @id @default(cuid())
+  caseId         String
+  bundleId       String?
+  severity       ReviewSeverity
+  reasonCode     String
+  reasonText     String
+  resolvedAt     DateTime?
+  case           Case          @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  bundle         EventBundle?  @relation(fields: [bundleId], references: [id], onDelete: SetNull)
+}
+
+model Consent {
+  id           String    @id @default(cuid())
+  userId       String
+  consentType  String
+  version      String
+  agreedAt     DateTime  @default(now())
+  ipAddress    String?
+  userAgent    String?
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ConnectionRequest {
+  id                  String                  @id @default(cuid())
+  userId              String
+  caseId              String
+  status              ConnectionRequestStatus
+  summarySnapshotJson Json?
+  createdAt           DateTime                @default(now())
+  user                User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  case                Case                    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+}
