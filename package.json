@@ -8,6 +8,7 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "test:contracts": "vitest run packages/domain/src/contracts.test.ts",
     "test:e2e": "playwright test",
     "typecheck": "turbo run typecheck",
     "db:generate": "prisma generate",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.3.0",
+    "@vitejs/plugin-react": "^5.0.2",
     "prisma": "^6.16.2",
     "turbo": "^2.5.6",
     "typescript": "^5.9.2",

@@ -1,19 +1,20 @@
 import { NextResponse } from "next/server";
-import { createApiSuccess } from "@vnexus/shared";
+import { createApiSuccess, loadAppEnv } from "@vnexus/shared";
 
 export async function GET() {
-  const required = {
-    databaseUrl: Boolean(process.env.DATABASE_URL),
-    redisUrl: Boolean(process.env.REDIS_URL),
-    authSecret: Boolean(process.env.AUTH_SECRET)
-  };
-
-  const ready = Object.values(required).every(Boolean);
+  const envResult = loadAppEnv();
+  const ready = envResult.ok;
 
   return NextResponse.json(
     createApiSuccess({
       status: ready ? "ready" : "not_ready",
-      checks: required
+      checks: {
+        envSchemaValid: ready,
+        databaseUrl: Boolean(process.env.DATABASE_URL),
+        redisUrl: Boolean(process.env.REDIS_URL),
+        authSecret: Boolean(process.env.AUTH_SECRET)
+      },
+      issues: envResult.ok ? [] : envResult.issues
     }),
     { status: ready ? 200 : 503 }
   );

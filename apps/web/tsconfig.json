@@ -4,7 +4,11 @@
     "jsx": "preserve",
     "plugins": [{ "name": "next" }],
     "allowJs": false,
-    "incremental": true
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
