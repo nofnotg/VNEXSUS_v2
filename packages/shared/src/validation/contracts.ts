@@ -38,7 +38,7 @@ export const documentCreateSchema = z.object({
 
 export const ocrJobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
 
-export const ocrJobPayloadSchema = z.object({
+export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
   fileOrders: z.array(z.number().int().positive()).min(1),
@@ -120,4 +120,4 @@ export type CaseUpdateInput = z.infer<typeof caseUpdateSchema>;
 export type PatientInput = z.infer<typeof patientInputSchema>;
 export type DocumentCreateInput = z.infer<typeof documentCreateSchema>;
 export type OcrJobCreateInput = z.infer<typeof ocrJobCreateSchema>;
-export type OcrJobPayload = z.infer<typeof ocrJobPayloadSchema>;
+export type OcrIngestionJobPayload = z.infer<typeof ocrIngestionJobPayloadSchema>;

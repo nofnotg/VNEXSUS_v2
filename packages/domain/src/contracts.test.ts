@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadAppEnv, ocrJobPayloadSchema, patientInputSchema } from "@vnexus/shared";
+import { loadAppEnv, ocrIngestionJobPayloadSchema, patientInputSchema } from "@vnexus/shared";
 import { planGatingBaseline } from "./plans/plan-gating";
 import { consumerSummarySchema, investigatorSlotSeedSchema } from "./reports/contracts";
 
@@ -40,7 +40,7 @@ describe("Epic 0 contracts", () => {
   });
 
   it("requires sourceDocumentIds in OCR job payload", () => {
-    const parsed = ocrJobPayloadSchema.safeParse({
+    const parsed = ocrIngestionJobPayloadSchema.safeParse({
       caseId: "case-1",
       sourceDocumentIds: ["doc-1"],
       fileOrders: [1],

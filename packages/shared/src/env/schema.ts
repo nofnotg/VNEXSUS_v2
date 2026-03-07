@@ -7,6 +7,14 @@ export const envSchema = z.object({
   REDIS_URL: z.string().min(1),
   AUTH_SECRET: z.string().min(1),
   SESSION_COOKIE_NAME: z.string().min(1),
+  STORAGE_DRIVER: z.enum(["gcs", "supabase"]).default("gcs"),
+  STORAGE_BUCKET: z.string().min(1),
+  STORAGE_PUBLIC_BASE_URL: z.string().url().optional(),
+  UPLOAD_MAX_FILE_SIZE_MB: z.coerce.number().positive().default(20),
+  UPLOAD_ALLOWED_MIME_TYPES: z
+    .string()
+    .default("application/pdf,image/png,image/jpeg")
+    .transform((value) => value.split(",").map((item) => item.trim()).filter(Boolean)),
   OCR_PROVIDER: z.literal("google-vision"),
   LLM_PROVIDER: z.literal("openai")
 });

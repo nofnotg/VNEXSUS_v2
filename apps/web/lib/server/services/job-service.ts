@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { OcrJobPayload, ApiError, OcrJobCreateInput, UserRole } from "@vnexus/shared";
+import { OcrIngestionJobPayload, ApiError, OcrJobCreateInput, UserRole } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
 
@@ -11,7 +11,7 @@ function buildOcrJobPayload(
   fileOrders: number[],
   requestedByUserId: string,
   enqueueReason: OcrJobCreateInput["enqueueReason"]
-): OcrJobPayload {
+): OcrIngestionJobPayload {
   const normalizedIds = [...sourceDocumentIds].sort();
   const normalizedFileOrders = [...fileOrders].sort((a, b) => a - b);
   const idempotencyKey = createHash("sha256")
@@ -72,6 +72,7 @@ export async function createOcrJob(caseId: string, userId: string, role: UserRol
       jobId: existingJob.id,
       documentCount: payload.sourceDocumentIds.length,
       status: existingJob.status,
+      // Same caseId + same sourceDocumentIds + queued/processing means duplicate enqueue.
       idempotentReused: true,
       payload
     };
