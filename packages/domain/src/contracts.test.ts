@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadAppEnv, patientInputSchema } from "@vnexus/shared";
+import { loadAppEnv, ocrJobPayloadSchema, patientInputSchema } from "@vnexus/shared";
 import { planGatingBaseline } from "./plans/plan-gating";
 import { consumerSummarySchema } from "./reports/contracts";
 
@@ -37,5 +37,17 @@ describe("Epic 0 contracts", () => {
     if (!result.ok) {
       expect(result.issues.length).toBeGreaterThan(0);
     }
+  });
+
+  it("requires sourceDocumentIds in OCR job payload", () => {
+    const parsed = ocrJobPayloadSchema.safeParse({
+      sourceDocumentIds: ["doc-1"],
+      requestedByUserId: "user-1",
+      enqueueReason: "manual_case_upload",
+      idempotencyKey: "abc",
+      allowedTransitions: ["queued", "processing", "completed", "failed"]
+    });
+
+    expect(parsed.success).toBe(true);
   });
 });

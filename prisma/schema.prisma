@@ -100,6 +100,12 @@ enum EvidenceRelationType {
   supporting
 }
 
+enum EvidenceKind {
+  ocr_block
+  block_range
+  page_region
+}
+
 enum ReportType {
   consumer_summary
   investigator_report
@@ -331,24 +337,27 @@ model DateCandidate {
 }
 
 model EvidenceRef {
-  id             String       @id @default(cuid())
-  caseId         String
-  sourceFileId   String
-  sourcePageId   String?
-  fileOrder      Int
-  pageOrder      Int
-  blockIndex     Int?
-  bboxJson       Json?
-  quote          String
-  contextBefore  String?
-  contextAfter   String?
-  confidence     Float?
-  case           Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
-  sourceFile     SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
-  sourcePage     SourcePage?    @relation(fields: [sourcePageId], references: [id], onDelete: SetNull)
-  bundleLinks    EventBundleEvidenceRef[]
+  id              String       @id @default(cuid())
+  caseId          String
+  sourceFileId    String
+  sourcePageId    String?
+  fileOrder       Int
+  pageOrder       Int
+  evidenceKind    EvidenceKind @default(ocr_block)
+  blockIndex      Int?
+  blockIndexStart Int?
+  blockIndexEnd   Int?
+  bboxJson        Json?
+  quote           String
+  contextBefore   String?
+  contextAfter    String?
+  confidence      Float?
+  case            Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  sourceFile      SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  sourcePage      SourcePage?    @relation(fields: [sourcePageId], references: [id], onDelete: SetNull)
+  bundleLinks     EventBundleEvidenceRef[]
 
-  @@index([caseId, pageOrder, blockIndex])
+  @@index([caseId, pageOrder, blockIndexStart, blockIndexEnd])
 }
 
 model EventAtom {
@@ -426,17 +435,20 @@ model ReportSlot {
 }
 
 model AnalysisJob {
-  id            String            @id @default(cuid())
+  id             String            @id @default(cuid())
   caseId         String
   jobType        AnalysisJobType
   status         AnalysisJobStatus
   requestedBy    String?
+  idempotencyKey String?
+  payloadJson    Json?
   startedAt      DateTime?
   finishedAt     DateTime?
   errorMessage   String?
   case           Case              @relation(fields: [caseId], references: [id], onDelete: Cascade)
 
   @@index([caseId, status, jobType])
+  @@index([caseId, jobType, idempotencyKey])
 }
 
 model ReviewFlag {

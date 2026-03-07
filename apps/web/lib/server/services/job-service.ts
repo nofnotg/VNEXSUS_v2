@@ -1,21 +1,68 @@
-import { ApiError, OcrJobCreateInput, UserRole } from "@vnexus/shared";
+import { createHash } from "node:crypto";
+import { OcrJobPayload, ApiError, OcrJobCreateInput, UserRole } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
+
+export const OCR_JOB_STATUS_TRANSITIONS = ["queued", "processing", "completed", "failed"] as const;
+
+function buildOcrJobPayload(sourceDocumentIds: string[], requestedByUserId: string, enqueueReason: OcrJobCreateInput["enqueueReason"]): OcrJobPayload {
+  const normalizedIds = [...sourceDocumentIds].sort();
+  const idempotencyKey = createHash("sha256")
+    .update(`${requestedByUserId}:${normalizedIds.join(",")}:${enqueueReason}`)
+    .digest("hex");
+
+  return {
+    sourceDocumentIds: normalizedIds,
+    requestedByUserId,
+    enqueueReason,
+    idempotencyKey,
+    allowedTransitions: [...OCR_JOB_STATUS_TRANSITIONS]
+  };
+}
 
 export async function createOcrJob(caseId: string, userId: string, role: UserRole, input: OcrJobCreateInput) {
   await getCaseForUser(caseId, userId, role);
 
-  const targetDocuments = input.sourceDocumentIds?.length
-    ? await prisma.sourceDocument.findMany({
-        where: {
-          caseId,
-          id: { in: input.sourceDocumentIds }
-        }
-      })
-    : await prisma.sourceDocument.findMany({ where: { caseId } });
+  const targetDocuments = await prisma.sourceDocument.findMany({
+    where: {
+      caseId,
+      id: { in: input.sourceDocumentIds }
+    },
+    orderBy: { fileOrder: "asc" }
+  });
 
   if (targetDocuments.length === 0) {
     throw new ApiError("CONFLICT", "No source documents available for OCR");
+  }
+
+  if (targetDocuments.length !== input.sourceDocumentIds.length) {
+    throw new ApiError("CONFLICT", "sourceDocumentIds must all belong to the target case");
+  }
+
+  const payload = buildOcrJobPayload(
+    targetDocuments.map((document) => document.id),
+    userId,
+    input.enqueueReason
+  );
+
+  const existingJob = await prisma.analysisJob.findFirst({
+    where: {
+      caseId,
+      jobType: "ocr",
+      idempotencyKey: payload.idempotencyKey,
+      status: { in: ["queued", "processing"] }
+    },
+    orderBy: [{ startedAt: "desc" }, { id: "desc" }]
+  });
+
+  if (existingJob) {
+    return {
+      jobId: existingJob.id,
+      documentCount: payload.sourceDocumentIds.length,
+      status: existingJob.status,
+      idempotentReused: true,
+      payload
+    };
   }
 
   const job = await prisma.analysisJob.create({
@@ -23,7 +70,9 @@ export async function createOcrJob(caseId: string, userId: string, role: UserRol
       caseId,
       jobType: "ocr",
       status: "queued",
-      requestedBy: userId
+      requestedBy: userId,
+      idempotencyKey: payload.idempotencyKey,
+      payloadJson: payload
     }
   });
 
@@ -35,7 +84,9 @@ export async function createOcrJob(caseId: string, userId: string, role: UserRol
   return {
     jobId: job.id,
     documentCount: targetDocuments.length,
-    status: job.status
+    status: job.status,
+    idempotentReused: false,
+    payload
   };
 }
 

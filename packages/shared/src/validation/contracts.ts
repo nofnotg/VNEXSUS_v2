@@ -36,11 +36,24 @@ export const documentCreateSchema = z.object({
   storagePath: z.string().min(1).optional()
 });
 
+export const ocrJobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
+
+export const ocrJobPayloadSchema = z.object({
+  sourceDocumentIds: z.array(z.string().min(1)).min(1),
+  requestedByUserId: z.string().min(1),
+  enqueueReason: z.enum(["manual_case_upload", "retry", "system_followup"]),
+  idempotencyKey: z.string().min(1),
+  allowedTransitions: z.array(ocrJobStatusSchema).length(4)
+});
+
 export const ocrJobCreateSchema = z.object({
-  sourceDocumentIds: z.array(z.string().min(1)).optional()
+  sourceDocumentIds: z.array(z.string().min(1)).min(1),
+  enqueueReason: z.enum(["manual_case_upload", "retry", "system_followup"]).default("manual_case_upload")
 });
 
 export const jobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
+
+export const evidenceKindSchema = z.enum(["ocr_block", "block_range", "page_region"]);
 
 export const evidenceRefContractSchema = z.object({
   evidenceId: z.string(),
@@ -48,7 +61,10 @@ export const evidenceRefContractSchema = z.object({
   sourcePageId: z.string().optional(),
   fileOrder: z.number().int().nonnegative(),
   pageOrder: z.number().int().nonnegative(),
+  evidenceKind: evidenceKindSchema,
   blockIndex: z.number().int().nonnegative().optional(),
+  blockIndexStart: z.number().int().nonnegative().optional(),
+  blockIndexEnd: z.number().int().nonnegative().optional(),
   bbox: z
     .object({
       xMin: z.number(),
@@ -96,3 +112,4 @@ export type CaseUpdateInput = z.infer<typeof caseUpdateSchema>;
 export type PatientInput = z.infer<typeof patientInputSchema>;
 export type DocumentCreateInput = z.infer<typeof documentCreateSchema>;
 export type OcrJobCreateInput = z.infer<typeof ocrJobCreateSchema>;
+export type OcrJobPayload = z.infer<typeof ocrJobPayloadSchema>;

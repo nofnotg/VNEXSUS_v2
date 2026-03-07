@@ -17,7 +17,10 @@ export async function listEvidenceForCase(caseId: string, userId: string, role: 
       sourcePageId: item.sourcePageId ?? undefined,
       fileOrder: item.fileOrder,
       pageOrder: item.pageOrder,
+      evidenceKind: item.evidenceKind,
       blockIndex: item.blockIndex ?? undefined,
+      blockIndexStart: item.blockIndexStart ?? undefined,
+      blockIndexEnd: item.blockIndexEnd ?? undefined,
       bbox: item.bboxJson ?? undefined,
       quote: item.quote,
       contextBefore: item.contextBefore ?? undefined,
@@ -28,42 +31,21 @@ export async function listEvidenceForCase(caseId: string, userId: string, role: 
 }
 
 export async function listEvidenceForBundle(bundleId: string, userId: string, role: UserRole) {
-  const bundle = await prisma.eventBundle.findFirst({
-    where:
-      role === "admin"
-        ? { id: bundleId }
-        : {
-            id: bundleId,
-            case: {
-              ownerUserId: userId
-            }
-          },
-    include: {
-      evidenceRefs: {
-        include: {
-          evidenceRef: true
-        }
-      }
-    }
-  });
-
-  if (!bundle) {
-    throw new ApiError("NOT_FOUND", "Event bundle not found");
+  // Epic 1 placeholder only: EventBundle generation/linking is not implemented yet.
+  // This route remains as a stub so the API surface matches the document contract
+  // without pulling EventBundle construction into the ingestion phase.
+  if (role !== "admin") {
+    await prisma.case.findFirst({
+      where: {
+        ownerUserId: userId
+      },
+      select: { id: true }
+    });
   }
 
   return {
-    items: bundle.evidenceRefs.map(({ evidenceRef }) => ({
-      evidenceId: evidenceRef.id,
-      sourceFileId: evidenceRef.sourceFileId,
-      sourcePageId: evidenceRef.sourcePageId ?? undefined,
-      fileOrder: evidenceRef.fileOrder,
-      pageOrder: evidenceRef.pageOrder,
-      blockIndex: evidenceRef.blockIndex ?? undefined,
-      bbox: evidenceRef.bboxJson ?? undefined,
-      quote: evidenceRef.quote,
-      contextBefore: evidenceRef.contextBefore ?? undefined,
-      contextAfter: evidenceRef.contextAfter ?? undefined,
-      confidence: evidenceRef.confidence ?? undefined
-    }))
+    bundleId,
+    placeholder: true,
+    items: []
   };
 }

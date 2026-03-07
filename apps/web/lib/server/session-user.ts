@@ -8,6 +8,9 @@ export async function requireSessionRecord() {
     return null;
   }
 
+  // TODO(auth): remove this dev/test convenience path once a real auth provider
+  // persists users. This upsert exists only so Epic 0/1 API skeletons can run
+  // with session cookies before production auth wiring is introduced.
   const user = await prisma.user.upsert({
     where: { email: sessionUser.email },
     update: {
