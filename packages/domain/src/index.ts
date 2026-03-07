@@ -1,4 +1,5 @@
 export * from "./auth/role-access";
+export * from "./cases/contracts";
 export * from "./plans/plan-gating";
 export * from "./reports/contracts";
 

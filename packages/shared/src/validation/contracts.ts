@@ -1,5 +1,26 @@
 import { z } from "zod";
 
+export const caseAudienceSchema = z.enum(["consumer", "investigator"]);
+
+export const caseStatusSchema = z.enum([
+  "draft",
+  "uploaded",
+  "processing",
+  "ready",
+  "review_required",
+  "archived"
+]);
+
+export const caseCreateSchema = z.object({
+  title: z.string().min(1),
+  audience: caseAudienceSchema
+});
+
+export const caseUpdateSchema = z.object({
+  title: z.string().min(1).optional(),
+  status: caseStatusSchema.optional()
+});
+
 export const patientInputSchema = z.object({
   patientName: z.string().min(1),
   birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
@@ -7,6 +28,19 @@ export const patientInputSchema = z.object({
   insuranceCompany: z.string().min(1).optional(),
   productType: z.string().min(1).optional()
 });
+
+export const documentCreateSchema = z.object({
+  originalFileName: z.string().min(1),
+  mimeType: z.string().min(1),
+  pageCount: z.number().int().positive(),
+  storagePath: z.string().min(1).optional()
+});
+
+export const ocrJobCreateSchema = z.object({
+  sourceDocumentIds: z.array(z.string().min(1)).optional()
+});
+
+export const jobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
 
 export const evidenceRefContractSchema = z.object({
   evidenceId: z.string(),
@@ -56,3 +90,9 @@ export const consumerSummarySchema = z.object({
   check_points: z.array(z.string()),
   recommended_next_actions: z.array(z.string())
 });
+
+export type CaseCreateInput = z.infer<typeof caseCreateSchema>;
+export type CaseUpdateInput = z.infer<typeof caseUpdateSchema>;
+export type PatientInput = z.infer<typeof patientInputSchema>;
+export type DocumentCreateInput = z.infer<typeof documentCreateSchema>;
+export type OcrJobCreateInput = z.infer<typeof ocrJobCreateSchema>;

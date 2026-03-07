@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.13.1",
+  "dependencies": {
+    "@prisma/client": "^6.16.2"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
