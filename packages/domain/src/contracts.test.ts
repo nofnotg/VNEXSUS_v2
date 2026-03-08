@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
-  eventAtomResponseContractSchema,
-  dateCenteredWindowResponseContractSchema,
   dateCandidateResponseContractSchema,
+  dateCenteredWindowResponseContractSchema,
   entityCandidateResponseContractSchema,
+  eventAtomResponseContractSchema,
+  eventBundleResponseContractSchema,
   loadAppEnv,
   ocrBlockResponseContractSchema,
   ocrIngestionJobPayloadSchema,
@@ -15,7 +16,7 @@ import { consumerSummarySchema, investigatorSlotSeedSchema } from "./reports/con
 describe("Epic 0 contracts", () => {
   it("keeps insuranceJoinDate as required user input metadata", () => {
     const parsed = patientInputSchema.safeParse({
-      patientName: "홍길동",
+      patientName: "Hong Gil Dong",
       insuranceJoinDate: "2022-01-01"
     });
 
@@ -76,8 +77,8 @@ describe("Epic 0 contracts", () => {
       fileOrder: 1,
       pageOrder: 1,
       blockIndex: 0,
-      textRaw: "진단서",
-      textNormalized: "진단서",
+      textRaw: "Diagnosis note",
+      textNormalized: "Diagnosis note",
       bboxJson: {
         xMin: 0,
         yMin: 0,
@@ -121,8 +122,8 @@ describe("Epic 0 contracts", () => {
       pageOrder: 1,
       blockIndex: 0,
       candidateType: "hospital",
-      rawText: "서울병원",
-      normalizedText: "서울병원",
+      rawText: "Seoul Hospital",
+      normalizedText: "Seoul Hospital",
       confidence: 0.88,
       metadataJson: {
         source: "keyword"
@@ -147,9 +148,9 @@ describe("Epic 0 contracts", () => {
       windowStartBlockIndex: 1,
       windowEndBlockIndex: 5,
       candidateSummaryJson: {
-        hospitals: ["서울병원"],
-        departments: ["내과"],
-        diagnoses: ["주상병"],
+        hospitals: ["Seoul Hospital"],
+        departments: ["Internal Medicine"],
+        diagnoses: ["Primary diagnosis"],
         tests: ["CT"],
         treatments: [],
         procedures: [],
@@ -157,7 +158,7 @@ describe("Epic 0 contracts", () => {
         admissions: [],
         discharges: [],
         pathologies: [],
-        medications: ["처방"],
+        medications: ["Aspirin"],
         symptoms: []
       },
       createdAt: "2026-03-08T00:00:00.000Z"
@@ -177,17 +178,17 @@ describe("Epic 0 contracts", () => {
       fileOrder: 1,
       pageOrder: 1,
       anchorBlockIndex: 3,
-      primaryHospital: "서울병원",
-      primaryDepartment: "내과",
-      primaryDiagnosis: "폐렴",
+      primaryHospital: "Seoul Hospital",
+      primaryDepartment: "Internal Medicine",
+      primaryDiagnosis: "Pneumonia",
       primaryTest: "CT",
       primaryTreatment: null,
       primaryProcedure: null,
       primarySurgery: null,
       admissionStatus: null,
       pathologySummary: null,
-      medicationSummary: "항생제",
-      symptomSummary: "기침",
+      medicationSummary: "Aspirin",
+      symptomSummary: "Cough",
       eventTypeCandidate: "exam",
       ambiguityScore: 0.21,
       requiresReview: false,
@@ -201,9 +202,9 @@ describe("Epic 0 contracts", () => {
         notes: []
       },
       candidateSnapshotJson: {
-        hospitals: ["서울병원"],
-        departments: ["내과"],
-        diagnoses: ["폐렴"],
+        hospitals: ["Seoul Hospital"],
+        departments: ["Internal Medicine"],
+        diagnoses: ["Pneumonia"],
         tests: ["CT"],
         treatments: [],
         procedures: [],
@@ -211,8 +212,54 @@ describe("Epic 0 contracts", () => {
         admissions: [],
         discharges: [],
         pathologies: [],
-        medications: ["항생제"],
-        symptoms: ["기침"]
+        medications: ["Aspirin"],
+        symptoms: ["Cough"]
+      },
+      createdAt: "2026-03-08T00:00:00.000Z"
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates persisted EventBundle response contract", () => {
+    const parsed = eventBundleResponseContractSchema.safeParse({
+      id: "bundle-1",
+      caseId: "case-1",
+      canonicalDate: "2024-03-07",
+      fileOrder: 1,
+      pageOrder: 1,
+      primaryHospital: "Seoul Hospital",
+      bundleTypeCandidate: "outpatient",
+      representativeDiagnosis: "Pneumonia",
+      representativeTest: "CT",
+      representativeTreatment: null,
+      representativeProcedure: null,
+      representativeSurgery: null,
+      admissionStatus: null,
+      ambiguityScore: 0.28,
+      requiresReview: false,
+      unresolvedBundleSlotsJson: {
+        hospitalConflict: false,
+        diagnosisConflict: false,
+        mixedAtomTypes: false,
+        weakGrouping: false,
+        needsManualReview: false,
+        notes: []
+      },
+      atomIdsJson: ["atom-1", "atom-2"],
+      candidateSnapshotJson: {
+        hospitals: ["Seoul Hospital"],
+        departments: ["Internal Medicine"],
+        diagnoses: ["Pneumonia"],
+        tests: ["CT"],
+        treatments: [],
+        procedures: [],
+        surgeries: [],
+        admissions: [],
+        discharges: [],
+        pathologies: [],
+        medications: ["Aspirin"],
+        symptoms: ["Cough"]
       },
       createdAt: "2026-03-08T00:00:00.000Z"
     });

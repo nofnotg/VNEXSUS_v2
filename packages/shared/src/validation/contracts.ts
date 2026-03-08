@@ -82,6 +82,19 @@ export const eventTypeCandidateSchema = z.enum([
   "unknown"
 ]);
 
+export const bundleTypeCandidateSchema = z.enum([
+  "outpatient",
+  "exam",
+  "treatment",
+  "procedure",
+  "surgery",
+  "admission",
+  "discharge",
+  "pathology",
+  "mixed",
+  "unknown"
+]);
+
 export const ocrBlockSchema = z.object({
   id: z.string().optional(),
   caseId: z.string().min(1),
@@ -232,6 +245,42 @@ export const eventAtomResponseContractSchema = eventAtomSchema.extend({
   createdAt: z.string().datetime()
 });
 
+export const unresolvedBundleSlotsSchema = z.object({
+  hospitalConflict: z.boolean(),
+  diagnosisConflict: z.boolean(),
+  mixedAtomTypes: z.boolean(),
+  weakGrouping: z.boolean(),
+  needsManualReview: z.boolean(),
+  notes: z.array(z.string())
+});
+
+export const eventBundleSchema = z.object({
+  id: z.string().optional(),
+  caseId: z.string().min(1),
+  canonicalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  fileOrder: z.number().int().positive(),
+  pageOrder: z.number().int().positive(),
+  primaryHospital: z.string().nullable().optional(),
+  bundleTypeCandidate: bundleTypeCandidateSchema,
+  representativeDiagnosis: z.string().nullable().optional(),
+  representativeTest: z.string().nullable().optional(),
+  representativeTreatment: z.string().nullable().optional(),
+  representativeProcedure: z.string().nullable().optional(),
+  representativeSurgery: z.string().nullable().optional(),
+  admissionStatus: z.enum(["admitted", "discharged", "both"]).nullable().optional(),
+  ambiguityScore: z.number().min(0).max(1),
+  requiresReview: z.boolean(),
+  unresolvedBundleSlotsJson: unresolvedBundleSlotsSchema,
+  atomIdsJson: z.array(z.string().min(1)),
+  candidateSnapshotJson: candidateSummarySchema,
+  createdAt: z.string().datetime().optional()
+});
+
+export const eventBundleResponseContractSchema = eventBundleSchema.extend({
+  id: z.string(),
+  createdAt: z.string().datetime()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -327,3 +376,6 @@ export type DateCenteredWindowResponseContract = z.infer<typeof dateCenteredWind
 export type UnresolvedSlots = z.infer<typeof unresolvedSlotsSchema>;
 export type EventAtomInput = z.infer<typeof eventAtomSchema>;
 export type EventAtomResponseContract = z.infer<typeof eventAtomResponseContractSchema>;
+export type UnresolvedBundleSlots = z.infer<typeof unresolvedBundleSlotsSchema>;
+export type EventBundleInput = z.infer<typeof eventBundleSchema>;
+export type EventBundleResponseContract = z.infer<typeof eventBundleResponseContractSchema>;

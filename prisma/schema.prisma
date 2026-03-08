@@ -150,6 +150,19 @@ enum EventTypeCandidate {
   unknown
 }
 
+enum BundleTypeCandidate {
+  outpatient
+  exam
+  treatment
+  procedure
+  surgery
+  admission
+  discharge
+  pathology
+  mixed
+  unknown
+}
+
 enum ReportType {
   consumer_summary
   investigator_report
@@ -509,24 +522,33 @@ model EventAtom {
 }
 
 model EventBundle {
-  id                String                 @id @default(cuid())
-  caseId            String
-  canonicalDate     DateTime
-  eventFamily       EventFamily
-  hospital          String?
-  slotSeedJson      Json?
-  ambiguityScore    Float                  @default(0)
-  requiresReview    Boolean                @default(false)
-  groupingStrategy  String?
-  bundleReason      String?
-  createdAt         DateTime               @default(now())
-  case              Case                   @relation(fields: [caseId], references: [id], onDelete: Cascade)
-  atoms             EventAtom[]
-  evidenceRefs      EventBundleEvidenceRef[]
-  reportSlots       ReportSlot[]
-  reviewFlags       ReviewFlag[]
+  id                        String                 @id @default(cuid())
+  caseId                    String
+  canonicalDate             String
+  fileOrder                 Int
+  pageOrder                 Int
+  primaryHospital           String?
+  bundleTypeCandidate       BundleTypeCandidate
+  representativeDiagnosis   String?
+  representativeTest        String?
+  representativeTreatment   String?
+  representativeProcedure   String?
+  representativeSurgery     String?
+  admissionStatus           String?
+  ambiguityScore            Float                  @default(0)
+  requiresReview            Boolean                @default(false)
+  unresolvedBundleSlotsJson Json
+  atomIdsJson               Json
+  candidateSnapshotJson     Json
+  createdAt                 DateTime               @default(now())
+  case                      Case                   @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  atoms                     EventAtom[]
+  evidenceRefs              EventBundleEvidenceRef[]
+  reportSlots               ReportSlot[]
+  reviewFlags               ReviewFlag[]
 
   @@index([caseId, canonicalDate])
+  @@index([caseId, fileOrder, pageOrder, createdAt])
 }
 
 model EventBundleEvidenceRef {
