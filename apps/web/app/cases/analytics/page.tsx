@@ -3,7 +3,7 @@ import { getLocaleMessages } from "@vnexus/shared";
 import { AppShell } from "../../../components/app-shell";
 import { getRequestLocale } from "../../../lib/server/report-locale";
 import { getSessionUser } from "../../../lib/session";
-import { getCaseAnalytics } from "../../../lib/server/services/case-analytics-service";
+import { getCaseAnalytics, getCaseAnalyticsTrend } from "../../../lib/server/services/case-analytics-service";
 import { CaseAnalyticsClient } from "./case-analytics-client";
 
 export default async function CaseAnalyticsPage() {
@@ -27,11 +27,14 @@ export default async function CaseAnalyticsPage() {
     );
   }
 
-  const analytics = await getCaseAnalytics(user.id, user.role);
+  const [analytics, trend] = await Promise.all([
+    getCaseAnalytics(user.id, user.role),
+    getCaseAnalyticsTrend(user.id, user.role, {}, "daily")
+  ]);
 
   return (
     <AppShell heading={localeMessages.uiAnalyticsHeading} subheading={localeMessages.uiAnalyticsSubheading}>
-      <CaseAnalyticsClient analytics={analytics} />
+      <CaseAnalyticsClient initialAnalytics={analytics} initialTrend={trend} />
     </AppShell>
   );
 }

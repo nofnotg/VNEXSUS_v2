@@ -3,15 +3,26 @@
 import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { messages } from "../../../../../packages/shared/src/locale/messages";
+import { getLocaleMessages } from "@vnexus/shared";
 import { LocaleProvider } from "../../../components/locale-provider";
 import { ThemeProvider } from "../../../components/theme-provider";
 import CaseAnalyticsPage from "./page.js";
 
-const { getSessionUserMock, getRequestLocaleMock, getCaseAnalyticsMock } = vi.hoisted(() => ({
+const { getSessionUserMock, getRequestLocaleMock, getCaseAnalyticsMock, getCaseAnalyticsTrendMock } = vi.hoisted(() => ({
   getSessionUserMock: vi.fn(),
   getRequestLocaleMock: vi.fn(),
-  getCaseAnalyticsMock: vi.fn()
+  getCaseAnalyticsMock: vi.fn(),
+  getCaseAnalyticsTrendMock: vi.fn()
+}));
+
+vi.mock("recharts", () => ({
+  CartesianGrid: () => null,
+  Legend: () => null,
+  Line: () => null,
+  LineChart: ({ children }: { children: React.ReactNode }) => <div data-testid="line-chart">{children}</div>,
+  Tooltip: () => null,
+  XAxis: () => null,
+  YAxis: () => null
 }));
 
 vi.mock("../../../lib/session", () => ({
@@ -23,7 +34,8 @@ vi.mock("../../../lib/server/report-locale", () => ({
 }));
 
 vi.mock("../../../lib/server/services/case-analytics-service", () => ({
-  getCaseAnalytics: getCaseAnalyticsMock
+  getCaseAnalytics: getCaseAnalyticsMock,
+  getCaseAnalyticsTrend: getCaseAnalyticsTrendMock
 }));
 
 describe("case analytics page", () => {
@@ -34,7 +46,9 @@ describe("case analytics page", () => {
     document.cookie = "vnexus_theme=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   });
 
-  it("renders analytics cards and localizes labels", async () => {
+  it("renders analytics page and localizes UI labels", async () => {
+    const ko = getLocaleMessages("ko");
+
     getSessionUserMock.mockResolvedValue({
       id: "user-1",
       email: "investigator@example.com",
@@ -50,13 +64,16 @@ describe("case analytics page", () => {
       reviewRequiredEvents: 2,
       eventsByType: {
         exam: 4,
-        outpatient: 3,
-        surgery: 1
+        outpatient: 3
       },
       eventsByHospital: {
         "Seoul Hospital": 5,
         "Busan Hospital": 2
       }
+    });
+    getCaseAnalyticsTrendMock.mockResolvedValue({
+      interval: "daily",
+      points: [{ date: "2026-01-01", total: 2, confirmed: 1, unconfirmed: 1 }]
     });
 
     vi.stubGlobal(
@@ -84,21 +101,20 @@ describe("case analytics page", () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByRole("heading", { level: 1, name: messages.en.uiAnalyticsHeading })).toBeTruthy();
-    expect(screen.getByText(messages.en.uiTotalCases)).toBeTruthy();
-    expect(screen.getByText(messages.en.uiEventsByType)).toBeTruthy();
-    expect(screen.getByText("Seoul Hospital")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Case Analytics" })).toBeTruthy();
+    expect(screen.getByText("Filters")).toBeTruthy();
+    expect(screen.getByText("Trend over time")).toBeTruthy();
 
-    fireEvent.change(screen.getByRole("combobox", { name: messages.en.uiLocaleSelectLabel }), {
+    fireEvent.change(screen.getByRole("combobox", { name: "Select language" }), {
       target: { value: "ko" }
     });
 
     await waitFor(() => {
-      expect(screen.getByText(messages.ko.uiAnalyticsHeading)).toBeTruthy();
+      expect(screen.getByText(ko.uiAnalyticsHeading)).toBeTruthy();
     });
 
-    expect(screen.getByText(messages.ko.uiTotalCases)).toBeTruthy();
-    expect(screen.getByText(messages.ko.uiEventsByType)).toBeTruthy();
+    expect(screen.getByText(ko.uiAnalyticsFilters)).toBeTruthy();
+    expect(screen.getByText(ko.uiTrendHeading)).toBeTruthy();
   });
 
   it("blocks analytics for consumer users", async () => {

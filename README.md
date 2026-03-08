@@ -51,6 +51,10 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
 
 - Use `/cases/analytics` to review aggregate case and event metrics across the current workspace scope.
 - Only investigator and admin roles can open the dashboard or call `/api/cases/analytics`.
-- The dashboard currently exposes total cases, total events, confirmed/unconfirmed events, review-required events, events by type, and top hospital counts.
+- The dashboard exposes total cases, total events, confirmed/unconfirmed events, review-required events, events by type, and top hospital counts.
+- Use the filter panel to narrow results by ISO date range (`YYYY-MM-DD`), event type, and hospital.
+- Trend data is available from `/api/cases/analytics/trend` and can be viewed in daily, weekly, or monthly intervals.
+- The trend chart shows total, confirmed, and unconfirmed event counts over time so reviewers can spot backlog or quality shifts.
 - Aggregations are computed in the service/repository layer so route handlers remain thin and testable.
+- Filter parsing and validation also happen before the service layer runs; invalid dates or unsupported intervals return `400 VALIDATION_ERROR`.
 - If event or hospital categories become too large, the repository/service layer is the place to add normalization or caching.

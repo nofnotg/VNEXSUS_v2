@@ -487,6 +487,39 @@ export const caseAnalyticsSchema = z.object({
   eventsByHospital: z.record(z.string(), z.number().int().nonnegative())
 });
 
+export const caseAnalyticsFilterSchema = z
+  .object({
+    startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+    endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+    eventTypes: z.array(z.string().min(1)).optional(),
+    hospitals: z.array(z.string().min(1)).optional()
+  })
+  .refine(
+    (value) => {
+      if (!value.startDate || !value.endDate) {
+        return true;
+      }
+
+      return value.startDate <= value.endDate;
+    },
+    {
+      message: "startDate must be less than or equal to endDate",
+      path: ["endDate"]
+    }
+  );
+
+export const caseAnalyticsTrendPointSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  total: z.number().int().nonnegative(),
+  confirmed: z.number().int().nonnegative(),
+  unconfirmed: z.number().int().nonnegative()
+});
+
+export const caseAnalyticsTrendSchema = z.object({
+  interval: z.enum(["daily", "weekly", "monthly"]),
+  points: z.array(caseAnalyticsTrendPointSchema)
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -606,3 +639,5 @@ export type CaseDetail = z.infer<typeof caseDetailSchema>;
 export type CaseEventEdit = z.infer<typeof caseEventEditSchema>;
 export type EventEditHistory = NonNullable<CaseEvent["editHistory"]>[number];
 export type CaseAnalytics = z.infer<typeof caseAnalyticsSchema>;
+export type CaseAnalyticsFilter = z.infer<typeof caseAnalyticsFilterSchema>;
+export type CaseAnalyticsTrend = z.infer<typeof caseAnalyticsTrendSchema>;

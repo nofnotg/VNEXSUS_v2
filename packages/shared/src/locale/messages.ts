@@ -165,9 +165,26 @@ export type MessageDictionary = {
   uiEventsByType: string;
   uiEventsByHospital: string;
   uiAnalyticsEmpty: string;
+  uiAnalyticsFilters: string;
+  uiStartDate: string;
+  uiEndDate: string;
+  uiEventTypes: string;
+  uiHospitals: string;
+  uiApplyFilters: string;
+  uiClearFilters: string;
+  uiTrendHeading: string;
+  uiTrendInterval: string;
+  uiTrendDaily: string;
+  uiTrendWeekly: string;
+  uiTrendMonthly: string;
+  uiAnalyticsLoading: string;
+  uiAnalyticsError: string;
+  uiTrendTotal: string;
+  uiTrendConfirmed: string;
+  uiTrendUnconfirmed: string;
 };
 
-export const messages: Record<LocaleCode, MessageDictionary> = {
+export const messages = {
   en: {
     genericUnknownDate: "unknown date",
     genericUnknownFacility: "unknown facility",
@@ -332,7 +349,24 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiReviewRequiredEvents: "Review required events",
     uiEventsByType: "Events by type",
     uiEventsByHospital: "Events by hospital",
-    uiAnalyticsEmpty: "No analytics data is available yet."
+    uiAnalyticsEmpty: "No analytics data is available yet.",
+    uiAnalyticsFilters: "Filters",
+    uiStartDate: "Start date",
+    uiEndDate: "End date",
+    uiEventTypes: "Event types",
+    uiHospitals: "Hospitals",
+    uiApplyFilters: "Apply filters",
+    uiClearFilters: "Clear filters",
+    uiTrendHeading: "Trend over time",
+    uiTrendInterval: "Interval",
+    uiTrendDaily: "Daily",
+    uiTrendWeekly: "Weekly",
+    uiTrendMonthly: "Monthly",
+    uiAnalyticsLoading: "Loading analytics...",
+    uiAnalyticsError: "Failed to update analytics.",
+    uiTrendTotal: "Total",
+    uiTrendConfirmed: "Confirmed",
+    uiTrendUnconfirmed: "Unconfirmed"
   },
   ko: {
     genericUnknownDate: "날짜 미확인",
@@ -500,7 +534,27 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiEventsByHospital: "병원별 이벤트",
     uiAnalyticsEmpty: "표시할 분석 데이터가 아직 없습니다."
   }
-};
+} satisfies Record<LocaleCode, Partial<MessageDictionary>>;
+
+Object.assign(messages.ko, {
+  uiAnalyticsFilters: "\uD544\uD130",
+  uiStartDate: "\uC2DC\uC791 \uB0A0\uC9DC",
+  uiEndDate: "\uC885\uB8CC \uB0A0\uC9DC",
+  uiEventTypes: "\uC774\uBCA4\uD2B8 \uC720\uD615",
+  uiHospitals: "\uBCD1\uC6D0",
+  uiApplyFilters: "\uD544\uD130 \uC801\uC6A9",
+  uiClearFilters: "\uD544\uD130 \uCD08\uAE30\uD654",
+  uiTrendHeading: "\uC2DC\uAC04\uBCC4 \uCD94\uC774",
+  uiTrendInterval: "\uAD6C\uAC04",
+  uiTrendDaily: "\uC77C\uBCC4",
+  uiTrendWeekly: "\uC8FC\uBCC4",
+  uiTrendMonthly: "\uC6D4\uBCC4",
+  uiAnalyticsLoading: "\uBD84\uC11D \uB370\uC774\uD130\uB97C \uBD88\uB7EC\uC624\uB294 \uC911\uC785\uB2C8\uB2E4...",
+  uiAnalyticsError: "\uBD84\uC11D \uB370\uC774\uD130\uB97C \uC5C5\uB370\uC774\uD2B8\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.",
+  uiTrendTotal: "\uC804\uCCB4",
+  uiTrendConfirmed: "\uD655\uC815",
+  uiTrendUnconfirmed: "\uBBF8\uD655\uC815"
+});
 
 export function formatMessage(template: string, values: Record<string, string>) {
   return template.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? "");

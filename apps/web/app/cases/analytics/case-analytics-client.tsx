@@ -1,11 +1,33 @@
 "use client";
 
-import React from "react";
-import type { CaseAnalytics } from "@vnexus/shared";
+import React, { startTransition, useMemo, useState } from "react";
+import type { CaseAnalytics, CaseAnalyticsFilter, CaseAnalyticsTrend } from "@vnexus/shared";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 import { useLocaleMessages } from "../../../components/locale-provider";
+import {
+  CaseAnalyticsApiError,
+  getCaseAnalytics,
+  getCaseAnalyticsTrend
+} from "../../../lib/client/case-analytics-api";
 
 type CaseAnalyticsClientProps = {
-  analytics: CaseAnalytics;
+  initialAnalytics: CaseAnalytics;
+  initialTrend: CaseAnalyticsTrend;
+};
+
+type FilterState = {
+  startDate: string;
+  endDate: string;
+  eventTypes: string[];
+  hospitals: string[];
 };
 
 function formatCount(value: number) {
@@ -29,8 +51,37 @@ function renderBarItems(items: Record<string, number>) {
   ));
 }
 
-export function CaseAnalyticsClient({ analytics }: CaseAnalyticsClientProps) {
+function toRequestFilter(filter: FilterState): CaseAnalyticsFilter {
+  return {
+    startDate: filter.startDate || undefined,
+    endDate: filter.endDate || undefined,
+    eventTypes: filter.eventTypes.length > 0 ? filter.eventTypes : undefined,
+    hospitals: filter.hospitals.length > 0 ? filter.hospitals : undefined
+  };
+}
+
+function mergeOptions(current: string[], incoming: string[]) {
+  return [...new Set([...current, ...incoming])].sort((left, right) => left.localeCompare(right));
+}
+
+export function CaseAnalyticsClient({ initialAnalytics, initialTrend }: CaseAnalyticsClientProps) {
   const localeMessages = useLocaleMessages();
+  const [filter, setFilter] = useState<FilterState>({
+    startDate: "",
+    endDate: "",
+    eventTypes: [],
+    hospitals: []
+  });
+  const [interval, setInterval] = useState<CaseAnalyticsTrend["interval"]>(initialTrend.interval);
+  const [analytics, setAnalytics] = useState(initialAnalytics);
+  const [trend, setTrend] = useState(initialTrend);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [eventTypeOptions, setEventTypeOptions] = useState(() => Object.keys(initialAnalytics.eventsByType).sort((a, b) => a.localeCompare(b)));
+  const [hospitalOptions, setHospitalOptions] = useState(() =>
+    Object.keys(initialAnalytics.eventsByHospital).sort((a, b) => a.localeCompare(b))
+  );
+
   const summaryCards = [
     { label: localeMessages.uiTotalCases, value: analytics.totalCases },
     { label: localeMessages.uiTotalEvents, value: analytics.totalEvents },
@@ -45,50 +96,218 @@ export function CaseAnalyticsClient({ analytics }: CaseAnalyticsClientProps) {
     Object.keys(analytics.eventsByType).length > 0 ||
     Object.keys(analytics.eventsByHospital).length > 0;
 
-  if (!hasAnalytics) {
-    return (
-      <div style={{ border: "1px dashed var(--border)", borderRadius: "16px", padding: "20px", color: "var(--muted)" }}>
-        {localeMessages.uiAnalyticsEmpty}
-      </div>
-    );
+  const chartData = useMemo(
+    () =>
+      trend.points.map((point) => ({
+        date: point.date,
+        [localeMessages.uiTrendTotal]: point.total,
+        [localeMessages.uiTrendConfirmed]: point.confirmed,
+        [localeMessages.uiTrendUnconfirmed]: point.unconfirmed
+      })),
+    [localeMessages.uiTrendConfirmed, localeMessages.uiTrendTotal, localeMessages.uiTrendUnconfirmed, trend.points]
+  );
+
+  const chartWidth = Math.max(480, trend.points.length * 80);
+
+  async function refresh(nextFilter: FilterState, nextInterval: CaseAnalyticsTrend["interval"]) {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const requestFilter = toRequestFilter(nextFilter);
+      const [nextAnalytics, nextTrend] = await Promise.all([
+        getCaseAnalytics(requestFilter),
+        getCaseAnalyticsTrend(requestFilter, nextInterval)
+      ]);
+
+      startTransition(() => {
+        setAnalytics(nextAnalytics);
+        setTrend(nextTrend);
+        setEventTypeOptions((current) => mergeOptions(current, Object.keys(nextAnalytics.eventsByType)));
+        setHospitalOptions((current) => mergeOptions(current, Object.keys(nextAnalytics.eventsByHospital)));
+      });
+    } catch (caught) {
+      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiAnalyticsError;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleMultiSelectChange(
+    event: React.ChangeEvent<HTMLSelectElement>,
+    key: "eventTypes" | "hospitals"
+  ) {
+    const values = Array.from(event.target.selectedOptions, (option) => option.value);
+    setFilter((current) => ({
+      ...current,
+      [key]: values
+    }));
   }
 
   return (
     <div style={{ display: "grid", gap: "24px" }}>
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-          gap: "16px"
-        }}
-      >
-        {summaryCards.map((item) => (
-          <article
-            key={item.label}
+      <section style={panelStyle}>
+        <h2 style={panelTitleStyle}>{localeMessages.uiAnalyticsFilters}</h2>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "end" }}>
+          <div style={fieldStyle}>
+            <label htmlFor="analytics-start-date">{localeMessages.uiStartDate}</label>
+            <input
+              id="analytics-start-date"
+              type="date"
+              value={filter.startDate}
+              onChange={(event) => setFilter((current) => ({ ...current, startDate: event.target.value }))}
+            />
+          </div>
+
+          <div style={fieldStyle}>
+            <label htmlFor="analytics-end-date">{localeMessages.uiEndDate}</label>
+            <input
+              id="analytics-end-date"
+              type="date"
+              value={filter.endDate}
+              onChange={(event) => setFilter((current) => ({ ...current, endDate: event.target.value }))}
+            />
+          </div>
+
+          <div style={fieldStyle}>
+            <label htmlFor="analytics-event-types">{localeMessages.uiEventTypes}</label>
+            <select
+              id="analytics-event-types"
+              multiple
+              value={filter.eventTypes}
+              onChange={(event) => handleMultiSelectChange(event, "eventTypes")}
+              style={{ minHeight: "112px" }}
+            >
+              {eventTypeOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={fieldStyle}>
+            <label htmlFor="analytics-hospitals">{localeMessages.uiHospitals}</label>
+            <select
+              id="analytics-hospitals"
+              multiple
+              value={filter.hospitals}
+              onChange={(event) => handleMultiSelectChange(event, "hospitals")}
+              style={{ minHeight: "112px" }}
+            >
+              {hospitalOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={fieldStyle}>
+            <label htmlFor="analytics-interval">{localeMessages.uiTrendInterval}</label>
+            <select
+              id="analytics-interval"
+              value={interval}
+              onChange={(event) => setInterval(event.target.value as CaseAnalyticsTrend["interval"])}
+            >
+              <option value="daily">{localeMessages.uiTrendDaily}</option>
+              <option value="weekly">{localeMessages.uiTrendWeekly}</option>
+              <option value="monthly">{localeMessages.uiTrendMonthly}</option>
+            </select>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+          <button type="button" onClick={() => void refresh(filter, interval)} disabled={loading}>
+            {loading ? localeMessages.uiAnalyticsLoading : localeMessages.uiApplyFilters}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const resetFilter = { startDate: "", endDate: "", eventTypes: [], hospitals: [] };
+              setFilter(resetFilter);
+              void refresh(resetFilter, interval);
+            }}
+            disabled={loading}
+          >
+            {localeMessages.uiClearFilters}
+          </button>
+        </div>
+
+        {error ? <p style={{ margin: 0, color: "#b42318" }}>{error}</p> : null}
+      </section>
+
+      {!hasAnalytics ? (
+        <div style={{ border: "1px dashed var(--border)", borderRadius: "16px", padding: "20px", color: "var(--muted)" }}>
+          {localeMessages.uiAnalyticsEmpty}
+        </div>
+      ) : (
+        <>
+          <section
             style={{
-              border: "1px solid var(--border)",
-              borderRadius: "18px",
-              padding: "18px",
-              background: "var(--surface)"
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: "16px"
             }}
           >
-            <div style={{ color: "var(--muted)", fontSize: "14px" }}>{item.label}</div>
-            <div style={{ marginTop: "10px", fontSize: "32px", fontWeight: 700 }}>{formatCount(item.value)}</div>
-          </article>
-        ))}
-      </section>
+            {summaryCards.map((item) => (
+              <article
+                key={item.label}
+                style={{
+                  border: "1px solid var(--border)",
+                  borderRadius: "18px",
+                  padding: "18px",
+                  background: "var(--surface)"
+                }}
+              >
+                <div style={{ color: "var(--muted)", fontSize: "14px" }}>{item.label}</div>
+                <div style={{ marginTop: "10px", fontSize: "32px", fontWeight: 700 }}>{formatCount(item.value)}</div>
+              </article>
+            ))}
+          </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
-        <article style={panelStyle}>
-          <h2 style={panelTitleStyle}>{localeMessages.uiEventsByType}</h2>
-          <div style={{ display: "grid", gap: "12px" }}>{renderBarItems(analytics.eventsByType)}</div>
-        </article>
+          <section style={panelStyle}>
+            <h2 style={panelTitleStyle}>{localeMessages.uiTrendHeading}</h2>
+            <div style={{ overflowX: "auto" }}>
+              <LineChart width={chartWidth} height={280} data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(27, 26, 23, 0.12)" />
+                <XAxis dataKey="date" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey={localeMessages.uiTrendTotal} stroke="#14532d" strokeWidth={2} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey={localeMessages.uiTrendConfirmed}
+                  stroke="#1d4ed8"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey={localeMessages.uiTrendUnconfirmed}
+                  stroke="#b45309"
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </div>
+          </section>
 
-        <article style={panelStyle}>
-          <h2 style={panelTitleStyle}>{localeMessages.uiEventsByHospital}</h2>
-          <div style={{ display: "grid", gap: "12px" }}>{renderBarItems(analytics.eventsByHospital)}</div>
-        </article>
-      </section>
+          <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
+            <article style={panelStyle}>
+              <h2 style={panelTitleStyle}>{localeMessages.uiEventsByType}</h2>
+              <div style={{ display: "grid", gap: "12px" }}>{renderBarItems(analytics.eventsByType)}</div>
+            </article>
+
+            <article style={panelStyle}>
+              <h2 style={panelTitleStyle}>{localeMessages.uiEventsByHospital}</h2>
+              <div style={{ display: "grid", gap: "12px" }}>{renderBarItems(analytics.eventsByHospital)}</div>
+            </article>
+          </section>
+        </>
+      )}
     </div>
   );
 }
@@ -105,4 +324,11 @@ const panelStyle = {
 const panelTitleStyle = {
   margin: 0,
   fontSize: "18px"
+} as const;
+
+const fieldStyle = {
+  display: "grid",
+  gap: "8px",
+  minWidth: "180px",
+  flex: "1 1 180px"
 } as const;

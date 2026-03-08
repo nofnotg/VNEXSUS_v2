@@ -32,7 +32,7 @@ describe("case analytics route", () => {
     vi.clearAllMocks();
   });
 
-  it("returns analytics for investigators", async () => {
+  it("returns analytics with parsed filters for investigators", async () => {
     requireAuthorizedSessionMock.mockResolvedValue({
       user: { id: "user-1", role: "investigator" }
     });
@@ -46,13 +46,33 @@ describe("case analytics route", () => {
       eventsByHospital: { "Seoul Hospital": 5 }
     });
 
-    const response = await GET();
+    const response = await GET(
+      new Request(
+        "http://localhost/api/cases/analytics?startDate=2026-01-01&endDate=2026-01-31&eventTypes=exam&eventTypes=surgery&hospitals=Seoul%20Hospital"
+      )
+    );
     const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(body.success).toBe(true);
-    expect(body.data.totalCases).toBe(3);
-    expect(getCaseAnalyticsMock).toHaveBeenCalledWith("user-1", "investigator");
+    expect(getCaseAnalyticsMock).toHaveBeenCalledWith("user-1", "investigator", {
+      startDate: "2026-01-01",
+      endDate: "2026-01-31",
+      eventTypes: ["exam", "surgery"],
+      hospitals: ["Seoul Hospital"]
+    });
+  });
+
+  it("returns 400 for invalid date filters", async () => {
+    requireAuthorizedSessionMock.mockResolvedValue({
+      user: { id: "user-1", role: "investigator" }
+    });
+
+    const response = await GET(new Request("http://localhost/api/cases/analytics?startDate=bad-date"));
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body.error.code).toBe("VALIDATION_ERROR");
   });
 
   it("returns 403 for consumers", async () => {
@@ -60,7 +80,7 @@ describe("case analytics route", () => {
       user: { id: "user-2", role: "consumer" }
     });
 
-    const response = await GET();
+    const response = await GET(new Request("http://localhost/api/cases/analytics"));
     const body = await response.json();
 
     expect(response.status).toBe(403);

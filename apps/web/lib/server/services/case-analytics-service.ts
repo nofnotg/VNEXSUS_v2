@@ -1,4 +1,12 @@
-import { ApiError, caseAnalyticsSchema, type UserRole } from "@vnexus/shared";
+import {
+  ApiError,
+  caseAnalyticsFilterSchema,
+  caseAnalyticsSchema,
+  caseAnalyticsTrendSchema,
+  type CaseAnalyticsFilter,
+  type CaseAnalyticsTrend,
+  type UserRole
+} from "@vnexus/shared";
 import { caseAnalyticsRepository } from "../data-access/case-analytics-repository";
 
 function toCountMap(items: Array<{ key: string; count: number }>) {
@@ -9,16 +17,28 @@ function toCountMap(items: Array<{ key: string; count: number }>) {
   );
 }
 
-export async function getCaseAnalytics(
-  userId: string,
-  role: UserRole,
-  repository: Pick<typeof caseAnalyticsRepository, "getAnalyticsForUser"> = caseAnalyticsRepository
-) {
+function assertAnalyticsRole(role: UserRole) {
   if (!["investigator", "admin"].includes(role)) {
     throw new ApiError("FORBIDDEN", "This role cannot access case analytics");
   }
+}
 
-  const result = await repository.getAnalyticsForUser(userId, role === "admin");
+function normalizeFilter(filter?: CaseAnalyticsFilter) {
+  return caseAnalyticsFilterSchema.parse(filter ?? {});
+}
+
+type AnalyticsRepository = Pick<typeof caseAnalyticsRepository, "getAnalyticsForUser" | "getTrendForUser">;
+
+export async function getCaseAnalytics(
+  userId: string,
+  role: UserRole,
+  filter?: CaseAnalyticsFilter,
+  repository: AnalyticsRepository = caseAnalyticsRepository
+) {
+  assertAnalyticsRole(role);
+
+  const parsedFilter = normalizeFilter(filter);
+  const result = await repository.getAnalyticsForUser(userId, role === "admin", parsedFilter);
 
   return caseAnalyticsSchema.parse({
     totalCases: result.totalCases,
@@ -29,4 +49,18 @@ export async function getCaseAnalytics(
     eventsByType: toCountMap(result.eventsByType),
     eventsByHospital: toCountMap(result.eventsByHospital.slice(0, 8))
   });
+}
+
+export async function getCaseAnalyticsTrend(
+  userId: string,
+  role: UserRole,
+  filter: CaseAnalyticsFilter,
+  interval: CaseAnalyticsTrend["interval"],
+  repository: AnalyticsRepository = caseAnalyticsRepository
+) {
+  assertAnalyticsRole(role);
+
+  const parsedFilter = normalizeFilter(filter);
+  const trend = await repository.getTrendForUser(userId, role === "admin", parsedFilter, interval);
+  return caseAnalyticsTrendSchema.parse(trend);
 }

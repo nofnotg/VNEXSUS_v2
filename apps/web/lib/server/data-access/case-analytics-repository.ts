@@ -1,3 +1,5 @@
+import type { Prisma } from "@prisma/client";
+import type { CaseAnalyticsFilter, CaseAnalyticsTrend } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 
 export type CaseAnalyticsRepositoryResult = {
@@ -10,20 +12,76 @@ export type CaseAnalyticsRepositoryResult = {
   eventsByHospital: Array<{ key: string; count: number }>;
 };
 
-export const caseAnalyticsRepository = {
-  async getAnalyticsForUser(userId: string, isAdmin: boolean): Promise<CaseAnalyticsRepositoryResult> {
-    const caseWhere = isAdmin ? {} : { ownerUserId: userId };
-    const eventWhere = isAdmin ? {} : { case: { ownerUserId: userId } };
+type TrendPoint = CaseAnalyticsTrend["points"][number];
 
-    const [
-      totalCases,
-      totalEvents,
-      confirmedEvents,
-      reviewRequiredEvents,
-      typeGroups,
-      hospitalGroups
-    ] = await Promise.all([
-      prisma.case.count({ where: caseWhere }),
+function normalizeFilter(filter?: CaseAnalyticsFilter): CaseAnalyticsFilter {
+  return {
+    startDate: filter?.startDate,
+    endDate: filter?.endDate,
+    eventTypes: filter?.eventTypes?.filter(Boolean),
+    hospitals: filter?.hospitals?.filter(Boolean)
+  };
+}
+
+function buildEventWhere(userId: string, isAdmin: boolean, filter?: CaseAnalyticsFilter): Prisma.EventAtomWhereInput {
+  const normalized = normalizeFilter(filter);
+
+  return {
+    ...(isAdmin ? {} : { case: { ownerUserId: userId } }),
+    ...(normalized.startDate || normalized.endDate
+      ? {
+          canonicalDate: {
+            ...(normalized.startDate ? { gte: normalized.startDate } : {}),
+            ...(normalized.endDate ? { lte: normalized.endDate } : {})
+          }
+        }
+      : {}),
+    ...(normalized.eventTypes?.length ? { eventTypeCandidate: { in: normalized.eventTypes as never[] } } : {}),
+    ...(normalized.hospitals?.length ? { primaryHospital: { in: normalized.hospitals } } : {})
+  };
+}
+
+function startOfWeek(dateText: string) {
+  const date = new Date(`${dateText}T00:00:00.000Z`);
+  const day = date.getUTCDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  date.setUTCDate(date.getUTCDate() + diff);
+  return date.toISOString().slice(0, 10);
+}
+
+function startOfMonth(dateText: string) {
+  return `${dateText.slice(0, 7)}-01`;
+}
+
+function bucketDate(dateText: string, interval: CaseAnalyticsTrend["interval"]) {
+  if (interval === "weekly") {
+    return startOfWeek(dateText);
+  }
+
+  if (interval === "monthly") {
+    return startOfMonth(dateText);
+  }
+
+  return dateText;
+}
+
+function toSortedEntries(record: Map<string, TrendPoint>) {
+  return [...record.values()].sort((left, right) => left.date.localeCompare(right.date));
+}
+
+export const caseAnalyticsRepository = {
+  async getAnalyticsForUser(
+    userId: string,
+    isAdmin: boolean,
+    filter?: CaseAnalyticsFilter
+  ): Promise<CaseAnalyticsRepositoryResult> {
+    const eventWhere = buildEventWhere(userId, isAdmin, filter);
+
+    const [caseGroups, totalEvents, confirmedEvents, reviewRequiredEvents, typeGroups, hospitalGroups] = await Promise.all([
+      prisma.eventAtom.groupBy({
+        by: ["caseId"],
+        where: eventWhere
+      }),
       prisma.eventAtom.count({ where: eventWhere }),
       prisma.eventAtom.count({ where: { ...eventWhere, confirmed: true } }),
       prisma.eventAtom.count({ where: { ...eventWhere, requiresReview: true } }),
@@ -44,7 +102,7 @@ export const caseAnalyticsRepository = {
     ]);
 
     return {
-      totalCases,
+      totalCases: caseGroups.length,
       totalEvents,
       confirmedEvents,
       unconfirmedEvents: Math.max(totalEvents - confirmedEvents, 0),
@@ -59,6 +117,51 @@ export const caseAnalyticsRepository = {
           key: item.primaryHospital ?? "Unknown hospital",
           count: item._count._all
         }))
+    };
+  },
+
+  async getTrendForUser(
+    userId: string,
+    isAdmin: boolean,
+    filter: CaseAnalyticsFilter,
+    interval: CaseAnalyticsTrend["interval"]
+  ): Promise<CaseAnalyticsTrend> {
+    const eventWhere = buildEventWhere(userId, isAdmin, filter);
+    const events = await prisma.eventAtom.findMany({
+      where: eventWhere,
+      select: {
+        canonicalDate: true,
+        confirmed: true
+      },
+      orderBy: {
+        canonicalDate: "asc"
+      }
+    });
+
+    const buckets = new Map<string, TrendPoint>();
+
+    for (const event of events) {
+      const bucket = bucketDate(event.canonicalDate, interval);
+      const current = buckets.get(bucket) ?? {
+        date: bucket,
+        total: 0,
+        confirmed: 0,
+        unconfirmed: 0
+      };
+
+      current.total += 1;
+      if (event.confirmed) {
+        current.confirmed += 1;
+      } else {
+        current.unconfirmed += 1;
+      }
+
+      buckets.set(bucket, current);
+    }
+
+    return {
+      interval,
+      points: toSortedEntries(buckets)
     };
   }
 };
