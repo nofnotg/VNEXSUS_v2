@@ -48,8 +48,10 @@ export function AppShell({
           </div>
           <nav style={{ display: "flex", gap: "16px", color: "var(--muted)", alignItems: "center", flexWrap: "wrap" }}>
             <Link href="/">{localeMessages.uiHome}</Link>
+            <Link href="/cases">{localeMessages.uiCases}</Link>
             <Link href="/sign-in">{localeMessages.uiSignIn}</Link>
             <Link href="/dashboard">{localeMessages.uiDashboard}</Link>
+            <Link href="/settings">{localeMessages.uiSettings}</Link>
             <label style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "var(--muted)" }}>
               <span>{localeMessages.uiLanguageLabel}</span>
               <select

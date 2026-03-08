@@ -41,6 +41,8 @@ export type MessageDictionary = {
   uiHome: string;
   uiSignIn: string;
   uiDashboard: string;
+  uiCases: string;
+  uiSettings: string;
   uiLocaleSelectLabel: string;
   uiInvestigatorNarrativeHeading: string;
   uiConsumerNarrativeHeading: string;
@@ -94,6 +96,33 @@ export type MessageDictionary = {
   uiRiskSignalFallback: string;
   uiCheckPointFallback: string;
   uiNextActionFallback: string;
+  uiCasesHeading: string;
+  uiCasesSubheading: string;
+  uiCasesEmpty: string;
+  uiCasesLoading: string;
+  uiCasesLoadError: string;
+  uiCaseIdColumn: string;
+  uiUploadDateColumn: string;
+  uiStatusColumn: string;
+  uiAudienceColumn: string;
+  uiActionsColumn: string;
+  uiActionReport: string;
+  uiActionNarrative: string;
+  uiActionPdf: string;
+  uiStatusReady: string;
+  uiStatusProcessing: string;
+  uiStatusReviewRequired: string;
+  uiStatusDraft: string;
+  uiAudienceConsumer: string;
+  uiAudienceInvestigator: string;
+  uiSettingsHeading: string;
+  uiSettingsSubheading: string;
+  uiLanguageOption: string;
+  uiThemeOption: string;
+  uiThemeLight: string;
+  uiThemeDark: string;
+  uiSaveSettings: string;
+  uiSettingsSaved: string;
 };
 
 export const messages: Record<LocaleCode, MessageDictionary> = {
@@ -138,6 +167,8 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiHome: "Home",
     uiSignIn: "Sign in",
     uiDashboard: "Dashboard",
+    uiCases: "Cases",
+    uiSettings: "Settings",
     uiLocaleSelectLabel: "Select language",
     uiInvestigatorNarrativeHeading: "Investigator Narrative",
     uiConsumerNarrativeHeading: "Consumer Narrative",
@@ -190,7 +221,34 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiNoNextActions: "No next actions.",
     uiRiskSignalFallback: "risk_signal",
     uiCheckPointFallback: "check_point",
-    uiNextActionFallback: "next_action"
+    uiNextActionFallback: "next_action",
+    uiCasesHeading: "Case List",
+    uiCasesSubheading: "Browse available cases and open report outputs.",
+    uiCasesEmpty: "No cases are available yet.",
+    uiCasesLoading: "Loading case list...",
+    uiCasesLoadError: "Failed to load case list.",
+    uiCaseIdColumn: "Case ID",
+    uiUploadDateColumn: "Upload date",
+    uiStatusColumn: "Status",
+    uiAudienceColumn: "Audience",
+    uiActionsColumn: "Actions",
+    uiActionReport: "Report",
+    uiActionNarrative: "Narrative",
+    uiActionPdf: "PDF",
+    uiStatusReady: "Ready",
+    uiStatusProcessing: "Processing",
+    uiStatusReviewRequired: "Review required",
+    uiStatusDraft: "Draft",
+    uiAudienceConsumer: "Consumer",
+    uiAudienceInvestigator: "Investigator",
+    uiSettingsHeading: "Settings",
+    uiSettingsSubheading: "Manage language and theme preferences.",
+    uiLanguageOption: "Language",
+    uiThemeOption: "Theme",
+    uiThemeLight: "Light",
+    uiThemeDark: "Dark",
+    uiSaveSettings: "Save settings",
+    uiSettingsSaved: "Settings saved."
   },
   ko: {
     genericUnknownDate: "날짜 미확인",
@@ -233,6 +291,8 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiHome: "홈",
     uiSignIn: "로그인",
     uiDashboard: "대시보드",
+    uiCases: "사례 목록",
+    uiSettings: "설정",
     uiLocaleSelectLabel: "언어 선택",
     uiInvestigatorNarrativeHeading: "조사자 내러티브",
     uiConsumerNarrativeHeading: "소비자 내러티브",
@@ -285,7 +345,34 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiNoNextActions: "다음 단계가 없다.",
     uiRiskSignalFallback: "주의 신호",
     uiCheckPointFallback: "확인 항목",
-    uiNextActionFallback: "다음 단계"
+    uiNextActionFallback: "다음 단계",
+    uiCasesHeading: "사례 목록",
+    uiCasesSubheading: "이용 가능한 사례를 살펴보고 보고서 출력을 연다.",
+    uiCasesEmpty: "표시할 사례가 아직 없다.",
+    uiCasesLoading: "사례 목록을 불러오는 중이다.",
+    uiCasesLoadError: "사례 목록을 불러오지 못했다.",
+    uiCaseIdColumn: "사례 ID",
+    uiUploadDateColumn: "업로드 일자",
+    uiStatusColumn: "상태",
+    uiAudienceColumn: "대상",
+    uiActionsColumn: "작업",
+    uiActionReport: "보고서",
+    uiActionNarrative: "내러티브",
+    uiActionPdf: "PDF",
+    uiStatusReady: "준비 완료",
+    uiStatusProcessing: "처리 중",
+    uiStatusReviewRequired: "검토 필요",
+    uiStatusDraft: "초안",
+    uiAudienceConsumer: "소비자",
+    uiAudienceInvestigator: "조사자",
+    uiSettingsHeading: "설정",
+    uiSettingsSubheading: "언어와 테마 기본 설정을 관리한다.",
+    uiLanguageOption: "언어",
+    uiThemeOption: "테마",
+    uiThemeLight: "라이트",
+    uiThemeDark: "다크",
+    uiSaveSettings: "설정 저장",
+    uiSettingsSaved: "설정을 저장했다."
   }
 };
 

@@ -409,6 +409,17 @@ export const consumerNarrativeJsonSchema = z.object({
   requiresReview: z.boolean()
 });
 
+export const caseListItemSchema = z.object({
+  caseId: z.string().min(1),
+  uploadDate: z.string().datetime(),
+  status: caseStatusSchema,
+  audience: caseAudienceSchema
+});
+
+export const caseListJsonSchema = z.object({
+  items: z.array(caseListItemSchema)
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -521,3 +532,5 @@ export type InvestigatorNarrativeSection = z.infer<typeof investigatorNarrativeS
 export type InvestigatorNarrativeJson = z.infer<typeof investigatorNarrativeJsonSchema>;
 export type ConsumerNarrativeSection = z.infer<typeof consumerNarrativeSectionSchema>;
 export type ConsumerNarrativeJson = z.infer<typeof consumerNarrativeJsonSchema>;
+export type CaseListItem = z.infer<typeof caseListItemSchema>;
+export type CaseListJson = z.infer<typeof caseListJsonSchema>;
