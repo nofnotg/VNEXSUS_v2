@@ -1,6 +1,6 @@
 export type LocaleCode = "en" | "ko";
 
-type MessageDictionary = {
+export type MessageDictionary = {
   genericUnknownDate: string;
   genericUnknownFacility: string;
   genericNoData: string;
@@ -38,6 +38,62 @@ type MessageDictionary = {
   uiLanguageEnglish: string;
   uiLanguageKorean: string;
   uiInvalidLanguage: string;
+  uiHome: string;
+  uiSignIn: string;
+  uiDashboard: string;
+  uiLocaleSelectLabel: string;
+  uiInvestigatorNarrativeHeading: string;
+  uiConsumerNarrativeHeading: string;
+  uiInvestigatorNarrativeSubheading: string;
+  uiConsumerNarrativeSubheading: string;
+  uiAuthRequiredNarrative: string;
+  uiInvestigatorNarrativeRoleRequired: string;
+  uiConsumerNarrativeRoleRequired: string;
+  uiInvestigatorNarrativeRoleBlocked: string;
+  uiConsumerNarrativeRoleBlocked: string;
+  uiLoadingInvestigatorNarrative: string;
+  uiLoadingConsumerNarrative: string;
+  uiNoInvestigatorNarrative: string;
+  uiNoConsumerNarrative: string;
+  uiManualReviewRequired: string;
+  uiReviewed: string;
+  uiAdditionalReviewRecommended: string;
+  uiClear: string;
+  uiInvestigatorReportHeading: string;
+  uiConsumerReportHeading: string;
+  uiInvestigatorReportSubheading: string;
+  uiConsumerReportSubheading: string;
+  uiAuthRequiredReport: string;
+  uiInvestigatorReportRoleRequired: string;
+  uiConsumerReportRoleRequired: string;
+  uiInvestigatorReportRoleBlocked: string;
+  uiConsumerReportRoleBlocked: string;
+  uiLoadingInvestigatorReport: string;
+  uiLoadingConsumerReport: string;
+  uiNoInvestigatorReport: string;
+  uiNoConsumerReport: string;
+  uiCaseLabel: string;
+  uiGeneratedLabel: string;
+  uiReviewLabel: string;
+  uiReviewRequiredShort: string;
+  uiReviewClearShort: string;
+  uiUntitledSection: string;
+  uiNoStructuredEntries: string;
+  uiReviewNotePending: string;
+  uiTimelineFallbackTitle: string;
+  uiTimelineFallbackItem: string;
+  uiNoTimelineItems: string;
+  uiOverviewFallbackTitle: string;
+  uiNoOverviewItems: string;
+  uiRiskSignalsHeading: string;
+  uiCheckPointsHeading: string;
+  uiNextActionsHeading: string;
+  uiNoRiskSignals: string;
+  uiNoCheckPoints: string;
+  uiNoNextActions: string;
+  uiRiskSignalFallback: string;
+  uiCheckPointFallback: string;
+  uiNextActionFallback: string;
 };
 
 export const messages: Record<LocaleCode, MessageDictionary> = {
@@ -78,7 +134,63 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiLanguageLabel: "Language",
     uiLanguageEnglish: "English",
     uiLanguageKorean: "Korean",
-    uiInvalidLanguage: "Unsupported language. Use en or ko."
+    uiInvalidLanguage: "Unsupported language. Use en or ko.",
+    uiHome: "Home",
+    uiSignIn: "Sign in",
+    uiDashboard: "Dashboard",
+    uiLocaleSelectLabel: "Select language",
+    uiInvestigatorNarrativeHeading: "Investigator Narrative",
+    uiConsumerNarrativeHeading: "Consumer Narrative",
+    uiInvestigatorNarrativeSubheading: "Template-based narrative derived from investigator report JSON.",
+    uiConsumerNarrativeSubheading: "Template-based narrative derived from consumer report JSON.",
+    uiAuthRequiredNarrative: "Authentication is required to view this narrative.",
+    uiInvestigatorNarrativeRoleRequired: "Please sign in with an investigator account.",
+    uiConsumerNarrativeRoleRequired: "Please sign in with a consumer account.",
+    uiInvestigatorNarrativeRoleBlocked: "Your current role cannot open investigator narrative output.",
+    uiConsumerNarrativeRoleBlocked: "Your current role cannot open consumer narrative output.",
+    uiLoadingInvestigatorNarrative: "Loading investigator narrative...",
+    uiLoadingConsumerNarrative: "Loading consumer narrative...",
+    uiNoInvestigatorNarrative: "No investigator narrative is available yet.",
+    uiNoConsumerNarrative: "No consumer narrative is available yet.",
+    uiManualReviewRequired: "Manual review required",
+    uiReviewed: "Reviewed",
+    uiAdditionalReviewRecommended: "Additional review recommended",
+    uiClear: "Clear",
+    uiInvestigatorReportHeading: "Investigator Report",
+    uiConsumerReportHeading: "Consumer Report",
+    uiInvestigatorReportSubheading: "Structured JSON view for investigator-only review.",
+    uiConsumerReportSubheading: "Structured JSON view for consumer-safe review.",
+    uiAuthRequiredReport: "Authentication is required to view this report.",
+    uiInvestigatorReportRoleRequired: "Please sign in with an investigator account.",
+    uiConsumerReportRoleRequired: "Please sign in with a consumer account.",
+    uiInvestigatorReportRoleBlocked: "Your current role cannot open investigator report JSON.",
+    uiConsumerReportRoleBlocked: "Your current role cannot open consumer report JSON.",
+    uiLoadingInvestigatorReport: "Loading investigator report...",
+    uiLoadingConsumerReport: "Loading consumer report...",
+    uiNoInvestigatorReport: "No investigator report sections are available yet.",
+    uiNoConsumerReport: "No consumer report sections are available yet.",
+    uiCaseLabel: "Case",
+    uiGeneratedLabel: "Generated",
+    uiReviewLabel: "Review",
+    uiReviewRequiredShort: "required",
+    uiReviewClearShort: "clear",
+    uiUntitledSection: "Untitled section",
+    uiNoStructuredEntries: "No structured entries are available for this section.",
+    uiReviewNotePending: "Review note pending",
+    uiTimelineFallbackTitle: "timeline_summary",
+    uiTimelineFallbackItem: "timeline item",
+    uiNoTimelineItems: "No timeline summary items are available.",
+    uiOverviewFallbackTitle: "consumer_overview",
+    uiNoOverviewItems: "No overview summary items are available.",
+    uiRiskSignalsHeading: "Risk signals",
+    uiCheckPointsHeading: "Check points",
+    uiNextActionsHeading: "Next actions",
+    uiNoRiskSignals: "No risk signals.",
+    uiNoCheckPoints: "No check points.",
+    uiNoNextActions: "No next actions.",
+    uiRiskSignalFallback: "risk_signal",
+    uiCheckPointFallback: "check_point",
+    uiNextActionFallback: "next_action"
   },
   ko: {
     genericUnknownDate: "날짜 미확인",
@@ -117,7 +229,63 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiLanguageLabel: "언어",
     uiLanguageEnglish: "영어",
     uiLanguageKorean: "한국어",
-    uiInvalidLanguage: "지원하지 않는 언어이다. en 또는 ko를 사용해야 한다."
+    uiInvalidLanguage: "지원하지 않는 언어이다. en 또는 ko를 사용해야 한다.",
+    uiHome: "홈",
+    uiSignIn: "로그인",
+    uiDashboard: "대시보드",
+    uiLocaleSelectLabel: "언어 선택",
+    uiInvestigatorNarrativeHeading: "조사자 내러티브",
+    uiConsumerNarrativeHeading: "소비자 내러티브",
+    uiInvestigatorNarrativeSubheading: "조사자 보고서 JSON에서 파생된 템플릿 기반 내러티브이다.",
+    uiConsumerNarrativeSubheading: "소비자 보고서 JSON에서 파생된 템플릿 기반 내러티브이다.",
+    uiAuthRequiredNarrative: "이 내러티브를 보려면 인증이 필요하다.",
+    uiInvestigatorNarrativeRoleRequired: "조사자 계정으로 로그인해야 한다.",
+    uiConsumerNarrativeRoleRequired: "소비자 계정으로 로그인해야 한다.",
+    uiInvestigatorNarrativeRoleBlocked: "현재 역할로는 조사자 내러티브를 열 수 없다.",
+    uiConsumerNarrativeRoleBlocked: "현재 역할로는 소비자 내러티브를 열 수 없다.",
+    uiLoadingInvestigatorNarrative: "조사자 내러티브를 불러오는 중이다.",
+    uiLoadingConsumerNarrative: "소비자 내러티브를 불러오는 중이다.",
+    uiNoInvestigatorNarrative: "표시할 조사자 내러티브가 아직 없다.",
+    uiNoConsumerNarrative: "표시할 소비자 내러티브가 아직 없다.",
+    uiManualReviewRequired: "수동 검토 필요",
+    uiReviewed: "검토 완료",
+    uiAdditionalReviewRecommended: "추가 검토 권장",
+    uiClear: "정상",
+    uiInvestigatorReportHeading: "조사자 보고서",
+    uiConsumerReportHeading: "소비자 보고서",
+    uiInvestigatorReportSubheading: "조사자 전용 검토를 위한 구조화 JSON 화면이다.",
+    uiConsumerReportSubheading: "소비자 안전 검토를 위한 구조화 JSON 화면이다.",
+    uiAuthRequiredReport: "이 보고서를 보려면 인증이 필요하다.",
+    uiInvestigatorReportRoleRequired: "조사자 계정으로 로그인해야 한다.",
+    uiConsumerReportRoleRequired: "소비자 계정으로 로그인해야 한다.",
+    uiInvestigatorReportRoleBlocked: "현재 역할로는 조사자 보고서 JSON을 열 수 없다.",
+    uiConsumerReportRoleBlocked: "현재 역할로는 소비자 보고서 JSON을 열 수 없다.",
+    uiLoadingInvestigatorReport: "조사자 보고서를 불러오는 중이다.",
+    uiLoadingConsumerReport: "소비자 보고서를 불러오는 중이다.",
+    uiNoInvestigatorReport: "표시할 조사자 보고서 섹션이 아직 없다.",
+    uiNoConsumerReport: "표시할 소비자 보고서 섹션이 아직 없다.",
+    uiCaseLabel: "사건",
+    uiGeneratedLabel: "생성 시각",
+    uiReviewLabel: "검토",
+    uiReviewRequiredShort: "필요",
+    uiReviewClearShort: "완료",
+    uiUntitledSection: "제목 없는 섹션",
+    uiNoStructuredEntries: "이 섹션에 표시할 구조화 항목이 아직 없다.",
+    uiReviewNotePending: "검토 메모 대기 중",
+    uiTimelineFallbackTitle: "타임라인 요약",
+    uiTimelineFallbackItem: "타임라인 항목",
+    uiNoTimelineItems: "표시할 타임라인 요약 항목이 없다.",
+    uiOverviewFallbackTitle: "소비자 개요",
+    uiNoOverviewItems: "표시할 개요 요약 항목이 없다.",
+    uiRiskSignalsHeading: "주의 신호",
+    uiCheckPointsHeading: "확인 항목",
+    uiNextActionsHeading: "다음 단계",
+    uiNoRiskSignals: "주의 신호가 없다.",
+    uiNoCheckPoints: "확인 항목이 없다.",
+    uiNoNextActions: "다음 단계가 없다.",
+    uiRiskSignalFallback: "주의 신호",
+    uiCheckPointFallback: "확인 항목",
+    uiNextActionFallback: "다음 단계"
   }
 };
 
@@ -127,4 +295,19 @@ export function formatMessage(template: string, values: Record<string, string>) 
 
 export function isLocaleCode(value: string | null | undefined): value is LocaleCode {
   return value === "en" || value === "ko";
+}
+
+export function normalizeLocaleCode(value: string | null | undefined): LocaleCode {
+  return isLocaleCode(value) ? value : "en";
+}
+
+export function getLocaleMessages(
+  locale: LocaleCode,
+  source: Partial<Record<LocaleCode, Partial<MessageDictionary>>> = messages
+): MessageDictionary {
+  return {
+    ...messages.en,
+    ...(source.en ?? {}),
+    ...(source[locale] ?? {})
+  };
 }

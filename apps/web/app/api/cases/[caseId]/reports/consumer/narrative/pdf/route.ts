@@ -12,7 +12,11 @@ export async function GET(request: NextRequest, context: Context) {
   try {
     const { caseId } = await context.params;
     const { user } = await requireAuthorizedSession();
-    const lang = resolveReportLocale(request.nextUrl.searchParams.get("lang"), request.headers.get("accept-language"));
+    const lang = resolveReportLocale(
+      request.nextUrl.searchParams.get("lang"),
+      request.cookies.get("vnexus_lang")?.value,
+      request.headers.get("accept-language")
+    );
 
     if (user.role !== "consumer") {
       throw new ApiError("FORBIDDEN", "Consumer role is required");

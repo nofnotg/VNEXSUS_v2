@@ -4,6 +4,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import type { ConsumerReportJson } from "@vnexus/shared";
 import { getConsumerReport, ReportApiError } from "../../../../../lib/client/report-api";
+import { useLocaleMessages } from "../../../../../components/locale-provider";
 
 type SessionResponse = {
   success: boolean;
@@ -47,6 +48,7 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export function ConsumerReportClient({ caseId }: Props) {
+  const localeMessages = useLocaleMessages();
   const [report, setReport] = useState<ConsumerReportJson | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +91,7 @@ export function ConsumerReportClient({ caseId }: Props) {
   }, [caseId]);
 
   if (isLoading) {
-    return <EmptyState message="Loading consumer report..." />;
+    return <EmptyState message={localeMessages.uiLoadingConsumerReport} />;
   }
 
   if (error) {
@@ -97,7 +99,7 @@ export function ConsumerReportClient({ caseId }: Props) {
   }
 
   if (!report || report.sections.length === 0) {
-    return <EmptyState message="No consumer report sections are available yet." />;
+    return <EmptyState message={localeMessages.uiNoConsumerReport} />;
   }
 
   const timelineSection = report.sections.find((section) => section.sectionTitle === "timeline_summary");
@@ -106,15 +108,15 @@ export function ConsumerReportClient({ caseId }: Props) {
   return (
     <div style={{ display: "grid", gap: "16px" }}>
       <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <span style={{ fontSize: "14px", color: "var(--muted)" }}>Case: {report.caseId}</span>
-        <span style={{ fontSize: "14px", color: "var(--muted)" }}>Generated: {report.generatedAt}</span>
+        <span style={{ fontSize: "14px", color: "var(--muted)" }}>{localeMessages.uiCaseLabel}: {report.caseId}</span>
+        <span style={{ fontSize: "14px", color: "var(--muted)" }}>{localeMessages.uiGeneratedLabel}: {report.generatedAt}</span>
         <span style={{ fontSize: "14px", color: report.requiresReview ? "#9a3412" : "var(--muted)" }}>
-          Review: {report.requiresReview ? "required" : "clear"}
+          {localeMessages.uiReviewLabel}: {report.requiresReview ? localeMessages.uiReviewRequiredShort : localeMessages.uiReviewClearShort}
         </span>
       </div>
 
       <article style={{ border: "1px solid var(--border)", borderRadius: "20px", padding: "20px", background: "var(--surface)" }}>
-        <h2 style={{ marginTop: 0 }}>{timelineSection?.sectionTitle || "timeline_summary"}</h2>
+        <h2 style={{ marginTop: 0 }}>{timelineSection?.sectionTitle || localeMessages.uiTimelineFallbackTitle}</h2>
         {timelineSection && timelineSection.summaryItems.length > 0 ? (
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <tbody>
@@ -131,7 +133,7 @@ export function ConsumerReportClient({ caseId }: Props) {
                       verticalAlign: "top"
                     }}
                   >
-                    {item.title || "timeline item"}
+                    {item.title || localeMessages.uiTimelineFallbackItem}
                   </th>
                   <td style={{ padding: "10px 0", borderBottom: "1px solid var(--border)" }}>{item.value || "-"}</td>
                 </tr>
@@ -139,12 +141,12 @@ export function ConsumerReportClient({ caseId }: Props) {
             </tbody>
           </table>
         ) : (
-          <EmptyState message="No timeline summary items are available." />
+          <EmptyState message={localeMessages.uiNoTimelineItems} />
         )}
       </article>
 
       <article style={{ border: "1px solid var(--border)", borderRadius: "20px", padding: "20px", background: "var(--surface)" }}>
-        <h2 style={{ marginTop: 0 }}>{overviewSection?.sectionTitle || "consumer_overview"}</h2>
+        <h2 style={{ marginTop: 0 }}>{overviewSection?.sectionTitle || localeMessages.uiOverviewFallbackTitle}</h2>
 
         {overviewSection && overviewSection.summaryItems.length > 0 ? (
           <ul style={{ margin: 0, paddingLeft: "18px" }}>
@@ -155,46 +157,46 @@ export function ConsumerReportClient({ caseId }: Props) {
             ))}
           </ul>
         ) : (
-          <EmptyState message="No overview summary items are available." />
+          <EmptyState message={localeMessages.uiNoOverviewItems} />
         )}
 
         <div style={{ display: "grid", gap: "16px", marginTop: "20px", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
           <section>
-            <h3 style={{ margin: "0 0 8px" }}>Risk signals</h3>
+            <h3 style={{ margin: "0 0 8px" }}>{localeMessages.uiRiskSignalsHeading}</h3>
             {overviewSection && overviewSection.riskSignals.length > 0 ? (
               <ul style={{ margin: 0, paddingLeft: "18px" }}>
                 {overviewSection.riskSignals.map((signal) => (
-                  <li key={signal}>{signal || "risk_signal"}</li>
+                  <li key={signal}>{signal || localeMessages.uiRiskSignalFallback}</li>
                 ))}
               </ul>
             ) : (
-              <p style={{ margin: 0, color: "var(--muted)" }}>No risk signals.</p>
+              <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.uiNoRiskSignals}</p>
             )}
           </section>
 
           <section>
-            <h3 style={{ margin: "0 0 8px" }}>Check points</h3>
+            <h3 style={{ margin: "0 0 8px" }}>{localeMessages.uiCheckPointsHeading}</h3>
             {overviewSection && overviewSection.checkPoints.length > 0 ? (
               <ul style={{ margin: 0, paddingLeft: "18px" }}>
                 {overviewSection.checkPoints.map((item) => (
-                  <li key={item}>{item || "check_point"}</li>
+                  <li key={item}>{item || localeMessages.uiCheckPointFallback}</li>
                 ))}
               </ul>
             ) : (
-              <p style={{ margin: 0, color: "var(--muted)" }}>No check points.</p>
+              <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.uiNoCheckPoints}</p>
             )}
           </section>
 
           <section>
-            <h3 style={{ margin: "0 0 8px" }}>Next actions</h3>
+            <h3 style={{ margin: "0 0 8px" }}>{localeMessages.uiNextActionsHeading}</h3>
             {overviewSection && overviewSection.nextActions.length > 0 ? (
               <ul style={{ margin: 0, paddingLeft: "18px" }}>
                 {overviewSection.nextActions.map((item) => (
-                  <li key={item}>{item || "next_action"}</li>
+                  <li key={item}>{item || localeMessages.uiNextActionFallback}</li>
                 ))}
               </ul>
             ) : (
-              <p style={{ margin: 0, color: "var(--muted)" }}>No next actions.</p>
+              <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.uiNoNextActions}</p>
             )}
           </section>
         </div>

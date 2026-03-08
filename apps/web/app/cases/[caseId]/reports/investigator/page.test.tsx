@@ -13,6 +13,10 @@ vi.mock("../../../../../lib/session", () => ({
   getSessionUser: getSessionUserMock
 }));
 
+vi.mock("../../../../../lib/server/report-locale", () => ({
+  getRequestLocale: vi.fn().mockResolvedValue("en")
+}));
+
 describe("investigator report page", () => {
   beforeEach(() => {
     vi.clearAllMocks();

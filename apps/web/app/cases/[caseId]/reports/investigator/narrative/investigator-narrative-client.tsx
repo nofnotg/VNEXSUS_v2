@@ -2,8 +2,9 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { messages, type InvestigatorNarrativeJson, type LocaleCode } from "@vnexus/shared";
+import type { InvestigatorNarrativeJson } from "@vnexus/shared";
 import { getInvestigatorNarrative, NarrativeApiError } from "../../../../../../lib/client/narrative-api";
+import { useLocale, useLocaleMessages } from "../../../../../../components/locale-provider";
 
 type SessionResponse = {
   success: boolean;
@@ -20,7 +21,6 @@ type SessionResponse = {
 
 type Props = {
   caseId: string;
-  lang: LocaleCode;
 };
 
 async function getCurrentUserRole() {
@@ -47,8 +47,9 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-export function InvestigatorNarrativeClient({ caseId, lang }: Props) {
-  const locale = messages[lang];
+export function InvestigatorNarrativeClient({ caseId }: Props) {
+  const { locale } = useLocale();
+  const localeMessages = useLocaleMessages();
   const [narrative, setNarrative] = useState<InvestigatorNarrativeJson | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +67,7 @@ export function InvestigatorNarrativeClient({ caseId, lang }: Props) {
           throw new NarrativeApiError("403 | Investigator role is required", 403, "FORBIDDEN");
         }
 
-        const nextNarrative = await getInvestigatorNarrative(caseId, lang);
+        const nextNarrative = await getInvestigatorNarrative(caseId, locale);
         if (!cancelled) {
           setNarrative(nextNarrative);
         }
@@ -87,10 +88,10 @@ export function InvestigatorNarrativeClient({ caseId, lang }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [caseId, lang]);
+  }, [caseId, locale]);
 
   if (isLoading) {
-    return <EmptyState message={lang === "ko" ? "조사자 내러티브를 불러오는 중이다." : "Loading investigator narrative..."} />;
+    return <EmptyState message={localeMessages.uiLoadingInvestigatorNarrative} />;
   }
 
   if (error) {
@@ -98,7 +99,7 @@ export function InvestigatorNarrativeClient({ caseId, lang }: Props) {
   }
 
   if (!narrative || narrative.sections.length === 0) {
-    return <EmptyState message={lang === "ko" ? "표시할 조사자 내러티브가 아직 없다." : "No investigator narrative is available yet."} />;
+    return <EmptyState message={localeMessages.uiNoInvestigatorNarrative} />;
   }
 
   return (
@@ -108,20 +109,14 @@ export function InvestigatorNarrativeClient({ caseId, lang }: Props) {
           <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
             <h2 style={{ margin: 0 }}>{section.heading}</h2>
             <span style={{ color: section.requiresReview ? "#9a3412" : "var(--muted)" }}>
-              {section.requiresReview
-                ? lang === "ko"
-                  ? "수동 검토 필요"
-                  : "Manual review required"
-                : lang === "ko"
-                  ? "검토 완료"
-                  : "Reviewed"}
+              {section.requiresReview ? localeMessages.uiManualReviewRequired : localeMessages.uiReviewed}
             </span>
           </div>
           <div style={{ display: "grid", gap: "12px", marginTop: "16px" }}>
             {section.paragraphs.length > 0 ? (
               section.paragraphs.map((paragraph) => <p key={paragraph} style={{ margin: 0 }}>{paragraph}</p>)
             ) : (
-              <p style={{ margin: 0, color: "var(--muted)" }}>{locale.pdfNoParagraphs}</p>
+              <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.pdfNoParagraphs}</p>
             )}
           </div>
         </article>

@@ -1,5 +1,7 @@
 import React from "react";
+import { getLocaleMessages } from "@vnexus/shared";
 import { AppShell } from "../../../../../components/app-shell";
+import { getRequestLocale } from "../../../../../lib/server/report-locale";
 import { getSessionUser } from "../../../../../lib/session";
 import { ConsumerReportClient } from "./consumer-report-client";
 
@@ -8,20 +10,22 @@ type PageProps = {
 };
 
 export default async function ConsumerReportPage({ params }: PageProps) {
+  const locale = await getRequestLocale();
+  const localeMessages = getLocaleMessages(locale);
   const user = await getSessionUser();
 
   if (!user) {
     return (
-      <AppShell heading="Consumer Report" subheading="Authentication is required to view this report.">
-        <p style={{ margin: 0, color: "var(--muted)" }}>Please sign in with a consumer account.</p>
+      <AppShell heading={localeMessages.uiConsumerReportHeading} subheading={localeMessages.uiAuthRequiredReport}>
+        <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.uiConsumerReportRoleRequired}</p>
       </AppShell>
     );
   }
 
   if (user.role !== "consumer") {
     return (
-      <AppShell heading="403 | Consumer Report" subheading="This report page is restricted to consumer users.">
-        <p style={{ margin: 0, color: "var(--muted)" }}>Your current role cannot open consumer report JSON.</p>
+      <AppShell heading={`403 | ${localeMessages.uiConsumerReportHeading}`} subheading={localeMessages.uiConsumerReportSubheading}>
+        <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.uiConsumerReportRoleBlocked}</p>
       </AppShell>
     );
   }
@@ -29,7 +33,7 @@ export default async function ConsumerReportPage({ params }: PageProps) {
   const { caseId } = await params;
 
   return (
-    <AppShell heading="Consumer Report" subheading="Structured JSON view for consumer-safe review.">
+    <AppShell heading={localeMessages.uiConsumerReportHeading} subheading={localeMessages.uiConsumerReportSubheading}>
       <ConsumerReportClient caseId={caseId} />
     </AppShell>
   );

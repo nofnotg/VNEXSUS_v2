@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import { ReactNode } from "react";
+import { type LocaleCode } from "@vnexus/shared";
+import { useLocale, useLocaleMessages } from "./locale-provider";
 
 export function AppShell({
   heading,
@@ -11,6 +15,9 @@ export function AppShell({
   subheading: string;
   children: ReactNode;
 }) {
+  const { locale, setLocale } = useLocale();
+  const localeMessages = useLocaleMessages();
+
   return (
     <main style={{ padding: "32px" }}>
       <div
@@ -39,10 +46,27 @@ export function AppShell({
             <h1 style={{ margin: "6px 0 0", fontSize: "28px" }}>{heading}</h1>
             <p style={{ margin: "8px 0 0", color: "var(--muted)" }}>{subheading}</p>
           </div>
-          <nav style={{ display: "flex", gap: "16px", color: "var(--muted)" }}>
-            <Link href="/">Home</Link>
-            <Link href="/sign-in">Sign in</Link>
-            <Link href="/dashboard">Dashboard</Link>
+          <nav style={{ display: "flex", gap: "16px", color: "var(--muted)", alignItems: "center", flexWrap: "wrap" }}>
+            <Link href="/">{localeMessages.uiHome}</Link>
+            <Link href="/sign-in">{localeMessages.uiSignIn}</Link>
+            <Link href="/dashboard">{localeMessages.uiDashboard}</Link>
+            <label style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "var(--muted)" }}>
+              <span>{localeMessages.uiLanguageLabel}</span>
+              <select
+                aria-label={localeMessages.uiLocaleSelectLabel}
+                value={locale}
+                onChange={(event) => setLocale(event.target.value as LocaleCode)}
+                style={{
+                  border: "1px solid var(--border)",
+                  borderRadius: "999px",
+                  padding: "6px 12px",
+                  background: "var(--surface)"
+                }}
+              >
+                <option value="en">{localeMessages.uiLanguageEnglish}</option>
+                <option value="ko">{localeMessages.uiLanguageKorean}</option>
+              </select>
+            </label>
           </nav>
         </header>
         <section style={{ padding: "28px" }}>{children}</section>

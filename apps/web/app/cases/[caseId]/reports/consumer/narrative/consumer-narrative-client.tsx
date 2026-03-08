@@ -2,8 +2,9 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { messages, type ConsumerNarrativeJson, type LocaleCode } from "@vnexus/shared";
+import type { ConsumerNarrativeJson } from "@vnexus/shared";
 import { getConsumerNarrative, NarrativeApiError } from "../../../../../../lib/client/narrative-api";
+import { useLocale, useLocaleMessages } from "../../../../../../components/locale-provider";
 
 type SessionResponse = {
   success: boolean;
@@ -20,7 +21,6 @@ type SessionResponse = {
 
 type Props = {
   caseId: string;
-  lang: LocaleCode;
 };
 
 async function getCurrentUserRole() {
@@ -47,8 +47,9 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-export function ConsumerNarrativeClient({ caseId, lang }: Props) {
-  const locale = messages[lang];
+export function ConsumerNarrativeClient({ caseId }: Props) {
+  const { locale } = useLocale();
+  const localeMessages = useLocaleMessages();
   const [narrative, setNarrative] = useState<ConsumerNarrativeJson | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +67,7 @@ export function ConsumerNarrativeClient({ caseId, lang }: Props) {
           throw new NarrativeApiError("403 | Consumer role is required", 403, "FORBIDDEN");
         }
 
-        const nextNarrative = await getConsumerNarrative(caseId, lang);
+        const nextNarrative = await getConsumerNarrative(caseId, locale);
         if (!cancelled) {
           setNarrative(nextNarrative);
         }
@@ -87,10 +88,10 @@ export function ConsumerNarrativeClient({ caseId, lang }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [caseId, lang]);
+  }, [caseId, locale]);
 
   if (isLoading) {
-    return <EmptyState message={lang === "ko" ? "소비자 내러티브를 불러오는 중이다." : "Loading consumer narrative..."} />;
+    return <EmptyState message={localeMessages.uiLoadingConsumerNarrative} />;
   }
 
   if (error) {
@@ -98,7 +99,7 @@ export function ConsumerNarrativeClient({ caseId, lang }: Props) {
   }
 
   if (!narrative || narrative.sections.length === 0) {
-    return <EmptyState message={lang === "ko" ? "표시할 소비자 내러티브가 아직 없다." : "No consumer narrative is available yet."} />;
+    return <EmptyState message={localeMessages.uiNoConsumerNarrative} />;
   }
 
   return (
@@ -108,20 +109,14 @@ export function ConsumerNarrativeClient({ caseId, lang }: Props) {
           <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
             <h2 style={{ margin: 0 }}>{section.heading}</h2>
             <span style={{ color: section.requiresReview ? "#9a3412" : "var(--muted)" }}>
-              {section.requiresReview
-                ? lang === "ko"
-                  ? "추가 검토 권장"
-                  : "Additional review recommended"
-                : lang === "ko"
-                  ? "정상"
-                  : "Clear"}
+              {section.requiresReview ? localeMessages.uiAdditionalReviewRecommended : localeMessages.uiClear}
             </span>
           </div>
           <div style={{ display: "grid", gap: "12px", marginTop: "16px" }}>
             {section.paragraphs.length > 0 ? (
               section.paragraphs.map((paragraph) => <p key={paragraph} style={{ margin: 0 }}>{paragraph}</p>)
             ) : (
-              <p style={{ margin: 0, color: "var(--muted)" }}>{locale.pdfNoParagraphs}</p>
+              <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.pdfNoParagraphs}</p>
             )}
           </div>
         </article>

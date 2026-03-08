@@ -4,6 +4,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import type { InvestigatorReportJson } from "@vnexus/shared";
 import { getInvestigatorReport, ReportApiError } from "../../../../../lib/client/report-api";
+import { useLocaleMessages } from "../../../../../components/locale-provider";
 
 type SessionResponse = {
   success: boolean;
@@ -47,6 +48,7 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export function InvestigatorReportClient({ caseId }: Props) {
+  const localeMessages = useLocaleMessages();
   const [report, setReport] = useState<InvestigatorReportJson | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +91,7 @@ export function InvestigatorReportClient({ caseId }: Props) {
   }, [caseId]);
 
   if (isLoading) {
-    return <EmptyState message="Loading investigator report..." />;
+    return <EmptyState message={localeMessages.uiLoadingInvestigatorReport} />;
   }
 
   if (error) {
@@ -97,16 +99,16 @@ export function InvestigatorReportClient({ caseId }: Props) {
   }
 
   if (!report || report.sections.length === 0) {
-    return <EmptyState message="No investigator report sections are available yet." />;
+    return <EmptyState message={localeMessages.uiNoInvestigatorReport} />;
   }
 
   return (
     <div style={{ display: "grid", gap: "16px" }}>
       <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <span style={{ fontSize: "14px", color: "var(--muted)" }}>Case: {report.caseId}</span>
-        <span style={{ fontSize: "14px", color: "var(--muted)" }}>Generated: {report.generatedAt}</span>
+        <span style={{ fontSize: "14px", color: "var(--muted)" }}>{localeMessages.uiCaseLabel}: {report.caseId}</span>
+        <span style={{ fontSize: "14px", color: "var(--muted)" }}>{localeMessages.uiGeneratedLabel}: {report.generatedAt}</span>
         <span style={{ fontSize: "14px", color: report.requiresReview ? "#9a3412" : "var(--muted)" }}>
-          Review: {report.requiresReview ? "required" : "clear"}
+          {localeMessages.uiReviewLabel}: {report.requiresReview ? localeMessages.uiReviewRequiredShort : localeMessages.uiReviewClearShort}
         </span>
       </div>
 
@@ -119,9 +121,9 @@ export function InvestigatorReportClient({ caseId }: Props) {
             style={{ border: "1px solid var(--border)", borderRadius: "20px", padding: "20px", background: "var(--surface)" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
-              <h2 style={{ margin: 0, fontSize: "20px" }}>{section.sectionTitle || "Untitled section"}</h2>
+              <h2 style={{ margin: 0, fontSize: "20px" }}>{section.sectionTitle || localeMessages.uiUntitledSection}</h2>
               <span style={{ fontSize: "13px", color: section.requiresReview ? "#9a3412" : "var(--muted)" }}>
-                {section.requiresReview ? "Manual review required" : "Reviewed"}
+                {section.requiresReview ? localeMessages.uiManualReviewRequired : localeMessages.uiReviewed}
               </span>
             </div>
 
@@ -149,13 +151,13 @@ export function InvestigatorReportClient({ caseId }: Props) {
                 </tbody>
               </table>
             ) : (
-              <EmptyState message="No structured entries are available for this section." />
+              <EmptyState message={localeMessages.uiNoStructuredEntries} />
             )}
 
             {section.notes.length > 0 ? (
               <ul style={{ margin: "16px 0 0", paddingLeft: "18px", color: "var(--muted)" }}>
                 {section.notes.map((note) => (
-                  <li key={note}>{note || "Review note pending"}</li>
+                  <li key={note}>{note || localeMessages.uiReviewNotePending}</li>
                 ))}
               </ul>
             ) : null}
