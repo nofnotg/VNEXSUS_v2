@@ -246,6 +246,7 @@ model Case {
   owner              User                 @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
   patientInput       CasePatientInput?
   sourceDocuments    SourceDocument[]
+  ocrBlocks          OcrBlock[]
   dateCandidates     DateCandidate[]
   evidenceRefs       EvidenceRef[]
   eventAtoms         EventAtom[]
@@ -303,6 +304,7 @@ model SourcePage {
 
 model OcrBlock {
   id             String       @id @default(cuid())
+  caseId         String
   sourceFileId   String
   sourcePageId   String
   fileOrder      Int
@@ -312,10 +314,13 @@ model OcrBlock {
   textNormalized String
   bboxJson       Json?
   confidence     Float?
+  createdAt      DateTime     @default(now())
+  case           Case           @relation(fields: [caseId], references: [id], onDelete: Cascade)
   sourceFile     SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
   sourcePage     SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
 
   @@unique([sourceFileId, pageOrder, blockIndex])
+  @@index([caseId, fileOrder, pageOrder, blockIndex])
   @@index([sourceFileId, pageOrder, blockIndex])
 }
 
@@ -445,6 +450,7 @@ model AnalysisJob {
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   startedAt      DateTime?
+  completedAt    DateTime?
   finishedAt     DateTime?
   errorMessage   String?
   case           Case              @relation(fields: [caseId], references: [id], onDelete: Cascade)

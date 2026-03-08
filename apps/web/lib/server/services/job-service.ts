@@ -1,5 +1,11 @@
 import { createHash } from "node:crypto";
-import { OcrIngestionJobPayload, ApiError, OcrJobCreateInput, UserRole } from "@vnexus/shared";
+import {
+  OcrIngestionJobPayload,
+  ApiError,
+  OcrJobCreateInput,
+  UserRole,
+  ocrBlockResponseContractSchema
+} from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
 
@@ -136,6 +142,7 @@ export async function getJob(jobId: string, userId: string, role: UserRole) {
     requestedBy: job.requestedBy,
     createdAt: job.createdAt,
     updatedAt: job.updatedAt,
+    completedAt: job.completedAt,
     payload: job.payloadJson
   };
 }
@@ -143,12 +150,27 @@ export async function getJob(jobId: string, userId: string, role: UserRole) {
 export async function listOcrBlocks(caseId: string, userId: string, role: UserRole) {
   await getCaseForUser(caseId, userId, role);
 
-  return prisma.ocrBlock.findMany({
+  const blocks = await prisma.ocrBlock.findMany({
     where: {
-      sourceFile: {
-        caseId
-      }
+      caseId
     },
     orderBy: [{ fileOrder: "asc" }, { pageOrder: "asc" }, { blockIndex: "asc" }]
   });
+
+  return blocks.map((block) =>
+    ocrBlockResponseContractSchema.parse({
+      id: block.id,
+      caseId: block.caseId,
+      sourceFileId: block.sourceFileId,
+      sourcePageId: block.sourcePageId,
+      fileOrder: block.fileOrder,
+      pageOrder: block.pageOrder,
+      blockIndex: block.blockIndex,
+      textRaw: block.textRaw,
+      textNormalized: block.textNormalized,
+      bboxJson: block.bboxJson,
+      confidence: block.confidence,
+      createdAt: block.createdAt.toISOString()
+    })
+  );
 }

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { loadAppEnv, ocrIngestionJobPayloadSchema, patientInputSchema } from "@vnexus/shared";
+import {
+  loadAppEnv,
+  ocrBlockResponseContractSchema,
+  ocrIngestionJobPayloadSchema,
+  patientInputSchema
+} from "@vnexus/shared";
 import { planGatingBaseline } from "./plans/plan-gating";
 import { consumerSummarySchema, investigatorSlotSeedSchema } from "./reports/contracts";
 
@@ -56,5 +61,29 @@ describe("Epic 0 contracts", () => {
 
   it("keeps consumer summary and investigator slot seed as separate contracts", () => {
     expect(consumerSummarySchema.shape).not.toBe(investigatorSlotSeedSchema.shape);
+  });
+
+  it("validates persisted OCR block response contract", () => {
+    const parsed = ocrBlockResponseContractSchema.safeParse({
+      id: "block-1",
+      caseId: "case-1",
+      sourceFileId: "doc-1",
+      sourcePageId: "page-1",
+      fileOrder: 1,
+      pageOrder: 1,
+      blockIndex: 0,
+      textRaw: "진단서",
+      textNormalized: "진단서",
+      bboxJson: {
+        xMin: 0,
+        yMin: 0,
+        xMax: 100,
+        yMax: 20
+      },
+      confidence: 0.98,
+      createdAt: "2026-03-08T00:00:00.000Z"
+    });
+
+    expect(parsed.success).toBe(true);
   });
 });

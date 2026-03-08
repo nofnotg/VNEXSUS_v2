@@ -38,6 +38,34 @@ export const documentCreateSchema = z.object({
 
 export const ocrJobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
 
+export const ocrBlockSchema = z.object({
+  id: z.string().optional(),
+  caseId: z.string().min(1),
+  sourceFileId: z.string().min(1),
+  sourcePageId: z.string().min(1),
+  fileOrder: z.number().int().positive(),
+  pageOrder: z.number().int().positive(),
+  blockIndex: z.number().int().nonnegative(),
+  textRaw: z.string(),
+  textNormalized: z.string(),
+  bboxJson: z
+    .object({
+      xMin: z.number(),
+      yMin: z.number(),
+      xMax: z.number(),
+      yMax: z.number()
+    })
+    .nullable()
+    .optional(),
+  confidence: z.number().min(0).max(1).nullable().optional(),
+  createdAt: z.string().datetime().optional()
+});
+
+export const ocrBlockResponseContractSchema = ocrBlockSchema.extend({
+  id: z.string(),
+  createdAt: z.string().datetime()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -121,3 +149,5 @@ export type PatientInput = z.infer<typeof patientInputSchema>;
 export type DocumentCreateInput = z.infer<typeof documentCreateSchema>;
 export type OcrJobCreateInput = z.infer<typeof ocrJobCreateSchema>;
 export type OcrIngestionJobPayload = z.infer<typeof ocrIngestionJobPayloadSchema>;
+export type OcrBlockInput = z.infer<typeof ocrBlockSchema>;
+export type OcrBlockResponseContract = z.infer<typeof ocrBlockResponseContractSchema>;

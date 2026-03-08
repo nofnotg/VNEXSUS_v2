@@ -7,7 +7,7 @@
     "dev": "next dev",
     "lint": "tsc --noEmit",
     "test": "vitest run --passWithNoTests \"src/**/*.test.ts\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
