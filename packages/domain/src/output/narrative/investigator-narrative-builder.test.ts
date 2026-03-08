@@ -55,4 +55,31 @@ describe("buildInvestigatorNarrative", () => {
     expect(narrative.sections[0]?.requiresReview).toBe(false);
     expect(narrative.sections[0]?.paragraphs).toHaveLength(1);
   });
+
+  it("renders Korean narrative text when lang is ko", () => {
+    const narrative = buildInvestigatorNarrative(
+      {
+        caseId: "case-3",
+        generatedAt: "2026-03-08T00:00:00.000Z",
+        requiresReview: true,
+        sections: [
+          {
+            sectionTitle: "2024-05-10 | treatment",
+            entries: [
+              { label: "canonicalDate", value: "2024-05-10" },
+              { label: "hospital", value: "서울병원" },
+              { label: "diagnosis", value: "폐렴" }
+            ],
+            requiresReview: true,
+            notes: ["추가 검토"]
+          }
+        ]
+      },
+      "ko"
+    );
+
+    expect(narrative.sections[0]?.paragraphs[0]).toContain("2024-05-10에");
+    expect(narrative.sections[0]?.paragraphs[0]).toContain("서울병원");
+    expect(narrative.sections[0]?.paragraphs[1]).toContain("검토 메모");
+  });
 });

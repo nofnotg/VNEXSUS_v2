@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import type { ConsumerNarrativeJson } from "@vnexus/shared";
+import { messages, type ConsumerNarrativeJson, type LocaleCode } from "@vnexus/shared";
 import { getConsumerNarrative, NarrativeApiError } from "../../../../../../lib/client/narrative-api";
 
 type SessionResponse = {
@@ -20,6 +20,7 @@ type SessionResponse = {
 
 type Props = {
   caseId: string;
+  lang: LocaleCode;
 };
 
 async function getCurrentUserRole() {
@@ -46,7 +47,8 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-export function ConsumerNarrativeClient({ caseId }: Props) {
+export function ConsumerNarrativeClient({ caseId, lang }: Props) {
+  const locale = messages[lang];
   const [narrative, setNarrative] = useState<ConsumerNarrativeJson | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +66,7 @@ export function ConsumerNarrativeClient({ caseId }: Props) {
           throw new NarrativeApiError("403 | Consumer role is required", 403, "FORBIDDEN");
         }
 
-        const nextNarrative = await getConsumerNarrative(caseId);
+        const nextNarrative = await getConsumerNarrative(caseId, lang);
         if (!cancelled) {
           setNarrative(nextNarrative);
         }
@@ -85,10 +87,10 @@ export function ConsumerNarrativeClient({ caseId }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [caseId]);
+  }, [caseId, lang]);
 
   if (isLoading) {
-    return <EmptyState message="Loading consumer narrative..." />;
+    return <EmptyState message={lang === "ko" ? "소비자 내러티브를 불러오는 중이다." : "Loading consumer narrative..."} />;
   }
 
   if (error) {
@@ -96,7 +98,7 @@ export function ConsumerNarrativeClient({ caseId }: Props) {
   }
 
   if (!narrative || narrative.sections.length === 0) {
-    return <EmptyState message="No consumer narrative is available yet." />;
+    return <EmptyState message={lang === "ko" ? "표시할 소비자 내러티브가 아직 없다." : "No consumer narrative is available yet."} />;
   }
 
   return (
@@ -106,14 +108,20 @@ export function ConsumerNarrativeClient({ caseId }: Props) {
           <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
             <h2 style={{ margin: 0 }}>{section.heading}</h2>
             <span style={{ color: section.requiresReview ? "#9a3412" : "var(--muted)" }}>
-              {section.requiresReview ? "Additional review recommended" : "Clear"}
+              {section.requiresReview
+                ? lang === "ko"
+                  ? "추가 검토 권장"
+                  : "Additional review recommended"
+                : lang === "ko"
+                  ? "정상"
+                  : "Clear"}
             </span>
           </div>
           <div style={{ display: "grid", gap: "12px", marginTop: "16px" }}>
             {section.paragraphs.length > 0 ? (
               section.paragraphs.map((paragraph) => <p key={paragraph} style={{ margin: 0 }}>{paragraph}</p>)
             ) : (
-              <p style={{ margin: 0, color: "var(--muted)" }}>No narrative paragraphs are available.</p>
+              <p style={{ margin: 0, color: "var(--muted)" }}>{locale.pdfNoParagraphs}</p>
             )}
           </div>
         </article>

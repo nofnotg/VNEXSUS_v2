@@ -52,4 +52,28 @@ describe("buildConsumerNarrative", () => {
 
     expect(narrative.sections[0]?.paragraphs[0]).toContain("No consumer summary details are available yet");
   });
+
+  it("renders Korean consumer narrative text when lang is ko", () => {
+    const narrative = buildConsumerNarrative(
+      {
+        caseId: "case-3",
+        generatedAt: "2026-03-08T00:00:00.000Z",
+        requiresReview: false,
+        sections: [
+          {
+            sectionTitle: "timeline_summary",
+            summaryItems: [{ title: "2024-03-07 | 서울병원", value: "폐렴 / CT" }],
+            riskSignals: [],
+            checkPoints: [],
+            nextActions: [],
+            requiresReview: false
+          }
+        ]
+      },
+      "ko"
+    );
+
+    expect(narrative.sections[0]?.paragraphs[0]).toContain("2024-03-07에");
+    expect(narrative.sections[0]?.paragraphs[0]).toContain("서울병원");
+  });
 });

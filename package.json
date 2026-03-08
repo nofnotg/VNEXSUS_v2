@@ -17,6 +17,7 @@
     "test:epic3": "vitest run apps/web/app/cases/[caseId]/reports/investigator/page.test.tsx apps/web/app/cases/[caseId]/reports/consumer/page.test.tsx",
     "test:epic4": "vitest run packages/domain/src/output/narrative/investigator-narrative-builder.test.ts packages/domain/src/output/narrative/consumer-narrative-builder.test.ts apps/web/app/api/cases/[caseId]/reports/investigator/narrative/route.test.ts apps/web/app/api/cases/[caseId]/reports/consumer/narrative/route.test.ts",
     "test:epic5": "vitest run packages/domain/src/output/export/pdf-builder.test.ts apps/web/app/api/cases/[caseId]/reports/investigator/narrative/pdf/route.test.ts apps/web/app/api/cases/[caseId]/reports/consumer/narrative/pdf/route.test.ts",
+    "test:epic6": "vitest run packages/domain/src/output/narrative/investigator-narrative-builder.test.ts packages/domain/src/output/narrative/consumer-narrative-builder.test.ts packages/domain/src/output/export/pdf-builder.test.ts apps/web/app/api/cases/[caseId]/reports/investigator/narrative/route.test.ts apps/web/app/api/cases/[caseId]/reports/consumer/narrative/route.test.ts apps/web/app/api/cases/[caseId]/reports/investigator/narrative/pdf/route.test.ts apps/web/app/api/cases/[caseId]/reports/consumer/narrative/pdf/route.test.ts",
     "test:e2e": "playwright test",
     "typecheck": "turbo run typecheck",
     "db:generate": "prisma generate",

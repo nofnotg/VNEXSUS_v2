@@ -11,6 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource/noto-sans-kr": "^5.2.9",
+    "@pdf-lib/fontkit": "^1.1.1",
     "@vnexus/shared": "workspace:*",
     "pdf-lib": "^1.17.1",
     "zod": "^4.1.5"

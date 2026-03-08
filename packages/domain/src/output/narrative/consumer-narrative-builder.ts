@@ -1,57 +1,63 @@
 import {
   consumerNarrativeJsonSchema,
+  formatMessage,
+  messages,
+  type LocaleCode,
   type ConsumerNarrativeJson,
   type ConsumerReportJson,
   type ConsumerReportSection
 } from "@vnexus/shared";
 
-function buildTimelineParagraphs(section: ConsumerReportSection) {
+function buildTimelineParagraphs(section: ConsumerReportSection, lang: LocaleCode) {
+  const locale = messages[lang];
+
   if (section.summaryItems.length === 0) {
-    return ["No confirmed timeline summary is available yet."];
+    return [locale.noTimeline];
   }
 
   return section.summaryItems.map((item) => {
     const [datePart, hospitalPart] = item.title.split("|").map((part) => part.trim());
-    const dateText = datePart || "unknown date";
-    const hospitalText = hospitalPart || "unknown facility";
+    const dateText = datePart || locale.genericUnknownDate;
+    const hospitalText = hospitalPart || locale.genericUnknownFacility;
     const valueText = item.value?.trim();
 
     return valueText
-      ? `On ${dateText}, records from ${hospitalText} show ${valueText}.`
-      : `On ${dateText}, a visit record from ${hospitalText} was identified.`;
+      ? formatMessage(locale.timelineDetail, { date: dateText, hospital: hospitalText, value: valueText })
+      : formatMessage(locale.timelineRecord, { date: dateText, hospital: hospitalText });
   });
 }
 
-function buildOverviewParagraphs(section: ConsumerReportSection) {
+function buildOverviewParagraphs(section: ConsumerReportSection, lang: LocaleCode) {
+  const locale = messages[lang];
   const paragraphs: string[] = [];
 
   if (section.summaryItems.length > 0) {
     const summary = section.summaryItems
-      .map((item) => `${item.title}: ${item.value ?? "no data"}`)
+      .map((item) => `${item.title}: ${item.value ?? locale.genericNoData}`)
       .join("; ");
-    paragraphs.push(`Summary: ${summary}.`);
+    paragraphs.push(formatMessage(locale.summaryIntro, { summary }));
   }
 
   if (section.riskSignals.length > 0) {
-    paragraphs.push(`Risk signals: ${section.riskSignals.join(", ")}.`);
+    paragraphs.push(formatMessage(locale.riskSignals, { signals: section.riskSignals.join(", ") }));
   }
 
   if (section.checkPoints.length > 0) {
-    paragraphs.push(`Check points: ${section.checkPoints.join(", ")}.`);
+    paragraphs.push(formatMessage(locale.checkPoints, { points: section.checkPoints.join(", ") }));
   }
 
   if (section.nextActions.length > 0) {
-    paragraphs.push(`Recommended next actions: ${section.nextActions.join(", ")}.`);
+    paragraphs.push(formatMessage(locale.nextActions, { actions: section.nextActions.join(", ") }));
   }
 
   if (paragraphs.length === 0) {
-    paragraphs.push("No consumer summary details are available yet.");
+    paragraphs.push(locale.noSummary);
   }
 
   return paragraphs;
 }
 
-export function buildConsumerNarrative(report: ConsumerReportJson): ConsumerNarrativeJson {
+export function buildConsumerNarrative(report: ConsumerReportJson, lang: LocaleCode = "en"): ConsumerNarrativeJson {
   return consumerNarrativeJsonSchema.parse({
     caseId: report.caseId,
     generatedAt: report.generatedAt,
@@ -59,7 +65,9 @@ export function buildConsumerNarrative(report: ConsumerReportJson): ConsumerNarr
     sections: report.sections.map((section) => ({
       heading: section.sectionTitle,
       paragraphs:
-        section.sectionTitle === "timeline_summary" ? buildTimelineParagraphs(section) : buildOverviewParagraphs(section),
+        section.sectionTitle === "timeline_summary"
+          ? buildTimelineParagraphs(section, lang)
+          : buildOverviewParagraphs(section, lang),
       requiresReview: section.requiresReview
     }))
   });

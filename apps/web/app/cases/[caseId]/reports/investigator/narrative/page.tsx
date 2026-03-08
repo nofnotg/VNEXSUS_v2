@@ -1,13 +1,15 @@
 import React from "react";
+import { isLocaleCode, messages, type LocaleCode } from "@vnexus/shared";
 import { AppShell } from "../../../../../../components/app-shell";
 import { getSessionUser } from "../../../../../../lib/session";
 import { InvestigatorNarrativeClient } from "./investigator-narrative-client";
 
 type PageProps = {
   params: Promise<{ caseId: string }>;
+  searchParams?: Promise<{ lang?: string }>;
 };
 
-export default async function InvestigatorNarrativePage({ params }: PageProps) {
+export default async function InvestigatorNarrativePage({ params, searchParams }: PageProps) {
   const user = await getSessionUser();
 
   if (!user) {
@@ -27,13 +29,36 @@ export default async function InvestigatorNarrativePage({ params }: PageProps) {
   }
 
   const { caseId } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const lang = isLocaleCode(resolvedSearchParams?.lang) ? resolvedSearchParams?.lang : "en";
+  const locale = messages[lang as LocaleCode];
+  const languageOptions: LocaleCode[] = ["en", "ko"];
 
   return (
     <AppShell heading="Investigator Narrative" subheading="Template-based narrative derived from investigator report JSON.">
       <div style={{ display: "grid", gap: "16px" }}>
+        {resolvedSearchParams?.lang && !isLocaleCode(resolvedSearchParams.lang) ? (
+          <p style={{ margin: 0, color: "#9a3412" }}>{messages.en.uiInvalidLanguage}</p>
+        ) : null}
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ color: "var(--muted)", fontSize: "0.95rem" }}>{locale.uiLanguageLabel}</span>
+          {languageOptions.map((option) => (
+            <a
+              key={option}
+              href={`/cases/${caseId}/reports/investigator/narrative?lang=${option}`}
+              style={{
+                color: option === lang ? "inherit" : "var(--muted)",
+                fontWeight: option === lang ? 700 : 500,
+                textDecoration: "none"
+              }}
+            >
+              {option === "en" ? locale.uiLanguageEnglish : locale.uiLanguageKorean}
+            </a>
+          ))}
+        </div>
         <div>
           <a
-            href={`/api/cases/${caseId}/reports/investigator/narrative/pdf`}
+            href={`/api/cases/${caseId}/reports/investigator/narrative/pdf?lang=${lang}`}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -46,10 +71,10 @@ export default async function InvestigatorNarrativePage({ params }: PageProps) {
               fontWeight: 600
             }}
           >
-            Download PDF
+            {locale.uiDownloadPdf}
           </a>
         </div>
-        <InvestigatorNarrativeClient caseId={caseId} />
+        <InvestigatorNarrativeClient caseId={caseId} lang={lang} />
       </div>
     </AppShell>
   );

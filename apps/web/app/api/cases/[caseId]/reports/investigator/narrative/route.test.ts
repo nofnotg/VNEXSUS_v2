@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { ApiError } from "@vnexus/shared";
 
 const { requireAuthorizedSessionMock, apiSuccessMock, apiFailureMock, getInvestigatorNarrativeMock } = vi.hoisted(() => ({
@@ -44,7 +44,7 @@ describe("investigator narrative route", () => {
       sections: [{ heading: "2024-03-07 | exam", paragraphs: ["exam narrative"], requiresReview: true }]
     });
 
-    const request = new Request("http://localhost/api/cases/case-1/reports/investigator/narrative") as NextRequest;
+    const request = new NextRequest("http://localhost/api/cases/case-1/reports/investigator/narrative?lang=ko");
     const response = await GET(request, {
       params: Promise.resolve({ caseId: "case-1" })
     });
@@ -53,7 +53,7 @@ describe("investigator narrative route", () => {
     expect(response.status).toBe(200);
     expect(body.success).toBe(true);
     expect(body.data.sections[0]?.heading).toBe("2024-03-07 | exam");
-    expect(getInvestigatorNarrativeMock).toHaveBeenCalledWith("case-1", "user-1", "investigator");
+    expect(getInvestigatorNarrativeMock).toHaveBeenCalledWith("case-1", "user-1", "investigator", "ko");
   });
 
   it("returns 403 when a non-investigator requests the investigator narrative", async () => {
@@ -61,7 +61,7 @@ describe("investigator narrative route", () => {
       user: { id: "user-2", role: "consumer" }
     });
 
-    const request = new Request("http://localhost/api/cases/case-1/reports/investigator/narrative") as NextRequest;
+    const request = new NextRequest("http://localhost/api/cases/case-1/reports/investigator/narrative");
     const response = await GET(request, {
       params: Promise.resolve({ caseId: "case-1" })
     });
@@ -69,5 +69,20 @@ describe("investigator narrative route", () => {
 
     expect(response.status).toBe(403);
     expect(body.code).toBe("FORBIDDEN");
+  });
+
+  it("returns 400 for unsupported lang values", async () => {
+    requireAuthorizedSessionMock.mockResolvedValue({
+      user: { id: "user-1", role: "investigator" }
+    });
+
+    const request = new NextRequest("http://localhost/api/cases/case-1/reports/investigator/narrative?lang=jp");
+    const response = await GET(request, {
+      params: Promise.resolve({ caseId: "case-1" })
+    });
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body.code).toBe("VALIDATION_ERROR");
   });
 });

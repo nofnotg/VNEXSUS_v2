@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { ApiError } from "@vnexus/shared";
 
 const { requireAuthorizedSessionMock, apiFailureMock, exportInvestigatorNarrativePdfMock } = vi.hoisted(() => ({
@@ -41,7 +41,7 @@ describe("investigator narrative pdf route", () => {
       buffer: new Uint8Array([37, 80, 68, 70])
     });
 
-    const request = new Request("http://localhost/api/cases/case-1/reports/investigator/narrative/pdf") as NextRequest;
+    const request = new NextRequest("http://localhost/api/cases/case-1/reports/investigator/narrative/pdf?lang=ko");
     const response = await GET(request, {
       params: Promise.resolve({ caseId: "case-1" })
     });
@@ -49,7 +49,7 @@ describe("investigator narrative pdf route", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe("application/pdf");
     expect(response.headers.get("Content-Disposition")).toContain("investigator-narrative-case-1.pdf");
-    expect(exportInvestigatorNarrativePdfMock).toHaveBeenCalledWith("case-1", "user-1", "investigator");
+    expect(exportInvestigatorNarrativePdfMock).toHaveBeenCalledWith("case-1", "user-1", "investigator", "ko");
   });
 
   it("returns 403 when a non-investigator requests the PDF", async () => {
@@ -57,7 +57,7 @@ describe("investigator narrative pdf route", () => {
       user: { id: "user-2", role: "consumer" }
     });
 
-    const request = new Request("http://localhost/api/cases/case-1/reports/investigator/narrative/pdf") as NextRequest;
+    const request = new NextRequest("http://localhost/api/cases/case-1/reports/investigator/narrative/pdf");
     const response = await GET(request, {
       params: Promise.resolve({ caseId: "case-1" })
     });
@@ -65,5 +65,20 @@ describe("investigator narrative pdf route", () => {
 
     expect(response.status).toBe(403);
     expect(body.code).toBe("FORBIDDEN");
+  });
+
+  it("returns 400 for unsupported pdf lang values", async () => {
+    requireAuthorizedSessionMock.mockResolvedValue({
+      user: { id: "user-1", role: "investigator" }
+    });
+
+    const request = new NextRequest("http://localhost/api/cases/case-1/reports/investigator/narrative/pdf?lang=jp");
+    const response = await GET(request, {
+      params: Promise.resolve({ caseId: "case-1" })
+    });
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body.code).toBe("VALIDATION_ERROR");
   });
 });

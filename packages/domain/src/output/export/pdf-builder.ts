@@ -1,5 +1,7 @@
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import type { ConsumerNarrativeJson, InvestigatorNarrativeJson } from "@vnexus/shared";
+import { readFileSync } from "node:fs";
+import fontkit from "@pdf-lib/fontkit";
+import { PDFDocument, StandardFonts, rgb, type PDFFont } from "pdf-lib";
+import { formatMessage, messages, type ConsumerNarrativeJson, type InvestigatorNarrativeJson, type LocaleCode } from "@vnexus/shared";
 
 const PAGE_WIDTH = 595;
 const PAGE_HEIGHT = 842;
@@ -12,11 +14,39 @@ const PARAGRAPH_GAP = 12;
 
 type NarrativeDocument = InvestigatorNarrativeJson | ConsumerNarrativeJson;
 
+const NOTO_SANS_KR_REGULAR = require.resolve("@fontsource/noto-sans-kr/files/noto-sans-kr-0-400-normal.woff");
+const NOTO_SANS_KR_BOLD = require.resolve("@fontsource/noto-sans-kr/files/noto-sans-kr-0-700-normal.woff");
+
+type EmbeddedFonts = {
+  regularFont: PDFFont;
+  boldFont: PDFFont;
+};
+
+async function embedFonts(pdfDoc: PDFDocument, lang: LocaleCode): Promise<EmbeddedFonts> {
+  if (lang === "ko") {
+    pdfDoc.registerFontkit(fontkit);
+
+    const [regularBytes, boldBytes] = [readFileSync(NOTO_SANS_KR_REGULAR), readFileSync(NOTO_SANS_KR_BOLD)];
+
+    return {
+      regularFont: await pdfDoc.embedFont(regularBytes),
+      boldFont: await pdfDoc.embedFont(boldBytes)
+    };
+  }
+
+  return {
+    regularFont: await pdfDoc.embedFont(StandardFonts.Helvetica),
+    boldFont: await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+  };
+}
+
 async function buildNarrativePdf(
   narrative: NarrativeDocument,
   title: string,
-  subject: string
+  subject: string,
+  lang: LocaleCode
 ): Promise<Uint8Array> {
+  const locale = messages[lang];
   const pdfDoc = await PDFDocument.create();
   pdfDoc.setTitle(title);
   pdfDoc.setSubject(subject);
@@ -25,8 +55,7 @@ async function buildNarrativePdf(
   pdfDoc.setCreationDate(new Date(narrative.generatedAt));
   pdfDoc.setModificationDate(new Date());
 
-  const regularFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const { regularFont, boldFont } = await embedFonts(pdfDoc, lang);
 
   let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   let cursorY = PAGE_HEIGHT - TOP_MARGIN;
@@ -39,7 +68,7 @@ async function buildNarrativePdf(
   };
 
   const drawFooter = () => {
-    page.drawText("Confidential", {
+    page.drawText(locale.pdfConfidential, {
       x: MARGIN_X,
       y: 24,
       size: 10,
@@ -89,9 +118,21 @@ async function buildNarrativePdf(
 
   drawWrappedText(title, 22, boldFont, rgb(0.1, 0.1, 0.1));
   cursorY -= 8;
-  drawWrappedText(`Case ID: ${narrative.caseId}`, 11, regularFont, rgb(0.4, 0.4, 0.4));
-  drawWrappedText(`Generated at: ${narrative.generatedAt}`, 11, regularFont, rgb(0.4, 0.4, 0.4));
-  drawWrappedText(`Review status: ${narrative.requiresReview ? "requires review" : "clear"}`, 11, regularFont, rgb(0.4, 0.4, 0.4));
+  drawWrappedText(formatMessage(locale.pdfCaseId, { caseId: narrative.caseId }), 11, regularFont, rgb(0.4, 0.4, 0.4));
+  drawWrappedText(
+    formatMessage(locale.pdfGeneratedAt, { generatedAt: narrative.generatedAt }),
+    11,
+    regularFont,
+    rgb(0.4, 0.4, 0.4)
+  );
+  drawWrappedText(
+    formatMessage(locale.pdfReviewStatus, {
+      status: narrative.requiresReview ? locale.pdfReviewStatusRequiresReview : locale.pdfReviewStatusClear
+    }),
+    11,
+    regularFont,
+    rgb(0.4, 0.4, 0.4)
+  );
   cursorY -= SECTION_GAP;
 
   narrative.sections.forEach((section, index) => {
@@ -99,11 +140,11 @@ async function buildNarrativePdf(
     drawWrappedText(`${index + 1}. ${section.heading}`, 16, boldFont, rgb(0.12, 0.12, 0.12));
 
     if (section.requiresReview) {
-      drawWrappedText("Review note: manual review is required for this section.", 11, regularFont, rgb(0.6, 0.25, 0.1));
+      drawWrappedText(locale.pdfSectionReviewNote, 11, regularFont, rgb(0.6, 0.25, 0.1));
     }
 
     if (section.paragraphs.length === 0) {
-      drawWrappedText("No narrative paragraphs are available for this section.", 11, regularFont, rgb(0.4, 0.4, 0.4));
+      drawWrappedText(locale.pdfNoParagraphs, 11, regularFont, rgb(0.4, 0.4, 0.4));
     } else {
       section.paragraphs.forEach((paragraph) => {
         drawWrappedText(paragraph, 12, regularFont);
@@ -122,10 +163,27 @@ async function buildNarrativePdf(
   return pdfDoc.save({ useObjectStreams: false });
 }
 
-export function buildInvestigatorReportPdf(narrative: InvestigatorNarrativeJson): Promise<Uint8Array> {
-  return buildNarrativePdf(narrative, `Investigator Narrative Report - ${narrative.caseId}`, "Investigator narrative export");
+export function buildInvestigatorReportPdf(
+  narrative: InvestigatorNarrativeJson,
+  lang: LocaleCode = "en"
+): Promise<Uint8Array> {
+  const locale = messages[lang];
+
+  return buildNarrativePdf(
+    narrative,
+    formatMessage(locale.pdfInvestigatorTitle, { caseId: narrative.caseId }),
+    locale.pdfInvestigatorSubject,
+    lang
+  );
 }
 
-export function buildConsumerReportPdf(narrative: ConsumerNarrativeJson): Promise<Uint8Array> {
-  return buildNarrativePdf(narrative, `Consumer Narrative Report - ${narrative.caseId}`, "Consumer narrative export");
+export function buildConsumerReportPdf(narrative: ConsumerNarrativeJson, lang: LocaleCode = "en"): Promise<Uint8Array> {
+  const locale = messages[lang];
+
+  return buildNarrativePdf(
+    narrative,
+    formatMessage(locale.pdfConsumerTitle, { caseId: narrative.caseId }),
+    locale.pdfConsumerSubject,
+    lang
+  );
 }

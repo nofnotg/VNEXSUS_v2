@@ -3,6 +3,7 @@ import {
   apiSuccessEnvelopeSchema,
   consumerNarrativeJsonSchema,
   investigatorNarrativeJsonSchema,
+  type LocaleCode,
   type ConsumerNarrativeJson,
   type InvestigatorNarrativeJson
 } from "@vnexus/shared";
@@ -45,10 +46,19 @@ async function fetchNarrative<T>(url: string, dataSchema: ZodType<T>) {
   return parsed.data.data;
 }
 
-export function getInvestigatorNarrative(caseId: string): Promise<InvestigatorNarrativeJson> {
-  return fetchNarrative(`/api/cases/${caseId}/reports/investigator/narrative`, investigatorNarrativeJsonSchema);
+function withLang(url: string, lang?: LocaleCode) {
+  if (!lang) {
+    return url;
+  }
+
+  const searchParams = new URLSearchParams({ lang });
+  return `${url}?${searchParams.toString()}`;
 }
 
-export function getConsumerNarrative(caseId: string): Promise<ConsumerNarrativeJson> {
-  return fetchNarrative(`/api/cases/${caseId}/reports/consumer/narrative`, consumerNarrativeJsonSchema);
+export function getInvestigatorNarrative(caseId: string, lang?: LocaleCode): Promise<InvestigatorNarrativeJson> {
+  return fetchNarrative(withLang(`/api/cases/${caseId}/reports/investigator/narrative`, lang), investigatorNarrativeJsonSchema);
+}
+
+export function getConsumerNarrative(caseId: string, lang?: LocaleCode): Promise<ConsumerNarrativeJson> {
+  return fetchNarrative(withLang(`/api/cases/${caseId}/reports/consumer/narrative`, lang), consumerNarrativeJsonSchema);
 }

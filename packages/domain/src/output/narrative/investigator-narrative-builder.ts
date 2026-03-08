@@ -1,5 +1,8 @@
 import {
+  formatMessage,
   investigatorNarrativeJsonSchema,
+  messages,
+  type LocaleCode,
   type InvestigatorNarrativeJson,
   type InvestigatorReportJson,
   type InvestigatorReportSection
@@ -13,7 +16,8 @@ function joinNarrativeParts(parts: Array<string | null | undefined>) {
   return parts.filter((part): part is string => Boolean(part && part.trim().length > 0)).join(" ");
 }
 
-function buildSummaryParagraph(section: InvestigatorReportSection) {
+function buildSummaryParagraph(section: InvestigatorReportSection, lang: LocaleCode) {
+  const locale = messages[lang];
   const canonicalDate = getEntryValue(section, "canonicalDate");
   const hospital = getEntryValue(section, "hospital");
   const department = getEntryValue(section, "department");
@@ -30,21 +34,24 @@ function buildSummaryParagraph(section: InvestigatorReportSection) {
     (value): value is string => Boolean(value && value.trim().length > 0)
   );
 
-  const eventText =
-    eventDetails.length > 0 ? `${eventDetails.join(", ")} was documented.` : "Key medical details need manual review.";
+  const eventText = eventDetails.length > 0 ? eventDetails.join(", ") : locale.investigatorNoKeyDetails;
+  const summaryBase = formatMessage(locale.investigatorSummaryTemplate, {
+    date: canonicalDate ?? locale.investigatorUnknownDate,
+    hospital: hospital ?? locale.investigatorUnknownFacility,
+    departmentClause: department ? (lang === "ko" ? ` ${department}` : `, within ${department}`) : "",
+    details: eventText
+  }).replace(/\s{2,}/g, " ").replace(/\s+\./g, ".").trim();
 
   return joinNarrativeParts([
-    canonicalDate ? `On ${canonicalDate},` : null,
-    hospital ? `at ${hospital},` : "with no confirmed facility,",
-    department ? `within ${department},` : null,
-    eventText,
-    pathologySummary ? `Pathology summary: ${pathologySummary}.` : null,
-    medicationSummary ? `Medication summary: ${medicationSummary}.` : null,
-    symptomSummary ? `Symptom summary: ${symptomSummary}.` : null
+    summaryBase,
+    pathologySummary ? formatMessage(locale.investigatorPathology, { value: pathologySummary }) : null,
+    medicationSummary ? formatMessage(locale.investigatorMedication, { value: medicationSummary }) : null,
+    symptomSummary ? formatMessage(locale.investigatorSymptom, { value: symptomSummary }) : null
   ]);
 }
 
-function buildReviewParagraph(section: InvestigatorReportSection) {
+function buildReviewParagraph(section: InvestigatorReportSection, lang: LocaleCode) {
+  const locale = messages[lang];
   const notes = section.notes.filter((note) => note.trim().length > 0);
 
   if (!section.requiresReview && notes.length === 0) {
@@ -52,20 +59,23 @@ function buildReviewParagraph(section: InvestigatorReportSection) {
   }
 
   if (notes.length === 0) {
-    return "This section requires manual review.";
+    return locale.investigatorReviewRequired;
   }
 
-  return `Review notes: ${notes.join("; ")}.`;
+  return formatMessage(locale.investigatorReviewNotes, { notes: notes.join("; ") });
 }
 
-export function buildInvestigatorNarrative(report: InvestigatorReportJson): InvestigatorNarrativeJson {
+export function buildInvestigatorNarrative(
+  report: InvestigatorReportJson,
+  lang: LocaleCode = "en"
+): InvestigatorNarrativeJson {
   return investigatorNarrativeJsonSchema.parse({
     caseId: report.caseId,
     generatedAt: report.generatedAt,
     requiresReview: report.requiresReview,
     sections: report.sections.map((section) => ({
       heading: section.sectionTitle,
-      paragraphs: [buildSummaryParagraph(section), buildReviewParagraph(section)].filter(
+      paragraphs: [buildSummaryParagraph(section, lang), buildReviewParagraph(section, lang)].filter(
         (paragraph): paragraph is string => Boolean(paragraph && paragraph.trim().length > 0)
       ),
       requiresReview: section.requiresReview
