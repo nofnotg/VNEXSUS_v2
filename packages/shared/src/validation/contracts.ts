@@ -343,6 +343,46 @@ export const consumerSummaryJsonSchema = z.object({
   requiresReview: z.boolean()
 });
 
+export const investigatorReportEntrySchema = z.object({
+  label: z.string().min(1),
+  value: z.string().nullable()
+});
+
+export const investigatorReportSectionSchema = z.object({
+  sectionTitle: z.string().min(1),
+  entries: z.array(investigatorReportEntrySchema),
+  requiresReview: z.boolean(),
+  notes: z.array(z.string())
+});
+
+export const investigatorReportJsonSchema = z.object({
+  caseId: z.string().min(1),
+  generatedAt: z.string().datetime(),
+  sections: z.array(investigatorReportSectionSchema),
+  requiresReview: z.boolean()
+});
+
+export const consumerReportSummaryItemSchema = z.object({
+  title: z.string().min(1),
+  value: z.string().nullable()
+});
+
+export const consumerReportSectionSchema = z.object({
+  sectionTitle: z.string().min(1),
+  summaryItems: z.array(consumerReportSummaryItemSchema),
+  riskSignals: z.array(z.string()),
+  checkPoints: z.array(z.string()),
+  nextActions: z.array(z.string()),
+  requiresReview: z.boolean()
+});
+
+export const consumerReportJsonSchema = z.object({
+  caseId: z.string().min(1),
+  generatedAt: z.string().datetime(),
+  sections: z.array(consumerReportSectionSchema),
+  requiresReview: z.boolean()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -445,3 +485,9 @@ export type InvestigatorSlotBundle = z.infer<typeof investigatorSlotBundleSchema
 export type InvestigatorSlotJson = z.infer<typeof investigatorSlotJsonSchema>;
 export type ConsumerTimelineItem = z.infer<typeof consumerTimelineItemSchema>;
 export type ConsumerSummaryJson = z.infer<typeof consumerSummaryJsonSchema>;
+export type InvestigatorReportEntry = z.infer<typeof investigatorReportEntrySchema>;
+export type InvestigatorReportSection = z.infer<typeof investigatorReportSectionSchema>;
+export type InvestigatorReportJson = z.infer<typeof investigatorReportJsonSchema>;
+export type ConsumerReportSummaryItem = z.infer<typeof consumerReportSummaryItemSchema>;
+export type ConsumerReportSection = z.infer<typeof consumerReportSectionSchema>;
+export type ConsumerReportJson = z.infer<typeof consumerReportJsonSchema>;

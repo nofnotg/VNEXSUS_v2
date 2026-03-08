@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  consumerReportJsonSchema,
   consumerSummaryJsonSchema,
   dateCandidateResponseContractSchema,
   dateCenteredWindowResponseContractSchema,
@@ -7,6 +8,7 @@ import {
   eventAtomResponseContractSchema,
   eventBundleResponseContractSchema,
   investigatorSlotJsonSchema,
+  investigatorReportJsonSchema,
   loadAppEnv,
   ocrBlockResponseContractSchema,
   ocrIngestionJobPayloadSchema,
@@ -319,6 +321,55 @@ describe("Epic 0 contracts", () => {
       riskSignals: ["review_required_bundle"],
       checkPoints: ["review_required_bundle_exists"],
       recommendedNextActions: ["review_original_documents"],
+      requiresReview: true
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates investigator report JSON contract", () => {
+    const parsed = investigatorReportJsonSchema.safeParse({
+      caseId: "case-1",
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      sections: [
+        {
+          sectionTitle: "2024-03-07 | exam",
+          entries: [
+            { label: "canonicalDate", value: "2024-03-07" },
+            { label: "hospital", value: "Seoul Hospital" }
+          ],
+          requiresReview: false,
+          notes: []
+        }
+      ],
+      requiresReview: false
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates consumer report JSON contract", () => {
+    const parsed = consumerReportJsonSchema.safeParse({
+      caseId: "case-1",
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      sections: [
+        {
+          sectionTitle: "timeline_summary",
+          summaryItems: [{ title: "2024-03-07 | Seoul Hospital", value: "Pneumonia / CT" }],
+          riskSignals: [],
+          checkPoints: [],
+          nextActions: [],
+          requiresReview: false
+        },
+        {
+          sectionTitle: "consumer_overview",
+          summaryItems: [{ title: "hospitalSummary", value: "Seoul Hospital" }],
+          riskSignals: ["review_required_bundle"],
+          checkPoints: ["review_required_bundle_exists"],
+          nextActions: ["review_original_documents"],
+          requiresReview: true
+        }
+      ],
       requiresReview: true
     });
 
