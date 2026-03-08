@@ -1,0 +1,3 @@
+ALTER TABLE "EventAtom"
+ADD COLUMN "editedAt" TIMESTAMP(3),
+ADD COLUMN "editHistory" JSONB;

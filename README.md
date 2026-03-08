@@ -40,5 +40,9 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
 
 - Use `/cases/:caseId` to inspect structured events that were derived from OCR extraction and event bundling.
 - Consumers can read the timeline, while investigator/admin users can change the `confirmed` state of each event.
+- Investigator/admin users can also edit event date, hospital, details, and review status from the case detail table.
 - Confirmation updates are written back to the persisted event record through `/api/cases/:caseId/events/:eventId/confirmation`.
+- Event edits are written through `/api/cases/:caseId/events/:eventId/edit`, and each edit appends a JSON history entry with editor, timestamp, and field-level changes.
+- The UI uses optimistic updates, but failed saves roll back local state and surface the server error to the reviewer.
+- Admin users can open edit history from the detail page to review prior changes.
 - Timeline rows intentionally stay close to the evidence-oriented event structure; they are not free-form summaries.

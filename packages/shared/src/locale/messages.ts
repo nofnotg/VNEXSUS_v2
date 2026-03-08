@@ -142,6 +142,19 @@ export type MessageDictionary = {
   uiConfirmationSaving: string;
   uiConfirmationSaved: string;
   uiConfirmationFailed: string;
+  uiEditAction: string;
+  uiSaveAction: string;
+  uiCancelAction: string;
+  uiEditSuccess: string;
+  uiEditError: string;
+  uiEventDateLabel: string;
+  uiEventHospitalLabel: string;
+  uiEventDetailsLabel: string;
+  uiEventReviewToggleLabel: string;
+  uiInvalidDate: string;
+  uiViewEditHistory: string;
+  uiHideEditHistory: string;
+  uiEditHistoryHeading: string;
 };
 
 export const messages: Record<LocaleCode, MessageDictionary> = {
@@ -286,7 +299,20 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiUnconfirmAction: "Mark unconfirmed",
     uiConfirmationSaving: "Saving confirmation...",
     uiConfirmationSaved: "Confirmation updated.",
-    uiConfirmationFailed: "Failed to update confirmation."
+    uiConfirmationFailed: "Failed to update confirmation.",
+    uiEditAction: "Edit",
+    uiSaveAction: "Save",
+    uiCancelAction: "Cancel",
+    uiEditSuccess: "Event updated.",
+    uiEditError: "Failed to update event.",
+    uiEventDateLabel: "Event date",
+    uiEventHospitalLabel: "Hospital",
+    uiEventDetailsLabel: "Details",
+    uiEventReviewToggleLabel: "Requires review",
+    uiInvalidDate: "Use YYYY-MM-DD format.",
+    uiViewEditHistory: "View edit history",
+    uiHideEditHistory: "Hide edit history",
+    uiEditHistoryHeading: "Edit history"
   },
   ko: {
     genericUnknownDate: "날짜 미확인",
@@ -429,7 +455,20 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiUnconfirmAction: "미확정으로 변경",
     uiConfirmationSaving: "확정 상태를 저장하는 중입니다...",
     uiConfirmationSaved: "확정 상태를 저장했습니다.",
-    uiConfirmationFailed: "확정 상태를 저장하지 못했습니다."
+    uiConfirmationFailed: "확정 상태를 저장하지 못했습니다.",
+    uiEditAction: "수정",
+    uiSaveAction: "저장",
+    uiCancelAction: "취소",
+    uiEditSuccess: "이벤트를 수정했습니다.",
+    uiEditError: "이벤트를 수정하지 못했습니다.",
+    uiEventDateLabel: "이벤트 날짜",
+    uiEventHospitalLabel: "병원",
+    uiEventDetailsLabel: "세부 내용",
+    uiEventReviewToggleLabel: "검토 필요",
+    uiInvalidDate: "YYYY-MM-DD 형식을 사용하세요.",
+    uiViewEditHistory: "수정 이력 보기",
+    uiHideEditHistory: "수정 이력 숨기기",
+    uiEditHistoryHeading: "수정 이력"
   }
 };
 

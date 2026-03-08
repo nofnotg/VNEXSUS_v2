@@ -511,6 +511,8 @@ model EventAtom {
   eventTypeCandidate  EventTypeCandidate
   ambiguityScore      Float
   confirmed           Boolean            @default(false)
+  editedAt            DateTime?
+  editHistory         Json?
   requiresReview      Boolean            @default(false)
   unresolvedSlotsJson Json
   candidateSnapshotJson Json

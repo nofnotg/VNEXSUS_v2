@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma";
 
 export type CaseDetailRecord = {
@@ -38,6 +39,8 @@ export type CaseDetailRecord = {
       | "mixed"
       | "unknown";
     confirmed: boolean;
+    editedAt: Date | null;
+    editHistory: unknown;
     requiresReview: boolean;
     sourceFileId: string;
     sourcePageId: string;
@@ -79,6 +82,8 @@ export const caseDetailRepository = {
             symptomSummary: true,
             eventTypeCandidate: true,
             confirmed: true,
+            editedAt: true,
+            editHistory: true,
             requiresReview: true,
             sourceFileId: true,
             sourcePageId: true
@@ -95,6 +100,25 @@ export const caseDetailRepository = {
       select: {
         id: true,
         confirmed: true
+      }
+    });
+  },
+
+  async updateEventDetails(
+    eventId: string,
+    data: {
+      canonicalDate?: string;
+      primaryHospital?: string;
+      requiresReview?: boolean;
+      editedAt: Date;
+      editHistory: Prisma.InputJsonValue;
+    }
+  ): Promise<{ id: string }> {
+    return prisma.eventAtom.update({
+      where: { id: eventId },
+      data,
+      select: {
+        id: true
       }
     });
   }

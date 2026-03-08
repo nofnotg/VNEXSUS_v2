@@ -234,6 +234,9 @@ export const eventAtomSchema = z.object({
   symptomSummary: z.string().nullable().optional(),
   eventTypeCandidate: eventTypeCandidateSchema,
   ambiguityScore: z.number().min(0).max(1),
+  confirmed: z.boolean().optional(),
+  editedAt: z.string().datetime().nullable().optional(),
+  editHistory: z.array(z.record(z.string(), z.unknown())).nullable().optional(),
   requiresReview: z.boolean(),
   unresolvedSlotsJson: unresolvedSlotsSchema,
   candidateSnapshotJson: candidateSummarySchema,
@@ -432,6 +435,22 @@ export const caseEventSchema = z.object({
   details: z.string().min(1),
   confirmed: z.boolean(),
   requiresReview: z.boolean(),
+  editedAt: z.string().datetime().nullable().optional(),
+  editHistory: z
+    .array(
+      z.object({
+        editedBy: z.string().min(1),
+        editedAt: z.string().datetime(),
+        changes: z.record(
+          z.string(),
+          z.object({
+            previousValue: z.string().nullable(),
+            nextValue: z.string().nullable()
+          })
+        )
+      })
+    )
+    .optional(),
   metadata: z
     .object({
       fileOrder: z.number().int().positive(),
@@ -448,6 +467,14 @@ export const caseDetailSchema = z.object({
   caseId: z.string().min(1),
   hospitalName: z.string().nullable(),
   events: z.array(caseEventSchema)
+});
+
+export const caseEventEditSchema = z.object({
+  eventId: z.string().min(1),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  hospital: z.string().min(1).optional(),
+  details: z.string().min(1).optional(),
+  requiresReview: z.boolean().optional()
 });
 
 export const ocrIngestionJobPayloadSchema = z.object({
@@ -566,3 +593,5 @@ export type CaseListItem = z.infer<typeof caseListItemSchema>;
 export type CaseListJson = z.infer<typeof caseListJsonSchema>;
 export type CaseEvent = z.infer<typeof caseEventSchema>;
 export type CaseDetail = z.infer<typeof caseDetailSchema>;
+export type CaseEventEdit = z.infer<typeof caseEventEditSchema>;
+export type EventEditHistory = NonNullable<CaseEvent["editHistory"]>[number];

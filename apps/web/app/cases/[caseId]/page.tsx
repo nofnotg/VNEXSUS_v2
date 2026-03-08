@@ -32,7 +32,12 @@ export default async function CaseDetailPage({ params }: PageProps) {
 
   return (
     <AppShell heading={localeMessages.uiCaseDetailHeading} subheading={localeMessages.uiCaseDetailSubheading}>
-      <CaseDetailClient caseId={caseId} initialDetail={detail} canEdit={user.role === "investigator" || user.role === "admin"} />
+      <CaseDetailClient
+        caseId={caseId}
+        initialDetail={detail}
+        canEdit={user.role === "investigator" || user.role === "admin"}
+        canViewHistory={user.role === "admin"}
+      />
     </AppShell>
   );
 }

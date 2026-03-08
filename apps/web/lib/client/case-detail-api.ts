@@ -1,4 +1,4 @@
-import { apiErrorEnvelopeSchema, apiSuccessEnvelopeSchema, caseDetailSchema, type CaseDetail } from "@vnexus/shared";
+import { apiErrorEnvelopeSchema, apiSuccessEnvelopeSchema, caseDetailSchema, caseEventSchema, type CaseDetail, type CaseEventEdit } from "@vnexus/shared";
 
 export class CaseDetailApiError extends Error {
   constructor(
@@ -60,4 +60,44 @@ export async function updateCaseEventConfirmation(caseId: string, eventId: strin
   }
 
   return json;
+}
+
+export async function updateCaseEventDetails(
+  caseId: string,
+  edit: CaseEventEdit,
+  lastKnownEditedAt?: string | null
+) {
+  const response = await fetch(`/api/cases/${caseId}/events/${edit.eventId}/edit`, {
+    method: "PUT",
+    credentials: "same-origin",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+      ...(lastKnownEditedAt ? { "x-event-last-edited-at": lastKnownEditedAt } : {})
+    },
+    body: JSON.stringify({
+      ...(edit.date !== undefined ? { date: edit.date } : {}),
+      ...(edit.hospital !== undefined ? { hospital: edit.hospital } : {}),
+      ...(edit.details !== undefined ? { details: edit.details } : {}),
+      ...(edit.requiresReview !== undefined ? { requiresReview: edit.requiresReview } : {})
+    })
+  });
+
+  const json = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const parsedError = apiErrorEnvelopeSchema.safeParse(json);
+    if (parsedError.success) {
+      throw new CaseDetailApiError(parsedError.data.error.message, response.status, parsedError.data.error.code);
+    }
+
+    throw new CaseDetailApiError("Failed to update event details", response.status);
+  }
+
+  const parsed = apiSuccessEnvelopeSchema(caseEventSchema).safeParse(json);
+  if (!parsed.success) {
+    throw new CaseDetailApiError("Invalid event edit response", response.status, "INVALID_EVENT_EDIT_RESPONSE");
+  }
+
+  return parsed.data.data;
 }
