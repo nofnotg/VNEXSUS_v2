@@ -103,7 +103,9 @@ export function CaseListClient() {
 
           return (
             <tr key={item.caseId}>
-              <td style={bodyCellStyle}>{item.caseId}</td>
+              <td style={bodyCellStyle}>
+                <Link href={`/cases/${item.caseId}`}>{item.caseId}</Link>
+              </td>
               <td style={bodyCellStyle}>{item.hospitalName ?? "-"}</td>
               <td style={bodyCellStyle}>{new Date(item.uploadDate).toLocaleString(locale)}</td>
               <td style={bodyCellStyle}>{resolveStatusLabel(item, localeMessages)}</td>

@@ -124,6 +124,24 @@ export type MessageDictionary = {
   uiThemeDark: string;
   uiSaveSettings: string;
   uiSettingsSaved: string;
+  uiCaseDetailHeading: string;
+  uiCaseDetailSubheading: string;
+  uiCaseDetailEmpty: string;
+  uiCaseDetailTimelineHeading: string;
+  uiEventDateColumn: string;
+  uiEventTypeColumn: string;
+  uiEventDetailsColumn: string;
+  uiEventConfirmedColumn: string;
+  uiEventRequiresReviewColumn: string;
+  uiEventConfirmed: string;
+  uiEventUnconfirmed: string;
+  uiEventRequiresReview: string;
+  uiEventNoReview: string;
+  uiConfirmAction: string;
+  uiUnconfirmAction: string;
+  uiConfirmationSaving: string;
+  uiConfirmationSaved: string;
+  uiConfirmationFailed: string;
 };
 
 export const messages: Record<LocaleCode, MessageDictionary> = {
@@ -250,7 +268,25 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiThemeLight: "Light",
     uiThemeDark: "Dark",
     uiSaveSettings: "Save settings",
-    uiSettingsSaved: "Settings saved."
+    uiSettingsSaved: "Settings saved.",
+    uiCaseDetailHeading: "Case Detail",
+    uiCaseDetailSubheading: "Review structured events and confirm timeline items.",
+    uiCaseDetailEmpty: "No structured events are available for this case yet.",
+    uiCaseDetailTimelineHeading: "Event timeline",
+    uiEventDateColumn: "Date",
+    uiEventTypeColumn: "Type",
+    uiEventDetailsColumn: "Details",
+    uiEventConfirmedColumn: "Confirmation",
+    uiEventRequiresReviewColumn: "Review",
+    uiEventConfirmed: "Confirmed",
+    uiEventUnconfirmed: "Unconfirmed",
+    uiEventRequiresReview: "Needs review",
+    uiEventNoReview: "No review flag",
+    uiConfirmAction: "Confirm",
+    uiUnconfirmAction: "Mark unconfirmed",
+    uiConfirmationSaving: "Saving confirmation...",
+    uiConfirmationSaved: "Confirmation updated.",
+    uiConfirmationFailed: "Failed to update confirmation."
   },
   ko: {
     genericUnknownDate: "날짜 미확인",
@@ -375,7 +411,25 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiThemeLight: "라이트",
     uiThemeDark: "다크",
     uiSaveSettings: "설정 저장",
-    uiSettingsSaved: "설정을 저장했다."
+    uiSettingsSaved: "설정을 저장했다.",
+    uiCaseDetailHeading: "사건 상세",
+    uiCaseDetailSubheading: "구조화된 이벤트 타임라인을 검토하고 확정 상태를 조정합니다.",
+    uiCaseDetailEmpty: "이 사례에 표시할 구조화 이벤트가 아직 없습니다.",
+    uiCaseDetailTimelineHeading: "이벤트 타임라인",
+    uiEventDateColumn: "날짜",
+    uiEventTypeColumn: "유형",
+    uiEventDetailsColumn: "세부 내용",
+    uiEventConfirmedColumn: "확정 상태",
+    uiEventRequiresReviewColumn: "검토",
+    uiEventConfirmed: "확정",
+    uiEventUnconfirmed: "미확정",
+    uiEventRequiresReview: "검토 필요",
+    uiEventNoReview: "검토 표시 없음",
+    uiConfirmAction: "확정",
+    uiUnconfirmAction: "미확정으로 변경",
+    uiConfirmationSaving: "확정 상태를 저장하는 중입니다...",
+    uiConfirmationSaved: "확정 상태를 저장했습니다.",
+    uiConfirmationFailed: "확정 상태를 저장하지 못했습니다."
   }
 };
 

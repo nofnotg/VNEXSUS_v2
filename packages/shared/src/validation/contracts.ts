@@ -424,6 +424,32 @@ export const caseListJsonSchema = z.object({
   items: z.array(caseListItemSchema)
 });
 
+export const caseEventSchema = z.object({
+  eventId: z.string().min(1),
+  type: z.enum(["visit", "diagnosis", "exam", "treatment", "procedure", "surgery", "admission", "discharge", "pathology", "followup", "other"]),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  hospital: z.string().min(1),
+  details: z.string().min(1),
+  confirmed: z.boolean(),
+  requiresReview: z.boolean(),
+  metadata: z
+    .object({
+      fileOrder: z.number().int().positive(),
+      pageOrder: z.number().int().positive(),
+      anchorBlockIndex: z.number().int().nonnegative(),
+      eventBundleId: z.string().min(1).nullable().optional(),
+      sourceFileId: z.string().min(1),
+      sourcePageId: z.string().min(1)
+    })
+    .optional()
+});
+
+export const caseDetailSchema = z.object({
+  caseId: z.string().min(1),
+  hospitalName: z.string().nullable(),
+  events: z.array(caseEventSchema)
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -538,3 +564,5 @@ export type ConsumerNarrativeSection = z.infer<typeof consumerNarrativeSectionSc
 export type ConsumerNarrativeJson = z.infer<typeof consumerNarrativeJsonSchema>;
 export type CaseListItem = z.infer<typeof caseListItemSchema>;
 export type CaseListJson = z.infer<typeof caseListJsonSchema>;
+export type CaseEvent = z.infer<typeof caseEventSchema>;
+export type CaseDetail = z.infer<typeof caseDetailSchema>;

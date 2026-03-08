@@ -510,6 +510,7 @@ model EventAtom {
   symptomSummary      String?
   eventTypeCandidate  EventTypeCandidate
   ambiguityScore      Float
+  confirmed           Boolean            @default(false)
   requiresReview      Boolean            @default(false)
   unresolvedSlotsJson Json
   candidateSnapshotJson Json

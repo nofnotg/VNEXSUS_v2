@@ -1,0 +1,2 @@
+ALTER TABLE "EventAtom"
+ADD COLUMN "confirmed" BOOLEAN NOT NULL DEFAULT false;

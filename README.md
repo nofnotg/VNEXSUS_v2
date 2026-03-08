@@ -16,10 +16,12 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
   - Subsequent narrative fetches and PDF download links automatically use the current locale.
 - Case list and settings pages:
   - `/cases` localizes table headers, action labels, and empty states through the shared message dictionary.
+  - Each case ID in `/cases` links to `/cases/:caseId`, where the event timeline can be reviewed against structured event data.
   - `/settings` lets users update language and theme preferences in one place.
   - Theme preference is stored in the `vnexus_theme` cookie and in `localStorage`.
   - When a signed-in user saves preferences, locale and theme are also persisted to the server-side profile record for cross-device consistency.
   - Case list data now comes from live case records and related report/document metadata instead of mock fixtures.
+  - Case detail data now comes from persisted `EventAtom` records, and investigator/admin users can update event confirmation state from the timeline UI.
   - Because locale/theme are personal preference data, they should be handled under the same privacy review as other user profile fields.
 - If `lang` is omitted, the server falls back to `Accept-Language` and then to English.
 - Unsupported language values return `400 VALIDATION_ERROR`.
@@ -33,3 +35,10 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
 5. Reuse the shared dictionary from domain narrative builders and PDF builders instead of adding route-level text generation.
 6. If the new language needs non-Latin glyphs in PDF output, embed a compatible font in `packages/domain/src/output/export/pdf-builder.ts`.
 7. Update localization coverage in `pnpm test:epic6` and page-level coverage in `pnpm test:epic7`.
+
+## Case Detail Timeline
+
+- Use `/cases/:caseId` to inspect structured events that were derived from OCR extraction and event bundling.
+- Consumers can read the timeline, while investigator/admin users can change the `confirmed` state of each event.
+- Confirmation updates are written back to the persisted event record through `/api/cases/:caseId/events/:eventId/confirmation`.
+- Timeline rows intentionally stay close to the evidence-oriented event structure; they are not free-form summaries.
