@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@vnexus/shared": "workspace:*",
+    "pdf-lib": "^1.17.1",
     "zod": "^4.1.5"
   }
 }

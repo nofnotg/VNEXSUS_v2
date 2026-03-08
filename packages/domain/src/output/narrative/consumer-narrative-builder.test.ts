@@ -28,7 +28,7 @@ describe("buildConsumerNarrative", () => {
     });
 
     expect(narrative.caseId).toBe("case-1");
-    expect(narrative.sections[0]?.paragraphs[0]).toContain("2024-03-07");
+    expect(narrative.sections[0]?.paragraphs[0]).toContain("On 2024-03-07");
     expect(narrative.sections[1]?.paragraphs.join(" ")).toContain("review_required_bundle_exists");
     expect(narrative.requiresReview).toBe(true);
   });
@@ -50,6 +50,6 @@ describe("buildConsumerNarrative", () => {
       ]
     });
 
-    expect(narrative.sections[0]?.paragraphs[0]).toContain("표시할 소비자용 요약 정보가 아직 없다");
+    expect(narrative.sections[0]?.paragraphs[0]).toContain("No consumer summary details are available yet");
   });
 });

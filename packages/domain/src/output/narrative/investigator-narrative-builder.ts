@@ -31,16 +31,16 @@ function buildSummaryParagraph(section: InvestigatorReportSection) {
   );
 
   const eventText =
-    eventDetails.length > 0 ? `${eventDetails.join(", ")} 관련 기록이 확인되었다.` : "핵심 의료 행위는 추가 검토가 필요하다.";
+    eventDetails.length > 0 ? `${eventDetails.join(", ")} was documented.` : "Key medical details need manual review.";
 
   return joinNarrativeParts([
-    canonicalDate ? `${canonicalDate}에` : null,
-    hospital ? `${hospital}에서` : "의료기관 정보 없이",
-    department ? `${department} 진료 맥락으로` : null,
+    canonicalDate ? `On ${canonicalDate},` : null,
+    hospital ? `at ${hospital},` : "with no confirmed facility,",
+    department ? `within ${department},` : null,
     eventText,
-    pathologySummary ? `병리 요약은 ${pathologySummary}로 정리되었다.` : null,
-    medicationSummary ? `투약 요약은 ${medicationSummary}이다.` : null,
-    symptomSummary ? `증상 메모는 ${symptomSummary}이다.` : null
+    pathologySummary ? `Pathology summary: ${pathologySummary}.` : null,
+    medicationSummary ? `Medication summary: ${medicationSummary}.` : null,
+    symptomSummary ? `Symptom summary: ${symptomSummary}.` : null
   ]);
 }
 
@@ -52,10 +52,10 @@ function buildReviewParagraph(section: InvestigatorReportSection) {
   }
 
   if (notes.length === 0) {
-    return "이 섹션은 수기 검토가 필요하다.";
+    return "This section requires manual review.";
   }
 
-  return `검토 메모: ${notes.join("; ")}.`;
+  return `Review notes: ${notes.join("; ")}.`;
 }
 
 export function buildInvestigatorNarrative(report: InvestigatorReportJson): InvestigatorNarrativeJson {

@@ -27,9 +27,9 @@ describe("buildInvestigatorNarrative", () => {
     expect(narrative.caseId).toBe("case-1");
     expect(narrative.requiresReview).toBe(true);
     expect(narrative.sections[0]?.heading).toBe("2024-03-07 | exam");
-    expect(narrative.sections[0]?.paragraphs[0]).toContain("2024-03-07에");
+    expect(narrative.sections[0]?.paragraphs[0]).toContain("On 2024-03-07");
     expect(narrative.sections[0]?.paragraphs[0]).toContain("Seoul Hospital");
-    expect(narrative.sections[0]?.paragraphs[1]).toContain("weak evidence");
+    expect(narrative.sections[0]?.paragraphs[1]).toContain("Review notes");
   });
 
   it("omits empty values while preserving review flags", () => {

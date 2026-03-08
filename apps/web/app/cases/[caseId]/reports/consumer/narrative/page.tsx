@@ -30,7 +30,27 @@ export default async function ConsumerNarrativePage({ params }: PageProps) {
 
   return (
     <AppShell heading="Consumer Narrative" subheading="Template-based narrative derived from consumer report JSON.">
-      <ConsumerNarrativeClient caseId={caseId} />
+      <div style={{ display: "grid", gap: "16px" }}>
+        <div>
+          <a
+            href={`/api/cases/${caseId}/reports/consumer/narrative/pdf`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "10px 16px",
+              borderRadius: "999px",
+              border: "1px solid var(--border)",
+              color: "inherit",
+              textDecoration: "none",
+              fontWeight: 600
+            }}
+          >
+            Download PDF
+          </a>
+        </div>
+        <ConsumerNarrativeClient caseId={caseId} />
+      </div>
     </AppShell>
   );
 }

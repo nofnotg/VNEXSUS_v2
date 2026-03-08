@@ -1,4 +1,5 @@
 export * from "./consumer-summary-builder";
+export * from "./export";
 export * from "./investigator-slot-builder";
 export * from "./narrative";
 export * from "./renderers/consumer-report-renderer";

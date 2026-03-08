@@ -30,7 +30,27 @@ export default async function InvestigatorNarrativePage({ params }: PageProps) {
 
   return (
     <AppShell heading="Investigator Narrative" subheading="Template-based narrative derived from investigator report JSON.">
-      <InvestigatorNarrativeClient caseId={caseId} />
+      <div style={{ display: "grid", gap: "16px" }}>
+        <div>
+          <a
+            href={`/api/cases/${caseId}/reports/investigator/narrative/pdf`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "10px 16px",
+              borderRadius: "999px",
+              border: "1px solid var(--border)",
+              color: "inherit",
+              textDecoration: "none",
+              fontWeight: 600
+            }}
+          >
+            Download PDF
+          </a>
+        </div>
+        <InvestigatorNarrativeClient caseId={caseId} />
+      </div>
     </AppShell>
   );
 }

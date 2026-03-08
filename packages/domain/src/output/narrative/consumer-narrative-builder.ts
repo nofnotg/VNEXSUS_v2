@@ -7,18 +7,18 @@ import {
 
 function buildTimelineParagraphs(section: ConsumerReportSection) {
   if (section.summaryItems.length === 0) {
-    return ["확인 가능한 타임라인 요약이 아직 없다."];
+    return ["No confirmed timeline summary is available yet."];
   }
 
   return section.summaryItems.map((item) => {
     const [datePart, hospitalPart] = item.title.split("|").map((part) => part.trim());
-    const dateText = datePart || "기록 시점 미상";
-    const hospitalText = hospitalPart || "의료기관 미상";
+    const dateText = datePart || "unknown date";
+    const hospitalText = hospitalPart || "unknown facility";
     const valueText = item.value?.trim();
 
     return valueText
-      ? `${dateText}에 ${hospitalText} 관련 기록으로 ${valueText}이 확인되었다.`
-      : `${dateText}에 ${hospitalText} 방문 기록이 확인되었다.`;
+      ? `On ${dateText}, records from ${hospitalText} show ${valueText}.`
+      : `On ${dateText}, a visit record from ${hospitalText} was identified.`;
   });
 }
 
@@ -27,25 +27,25 @@ function buildOverviewParagraphs(section: ConsumerReportSection) {
 
   if (section.summaryItems.length > 0) {
     const summary = section.summaryItems
-      .map((item) => `${item.title}: ${item.value ?? "정보 없음"}`)
+      .map((item) => `${item.title}: ${item.value ?? "no data"}`)
       .join("; ");
-    paragraphs.push(`핵심 요약은 ${summary}이다.`);
+    paragraphs.push(`Summary: ${summary}.`);
   }
 
   if (section.riskSignals.length > 0) {
-    paragraphs.push(`주의 신호는 ${section.riskSignals.join(", ")}이다.`);
+    paragraphs.push(`Risk signals: ${section.riskSignals.join(", ")}.`);
   }
 
   if (section.checkPoints.length > 0) {
-    paragraphs.push(`추가 확인 항목은 ${section.checkPoints.join(", ")}이다.`);
+    paragraphs.push(`Check points: ${section.checkPoints.join(", ")}.`);
   }
 
   if (section.nextActions.length > 0) {
-    paragraphs.push(`권장 다음 단계는 ${section.nextActions.join(", ")}이다.`);
+    paragraphs.push(`Recommended next actions: ${section.nextActions.join(", ")}.`);
   }
 
   if (paragraphs.length === 0) {
-    paragraphs.push("표시할 소비자용 요약 정보가 아직 없다.");
+    paragraphs.push("No consumer summary details are available yet.");
   }
 
   return paragraphs;
