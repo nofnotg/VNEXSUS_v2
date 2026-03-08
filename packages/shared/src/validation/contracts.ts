@@ -383,6 +383,32 @@ export const consumerReportJsonSchema = z.object({
   requiresReview: z.boolean()
 });
 
+export const investigatorNarrativeSectionSchema = z.object({
+  heading: z.string().min(1),
+  paragraphs: z.array(z.string()),
+  requiresReview: z.boolean()
+});
+
+export const investigatorNarrativeJsonSchema = z.object({
+  caseId: z.string().min(1),
+  generatedAt: z.string().datetime(),
+  sections: z.array(investigatorNarrativeSectionSchema),
+  requiresReview: z.boolean()
+});
+
+export const consumerNarrativeSectionSchema = z.object({
+  heading: z.string().min(1),
+  paragraphs: z.array(z.string()),
+  requiresReview: z.boolean()
+});
+
+export const consumerNarrativeJsonSchema = z.object({
+  caseId: z.string().min(1),
+  generatedAt: z.string().datetime(),
+  sections: z.array(consumerNarrativeSectionSchema),
+  requiresReview: z.boolean()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -491,3 +517,7 @@ export type InvestigatorReportJson = z.infer<typeof investigatorReportJsonSchema
 export type ConsumerReportSummaryItem = z.infer<typeof consumerReportSummaryItemSchema>;
 export type ConsumerReportSection = z.infer<typeof consumerReportSectionSchema>;
 export type ConsumerReportJson = z.infer<typeof consumerReportJsonSchema>;
+export type InvestigatorNarrativeSection = z.infer<typeof investigatorNarrativeSectionSchema>;
+export type InvestigatorNarrativeJson = z.infer<typeof investigatorNarrativeJsonSchema>;
+export type ConsumerNarrativeSection = z.infer<typeof consumerNarrativeSectionSchema>;
+export type ConsumerNarrativeJson = z.infer<typeof consumerNarrativeJsonSchema>;
