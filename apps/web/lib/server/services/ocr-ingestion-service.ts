@@ -3,6 +3,7 @@ import { ApiError, ocrBlockSchema } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getStorageAdapter } from "../storage/factory";
 import { callOcrProvider } from "../ocr/provider";
+import { extractAndPersistDateCandidatesForDocument } from "./date-extraction-service";
 
 type OcrIngestionJobPayload = {
   caseId: string;
@@ -184,6 +185,8 @@ export async function runOcrIngestionSkeleton(jobId: string) {
         pageCount: actualPageCount,
         blockCount: blocks.length
       });
+
+      await extractAndPersistDateCandidatesForDocument(payload.caseId, document.id);
     }
 
     await prisma.analysisJob.update({

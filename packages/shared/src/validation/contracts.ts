@@ -38,6 +38,19 @@ export const documentCreateSchema = z.object({
 
 export const ocrJobStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
 
+export const dateTypeCandidateSchema = z.enum([
+  "visit",
+  "exam",
+  "report",
+  "pathology",
+  "surgery",
+  "admission",
+  "discharge",
+  "plan",
+  "admin",
+  "irrelevant"
+]);
+
 export const ocrBlockSchema = z.object({
   id: z.string().optional(),
   caseId: z.string().min(1),
@@ -62,6 +75,26 @@ export const ocrBlockSchema = z.object({
 });
 
 export const ocrBlockResponseContractSchema = ocrBlockSchema.extend({
+  id: z.string(),
+  createdAt: z.string().datetime()
+});
+
+export const dateCandidateSchema = z.object({
+  id: z.string().optional(),
+  caseId: z.string().min(1),
+  sourceFileId: z.string().min(1),
+  sourcePageId: z.string().min(1),
+  fileOrder: z.number().int().positive(),
+  pageOrder: z.number().int().positive(),
+  blockIndex: z.number().int().nonnegative(),
+  rawDateText: z.string().min(1),
+  normalizedDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+  dateTypeCandidate: dateTypeCandidateSchema,
+  confidence: z.number().min(0).max(1),
+  createdAt: z.string().datetime().optional()
+});
+
+export const dateCandidateResponseContractSchema = dateCandidateSchema.extend({
   id: z.string(),
   createdAt: z.string().datetime()
 });
@@ -151,3 +184,5 @@ export type OcrJobCreateInput = z.infer<typeof ocrJobCreateSchema>;
 export type OcrIngestionJobPayload = z.infer<typeof ocrIngestionJobPayloadSchema>;
 export type OcrBlockInput = z.infer<typeof ocrBlockSchema>;
 export type OcrBlockResponseContract = z.infer<typeof ocrBlockResponseContractSchema>;
+export type DateCandidateInput = z.infer<typeof dateCandidateSchema>;
+export type DateCandidateResponseContract = z.infer<typeof dateCandidateResponseContractSchema>;

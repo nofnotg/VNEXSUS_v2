@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  dateCandidateResponseContractSchema,
   loadAppEnv,
   ocrBlockResponseContractSchema,
   ocrIngestionJobPayloadSchema,
@@ -81,6 +82,25 @@ describe("Epic 0 contracts", () => {
         yMax: 20
       },
       confidence: 0.98,
+      createdAt: "2026-03-08T00:00:00.000Z"
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates persisted DateCandidate response contract", () => {
+    const parsed = dateCandidateResponseContractSchema.safeParse({
+      id: "candidate-1",
+      caseId: "case-1",
+      sourceFileId: "doc-1",
+      sourcePageId: "page-1",
+      fileOrder: 1,
+      pageOrder: 1,
+      blockIndex: 0,
+      rawDateText: "2024.03.07",
+      normalizedDate: "2024-03-07",
+      dateTypeCandidate: "visit",
+      confidence: 0.92,
       createdAt: "2026-03-08T00:00:00.000Z"
     });
 

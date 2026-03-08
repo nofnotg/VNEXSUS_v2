@@ -48,6 +48,7 @@ const state = vi.hoisted(() => ({
   }>,
   readCalls: [] as string[],
   ocrCalls: [] as string[],
+  dateExtractionCalls: [] as Array<{ caseId: string; sourceFileId: string }>,
   shouldFailOcr: false
 }));
 
@@ -171,6 +172,13 @@ vi.mock("../ocr/provider", () => ({
   })
 }));
 
+vi.mock("./date-extraction-service", () => ({
+  extractAndPersistDateCandidatesForDocument: vi.fn(async (caseId: string, sourceFileId: string) => {
+    state.dateExtractionCalls.push({ caseId, sourceFileId });
+    return { sourceFileId, candidateCount: 1 };
+  })
+}));
+
 import { runOcrIngestionSkeleton } from "./ocr-ingestion-service";
 
 describe("ocr ingestion skeleton", () => {
@@ -211,6 +219,7 @@ describe("ocr ingestion skeleton", () => {
     state.blocks = [];
     state.readCalls = [];
     state.ocrCalls = [];
+    state.dateExtractionCalls = [];
     state.shouldFailOcr = false;
   });
 
@@ -224,6 +233,7 @@ describe("ocr ingestion skeleton", () => {
     expect(state.blocks.map((block) => block.pageOrder)).toEqual([1, 1]);
     expect(state.blocks[0]?.textNormalized).toBe("진단서");
     expect(state.documents[0]?.pageCount).toBe(1);
+    expect(state.dateExtractionCalls).toEqual([{ caseId: "case-1", sourceFileId: "doc-1" }]);
     expect(result.status).toBe("completed");
     expect(state.job.completedAt).toBeInstanceOf(Date);
   });

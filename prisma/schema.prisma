@@ -106,6 +106,19 @@ enum EvidenceKind {
   page_region
 }
 
+enum DateTypeCandidate {
+  visit
+  exam
+  report
+  pathology
+  surgery
+  admission
+  discharge
+  plan
+  admin
+  irrelevant
+}
+
 enum ReportType {
   consumer_summary
   investigator_report
@@ -297,6 +310,7 @@ model SourcePage {
   height        Int?
   sourceFile    SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
   ocrBlocks     OcrBlock[]
+  dateCandidates DateCandidate[]
   evidenceRefs  EvidenceRef[]
 
   @@unique([sourceFileId, pageOrder])
@@ -328,16 +342,20 @@ model DateCandidate {
   id                String       @id @default(cuid())
   caseId            String
   sourceFileId      String
+  sourcePageId      String
+  fileOrder         Int
   pageOrder         Int
   blockIndex        Int
   rawDateText       String
-  normalizedDate    DateTime?
-  dateTypeCandidate String?
+  normalizedDate    String?
+  dateTypeCandidate DateTypeCandidate
   confidence        Float
-  metadataJson      Json?
+  createdAt         DateTime     @default(now())
   case              Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
   sourceFile        SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  sourcePage        SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
 
+  @@index([caseId, fileOrder, pageOrder, blockIndex])
   @@index([caseId, normalizedDate])
 }
 
