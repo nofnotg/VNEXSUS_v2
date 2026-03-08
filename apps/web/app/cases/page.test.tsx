@@ -39,22 +39,42 @@ describe("cases page", () => {
 
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue(
-        Response.json({
-          success: true,
-          data: {
-            items: [
-              {
-                caseId: "case-1",
-                uploadDate: "2026-03-06T09:00:00.000Z",
-                status: "ready",
-                audience: "consumer"
-              }
-            ]
-          },
-          meta: { requestId: "req-case-list" }
-        })
-      )
+      vi.fn((input: string) => {
+        if (input === "/api/cases/list") {
+          return Promise.resolve(
+            Response.json({
+              success: true,
+              data: {
+                items: [
+                  {
+                    caseId: "case-1",
+                    hospitalName: "Seoul Hospital",
+                    uploadDate: "2026-03-06T09:00:00.000Z",
+                    status: "ready",
+                    audience: "consumer",
+                    hasReport: true,
+                    hasNarrative: true,
+                    hasPdf: true
+                  }
+                ]
+              },
+              meta: { requestId: "req-case-list" }
+            })
+          );
+        }
+
+        if (input === "/api/user/preferences") {
+          return Promise.resolve(
+            Response.json({
+              success: true,
+              data: { locale: "ko", theme: "light" },
+              meta: { requestId: "req-prefs" }
+            })
+          );
+        }
+
+        return Promise.reject(new Error(`Unexpected fetch: ${input}`));
+      })
     );
 
     const ui = await CasesPage();
@@ -70,6 +90,7 @@ describe("cases page", () => {
     });
 
     expect(screen.getByText("case-1")).toBeTruthy();
+    expect(screen.getByText("Seoul Hospital")).toBeTruthy();
     expect(screen.getByText("Ready")).toBeTruthy();
 
     fireEvent.change(screen.getByRole("combobox", { name: "Select language" }), {
@@ -80,6 +101,7 @@ describe("cases page", () => {
       expect(screen.getByText("사례 ID")).toBeTruthy();
     });
 
+    expect(screen.getByText("병원")).toBeTruthy();
     expect(screen.getByText("작업")).toBeTruthy();
   });
 });

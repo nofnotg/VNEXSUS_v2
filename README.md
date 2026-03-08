@@ -18,6 +18,9 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
   - `/cases` localizes table headers, action labels, and empty states through the shared message dictionary.
   - `/settings` lets users update language and theme preferences in one place.
   - Theme preference is stored in the `vnexus_theme` cookie and in `localStorage`.
+  - When a signed-in user saves preferences, locale and theme are also persisted to the server-side profile record for cross-device consistency.
+  - Case list data now comes from live case records and related report/document metadata instead of mock fixtures.
+  - Because locale/theme are personal preference data, they should be handled under the same privacy review as other user profile fields.
 - If `lang` is omitted, the server falls back to `Accept-Language` and then to English.
 - Unsupported language values return `400 VALIDATION_ERROR`.
 

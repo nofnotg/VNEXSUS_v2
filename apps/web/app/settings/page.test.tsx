@@ -26,6 +26,16 @@ describe("settings page", () => {
 
   it("saves locale and theme preferences to provider state and storage", async () => {
     getRequestLocaleMock.mockResolvedValue("en");
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(
+        Response.json({
+          success: true,
+          data: { locale: "ko", theme: "dark" },
+          meta: { requestId: "req-save-prefs" }
+        })
+      )
+    );
+    vi.stubGlobal("fetch", fetchMock);
 
     const ui = await SettingsPage();
 
@@ -52,5 +62,9 @@ describe("settings page", () => {
     expect(document.cookie).toContain("vnexus_lang=ko");
     expect(document.cookie).toContain("vnexus_theme=dark");
     expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/user/preferences",
+      expect.objectContaining({ method: "PUT", credentials: "same-origin" })
+    );
   });
 });

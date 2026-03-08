@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getLocaleMessages, type LocaleCode } from "@vnexus/shared";
 import { useLocale, useLocaleMessages } from "../../components/locale-provider";
 import { useTheme, type ThemeMode } from "../../components/theme-provider";
+import { syncUserPreferences } from "../../lib/client/user-preferences-api";
 
 export function SettingsClient() {
   const { locale, setLocale } = useLocale();
@@ -28,6 +29,7 @@ export function SettingsClient() {
         event.preventDefault();
         setLocale(nextLocale);
         setTheme(nextTheme);
+        void syncUserPreferences({ locale: nextLocale, theme: nextTheme });
         setSavedMessage(getLocaleMessages(nextLocale).uiSettingsSaved);
       }}
       style={{ display: "grid", gap: "20px", maxWidth: "520px" }}

@@ -1,0 +1,3 @@
+ALTER TABLE "Profile"
+ADD COLUMN "locale" TEXT,
+ADD COLUMN "theme" TEXT;

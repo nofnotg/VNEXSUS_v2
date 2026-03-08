@@ -1,37 +1,34 @@
-import { ApiError, caseListJsonSchema, type CaseListItem, type UserRole } from "@vnexus/shared";
+import { ApiError, caseListJsonSchema, type UserRole } from "@vnexus/shared";
+import { caseListRepository, type CaseListRecord } from "../data-access/case-list-repository";
 
-const mockCaseItems: Array<CaseListItem & { ownerUserId: string }> = [
-  {
-    caseId: "case-1",
-    ownerUserId: "user-1",
-    uploadDate: "2026-03-06T09:00:00.000Z",
-    status: "ready",
-    audience: "investigator"
-  },
-  {
-    caseId: "case-2",
-    ownerUserId: "user-1",
-    uploadDate: "2026-03-07T14:30:00.000Z",
-    status: "review_required",
-    audience: "consumer"
-  },
-  {
-    caseId: "case-3",
-    ownerUserId: "user-2",
-    uploadDate: "2026-03-08T08:15:00.000Z",
-    status: "processing",
-    audience: "consumer"
-  }
-];
+function mapCaseListItem(item: CaseListRecord) {
+  const readyReport = item.reports.find((report) => report.status === "ready");
+  const hasNarrative = Boolean(readyReport);
 
-export async function getCaseList(userId: string, role: UserRole) {
+  return {
+    caseId: item.id,
+    hospitalName: item.eventBundles[0]?.primaryHospital ?? item.patientInput?.insuranceCompany ?? null,
+    uploadDate: item.sourceDocuments[0]?.uploadedAt.toISOString() ?? item.createdAt.toISOString(),
+    status: item.status,
+    audience: item.audience,
+    hasReport: Boolean(readyReport),
+    hasNarrative,
+    hasPdf: hasNarrative
+  };
+}
+
+export async function getCaseList(
+  userId: string,
+  role: UserRole,
+  repository: Pick<typeof caseListRepository, "findCasesForUser"> = caseListRepository
+) {
   if (!["consumer", "investigator", "admin"].includes(role)) {
     throw new ApiError("FORBIDDEN", "This role cannot access case list");
   }
 
-  const items = role === "admin" ? mockCaseItems : mockCaseItems.filter((item) => item.ownerUserId === userId);
+  const items = await repository.findCasesForUser(userId, role === "admin");
 
   return caseListJsonSchema.parse({
-    items: items.map(({ ownerUserId: _ownerUserId, ...item }) => item)
+    items: items.map(mapCaseListItem)
   });
 }

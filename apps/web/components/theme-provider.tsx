@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { syncUserPreferences } from "../lib/client/user-preferences-api";
 
 export type ThemeMode = "light" | "dark";
 
@@ -15,6 +16,18 @@ const ThemeContext = createContext<ThemeContextValue>({
   theme: "light",
   setTheme: () => {}
 });
+
+function schedulePreferenceSync(preferences: { locale?: "en" | "ko"; theme?: ThemeMode }, attempt = 0) {
+  void syncUserPreferences(preferences).catch(() => {
+    if (attempt >= 1 || typeof window === "undefined") {
+      return;
+    }
+
+    window.setTimeout(() => {
+      schedulePreferenceSync(preferences, attempt + 1);
+    }, 1000);
+  });
+}
 
 function normalizeTheme(value: string | null | undefined): ThemeMode {
   return value === "dark" ? "dark" : "light";
@@ -67,6 +80,7 @@ export function ThemeProvider({ initialTheme = "light", children }: { initialThe
     const normalized = normalizeTheme(nextTheme);
     setThemeState(normalized);
     persistTheme(normalized);
+    schedulePreferenceSync({ theme: normalized });
   };
 
   return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;

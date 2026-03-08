@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { getLocaleMessages, normalizeLocaleCode, type LocaleCode } from "@vnexus/shared";
+import { syncUserPreferences } from "../lib/client/user-preferences-api";
 
 export const LOCALE_COOKIE_NAME = "vnexus_lang";
 
@@ -14,6 +15,18 @@ const LocaleContext = createContext<LocaleContextValue>({
   locale: "en",
   setLocale: () => {}
 });
+
+function schedulePreferenceSync(preferences: { locale?: LocaleCode; theme?: "light" | "dark" }, attempt = 0) {
+  void syncUserPreferences(preferences).catch(() => {
+    if (attempt >= 1 || typeof window === "undefined") {
+      return;
+    }
+
+    window.setTimeout(() => {
+      schedulePreferenceSync(preferences, attempt + 1);
+    }, 1000);
+  });
+}
 
 function readStoredLocale() {
   if (typeof window === "undefined") {
@@ -62,6 +75,7 @@ export function LocaleProvider({ initialLocale = "en", children }: { initialLoca
     const normalized = normalizeLocaleCode(nextLocale);
     setLocaleState(normalized);
     persistLocale(normalized);
+    schedulePreferenceSync({ locale: normalized });
   };
 
   return <LocaleContext.Provider value={{ locale, setLocale }}>{children}</LocaleContext.Provider>;

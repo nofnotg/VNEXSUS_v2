@@ -225,6 +225,8 @@ model Profile {
   displayName                    String?
   phone                          String?
   roleDetail                     String?
+  locale                         String?
+  theme                          String?
   investigatorVerificationStatus InvestigatorVerificationStatus @default(not_requested)
   marketingOptIn                 Boolean                        @default(false)
   user                           User                           @relation(fields: [userId], references: [id], onDelete: Cascade)

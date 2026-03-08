@@ -87,6 +87,7 @@ export function CaseListClient() {
       <thead>
         <tr>
           <th style={headerCellStyle}>{localeMessages.uiCaseIdColumn}</th>
+          <th style={headerCellStyle}>{localeMessages.uiHospitalColumn}</th>
           <th style={headerCellStyle}>{localeMessages.uiUploadDateColumn}</th>
           <th style={headerCellStyle}>{localeMessages.uiStatusColumn}</th>
           <th style={headerCellStyle}>{localeMessages.uiAudienceColumn}</th>
@@ -103,16 +104,21 @@ export function CaseListClient() {
           return (
             <tr key={item.caseId}>
               <td style={bodyCellStyle}>{item.caseId}</td>
+              <td style={bodyCellStyle}>{item.hospitalName ?? "-"}</td>
               <td style={bodyCellStyle}>{new Date(item.uploadDate).toLocaleString(locale)}</td>
               <td style={bodyCellStyle}>{resolveStatusLabel(item, localeMessages)}</td>
               <td style={bodyCellStyle}>{audienceLabel}</td>
               <td style={bodyCellStyle}>
                 <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                   <Link href={reportBase}>{localeMessages.uiActionReport}</Link>
-                  <Link href={narrativeBase}>{localeMessages.uiActionNarrative}</Link>
-                  <a href={`/api/cases/${item.caseId}/reports/${item.audience}/narrative/pdf?lang=${locale}`}>
-                    {localeMessages.uiActionPdf}
-                  </a>
+                  {item.hasNarrative ? <Link href={narrativeBase}>{localeMessages.uiActionNarrative}</Link> : <span>-</span>}
+                  {item.hasPdf ? (
+                    <a href={`/api/cases/${item.caseId}/reports/${item.audience}/narrative/pdf?lang=${locale}`}>
+                      {localeMessages.uiActionPdf}
+                    </a>
+                  ) : (
+                    <span>-</span>
+                  )}
                 </div>
               </td>
             </tr>

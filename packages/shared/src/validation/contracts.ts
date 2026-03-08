@@ -411,9 +411,13 @@ export const consumerNarrativeJsonSchema = z.object({
 
 export const caseListItemSchema = z.object({
   caseId: z.string().min(1),
+  hospitalName: z.string().nullable(),
   uploadDate: z.string().datetime(),
   status: caseStatusSchema,
-  audience: caseAudienceSchema
+  audience: caseAudienceSchema,
+  hasReport: z.boolean(),
+  hasNarrative: z.boolean(),
+  hasPdf: z.boolean()
 });
 
 export const caseListJsonSchema = z.object({

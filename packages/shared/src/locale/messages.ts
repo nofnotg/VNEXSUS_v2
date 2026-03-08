@@ -103,6 +103,7 @@ export type MessageDictionary = {
   uiCasesLoadError: string;
   uiCaseIdColumn: string;
   uiUploadDateColumn: string;
+  uiHospitalColumn: string;
   uiStatusColumn: string;
   uiAudienceColumn: string;
   uiActionsColumn: string;
@@ -229,6 +230,7 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiCasesLoadError: "Failed to load case list.",
     uiCaseIdColumn: "Case ID",
     uiUploadDateColumn: "Upload date",
+    uiHospitalColumn: "Hospital",
     uiStatusColumn: "Status",
     uiAudienceColumn: "Audience",
     uiActionsColumn: "Actions",
@@ -353,6 +355,7 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiCasesLoadError: "사례 목록을 불러오지 못했다.",
     uiCaseIdColumn: "사례 ID",
     uiUploadDateColumn: "업로드 일자",
+    uiHospitalColumn: "병원",
     uiStatusColumn: "상태",
     uiAudienceColumn: "대상",
     uiActionsColumn: "작업",

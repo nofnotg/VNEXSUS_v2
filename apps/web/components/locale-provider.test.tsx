@@ -2,7 +2,7 @@
 
 import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getLocaleMessages } from "@vnexus/shared";
 import { LocaleProvider, useLocale, useLocaleMessages } from "./locale-provider";
 
@@ -22,6 +22,21 @@ function LocaleProbe() {
 }
 
 describe("LocaleProvider", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          Response.json({
+            success: true,
+            data: { locale: "ko", theme: "light" },
+            meta: { requestId: "req-prefs" }
+          })
+        )
+      )
+    );
+  });
+
   it("updates locale state and persists it to cookie and localStorage", async () => {
     window.localStorage.clear();
     document.cookie = "vnexus_lang=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
