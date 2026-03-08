@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  eventAtomResponseContractSchema,
   dateCenteredWindowResponseContractSchema,
   dateCandidateResponseContractSchema,
   entityCandidateResponseContractSchema,
@@ -158,6 +159,60 @@ describe("Epic 0 contracts", () => {
         pathologies: [],
         medications: ["처방"],
         symptoms: []
+      },
+      createdAt: "2026-03-08T00:00:00.000Z"
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates persisted EventAtom response contract", () => {
+    const parsed = eventAtomResponseContractSchema.safeParse({
+      id: "atom-1",
+      caseId: "case-1",
+      sourceWindowId: "window-1",
+      sourceFileId: "doc-1",
+      sourcePageId: "page-1",
+      canonicalDate: "2024-03-07",
+      fileOrder: 1,
+      pageOrder: 1,
+      anchorBlockIndex: 3,
+      primaryHospital: "서울병원",
+      primaryDepartment: "내과",
+      primaryDiagnosis: "폐렴",
+      primaryTest: "CT",
+      primaryTreatment: null,
+      primaryProcedure: null,
+      primarySurgery: null,
+      admissionStatus: null,
+      pathologySummary: null,
+      medicationSummary: "항생제",
+      symptomSummary: "기침",
+      eventTypeCandidate: "exam",
+      ambiguityScore: 0.21,
+      requiresReview: false,
+      unresolvedSlotsJson: {
+        hospitalMissing: false,
+        diagnosisMissing: false,
+        conflictingDiagnosis: false,
+        conflictingHospital: false,
+        weakEvidence: false,
+        needsManualReview: false,
+        notes: []
+      },
+      candidateSnapshotJson: {
+        hospitals: ["서울병원"],
+        departments: ["내과"],
+        diagnoses: ["폐렴"],
+        tests: ["CT"],
+        treatments: [],
+        procedures: [],
+        surgeries: [],
+        admissions: [],
+        discharges: [],
+        pathologies: [],
+        medications: ["항생제"],
+        symptoms: ["기침"]
       },
       createdAt: "2026-03-08T00:00:00.000Z"
     });

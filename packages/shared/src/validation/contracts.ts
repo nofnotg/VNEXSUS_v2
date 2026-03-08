@@ -68,6 +68,20 @@ export const entityCandidateTypeSchema = z.enum([
   "unknown"
 ]);
 
+export const eventTypeCandidateSchema = z.enum([
+  "outpatient",
+  "exam",
+  "treatment",
+  "procedure",
+  "surgery",
+  "admission",
+  "discharge",
+  "pathology",
+  "followup",
+  "mixed",
+  "unknown"
+]);
+
 export const ocrBlockSchema = z.object({
   id: z.string().optional(),
   caseId: z.string().min(1),
@@ -174,6 +188,50 @@ export const dateCenteredWindowResponseContractSchema = dateCenteredWindowSchema
   createdAt: z.string().datetime()
 });
 
+export const unresolvedSlotsSchema = z.object({
+  hospitalMissing: z.boolean(),
+  diagnosisMissing: z.boolean(),
+  conflictingDiagnosis: z.boolean(),
+  conflictingHospital: z.boolean(),
+  weakEvidence: z.boolean(),
+  needsManualReview: z.boolean(),
+  notes: z.array(z.string())
+});
+
+export const eventAtomSchema = z.object({
+  id: z.string().optional(),
+  caseId: z.string().min(1),
+  sourceWindowId: z.string().min(1),
+  sourceFileId: z.string().min(1),
+  sourcePageId: z.string().min(1),
+  canonicalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  fileOrder: z.number().int().positive(),
+  pageOrder: z.number().int().positive(),
+  anchorBlockIndex: z.number().int().nonnegative(),
+  primaryHospital: z.string().nullable().optional(),
+  primaryDepartment: z.string().nullable().optional(),
+  primaryDiagnosis: z.string().nullable().optional(),
+  primaryTest: z.string().nullable().optional(),
+  primaryTreatment: z.string().nullable().optional(),
+  primaryProcedure: z.string().nullable().optional(),
+  primarySurgery: z.string().nullable().optional(),
+  admissionStatus: z.enum(["admitted", "discharged", "both"]).nullable().optional(),
+  pathologySummary: z.string().nullable().optional(),
+  medicationSummary: z.string().nullable().optional(),
+  symptomSummary: z.string().nullable().optional(),
+  eventTypeCandidate: eventTypeCandidateSchema,
+  ambiguityScore: z.number().min(0).max(1),
+  requiresReview: z.boolean(),
+  unresolvedSlotsJson: unresolvedSlotsSchema,
+  candidateSnapshotJson: candidateSummarySchema,
+  createdAt: z.string().datetime().optional()
+});
+
+export const eventAtomResponseContractSchema = eventAtomSchema.extend({
+  id: z.string(),
+  createdAt: z.string().datetime()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -266,3 +324,6 @@ export type EntityCandidateResponseContract = z.infer<typeof entityCandidateResp
 export type CandidateSummary = z.infer<typeof candidateSummarySchema>;
 export type DateCenteredWindowInput = z.infer<typeof dateCenteredWindowSchema>;
 export type DateCenteredWindowResponseContract = z.infer<typeof dateCenteredWindowResponseContractSchema>;
+export type UnresolvedSlots = z.infer<typeof unresolvedSlotsSchema>;
+export type EventAtomInput = z.infer<typeof eventAtomSchema>;
+export type EventAtomResponseContract = z.infer<typeof eventAtomResponseContractSchema>;

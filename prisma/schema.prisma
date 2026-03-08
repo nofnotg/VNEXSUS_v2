@@ -136,6 +136,20 @@ enum EntityCandidateType {
   unknown
 }
 
+enum EventTypeCandidate {
+  outpatient
+  exam
+  treatment
+  procedure
+  surgery
+  admission
+  discharge
+  pathology
+  followup
+  mixed
+  unknown
+}
+
 enum ReportType {
   consumer_summary
   investigator_report
@@ -427,6 +441,7 @@ model DateCenteredWindow {
   dateCandidate         DateCandidate  @relation(fields: [dateCandidateId], references: [id], onDelete: Cascade)
   sourceFile            SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
   sourcePage            SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
+  eventAtoms            EventAtom[]
 
   @@index([caseId, fileOrder, pageOrder, anchorBlockIndex])
   @@index([dateCandidateId])
@@ -457,20 +472,40 @@ model EvidenceRef {
 }
 
 model EventAtom {
-  id             String     @id @default(cuid())
-  caseId         String
-  eventBundleId  String?
-  canonicalDate  DateTime?
-  eventType      EventType
-  hospital       String?
-  department     String?
-  payloadJson    Json
-  confidence     Float
-  createdAt      DateTime   @default(now())
-  case           Case       @relation(fields: [caseId], references: [id], onDelete: Cascade)
-  eventBundle    EventBundle? @relation(fields: [eventBundleId], references: [id], onDelete: SetNull)
+  id                  String             @id @default(cuid())
+  caseId              String
+  sourceWindowId      String
+  eventBundleId       String?
+  sourceFileId        String
+  sourcePageId        String
+  canonicalDate       String
+  fileOrder           Int
+  pageOrder           Int
+  anchorBlockIndex    Int
+  primaryHospital     String?
+  primaryDepartment   String?
+  primaryDiagnosis    String?
+  primaryTest         String?
+  primaryTreatment    String?
+  primaryProcedure    String?
+  primarySurgery      String?
+  admissionStatus     String?
+  pathologySummary    String?
+  medicationSummary   String?
+  symptomSummary      String?
+  eventTypeCandidate  EventTypeCandidate
+  ambiguityScore      Float
+  requiresReview      Boolean            @default(false)
+  unresolvedSlotsJson Json
+  candidateSnapshotJson Json
+  createdAt           DateTime           @default(now())
+  case                Case               @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  sourceWindow        DateCenteredWindow @relation(fields: [sourceWindowId], references: [id], onDelete: Cascade)
+  eventBundle         EventBundle?       @relation(fields: [eventBundleId], references: [id], onDelete: SetNull)
 
+  @@index([caseId, fileOrder, pageOrder, anchorBlockIndex])
   @@index([caseId, canonicalDate])
+  @@index([sourceWindowId])
 }
 
 model EventBundle {

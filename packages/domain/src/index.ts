@@ -3,6 +3,7 @@ export * from "./cases/contracts";
 export * from "./dates";
 export * from "./documents/invariants";
 export * from "./entities";
+export * from "./events";
 export * from "./plans/plan-gating";
 export * from "./reports/contracts";
 export * from "./windows";
