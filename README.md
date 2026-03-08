@@ -46,3 +46,11 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
 - The UI uses optimistic updates, but failed saves roll back local state and surface the server error to the reviewer.
 - Admin users can open edit history from the detail page to review prior changes.
 - Timeline rows intentionally stay close to the evidence-oriented event structure; they are not free-form summaries.
+
+## Analytics Dashboard
+
+- Use `/cases/analytics` to review aggregate case and event metrics across the current workspace scope.
+- Only investigator and admin roles can open the dashboard or call `/api/cases/analytics`.
+- The dashboard currently exposes total cases, total events, confirmed/unconfirmed events, review-required events, events by type, and top hospital counts.
+- Aggregations are computed in the service/repository layer so route handlers remain thin and testable.
+- If event or hospital categories become too large, the repository/service layer is the place to add normalization or caching.

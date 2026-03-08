@@ -477,6 +477,16 @@ export const caseEventEditSchema = z.object({
   requiresReview: z.boolean().optional()
 });
 
+export const caseAnalyticsSchema = z.object({
+  totalCases: z.number().int().nonnegative(),
+  totalEvents: z.number().int().nonnegative(),
+  confirmedEvents: z.number().int().nonnegative(),
+  unconfirmedEvents: z.number().int().nonnegative(),
+  reviewRequiredEvents: z.number().int().nonnegative(),
+  eventsByType: z.record(z.string(), z.number().int().nonnegative()),
+  eventsByHospital: z.record(z.string(), z.number().int().nonnegative())
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -595,3 +605,4 @@ export type CaseEvent = z.infer<typeof caseEventSchema>;
 export type CaseDetail = z.infer<typeof caseDetailSchema>;
 export type CaseEventEdit = z.infer<typeof caseEventEditSchema>;
 export type EventEditHistory = NonNullable<CaseEvent["editHistory"]>[number];
+export type CaseAnalytics = z.infer<typeof caseAnalyticsSchema>;

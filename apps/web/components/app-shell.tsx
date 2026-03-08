@@ -49,6 +49,7 @@ export function AppShell({
           <nav style={{ display: "flex", gap: "16px", color: "var(--muted)", alignItems: "center", flexWrap: "wrap" }}>
             <Link href="/">{localeMessages.uiHome}</Link>
             <Link href="/cases">{localeMessages.uiCases}</Link>
+            <Link href="/cases/analytics">{localeMessages.uiAnalyticsHeading}</Link>
             <Link href="/sign-in">{localeMessages.uiSignIn}</Link>
             <Link href="/dashboard">{localeMessages.uiDashboard}</Link>
             <Link href="/settings">{localeMessages.uiSettings}</Link>

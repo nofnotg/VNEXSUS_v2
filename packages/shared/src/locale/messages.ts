@@ -155,6 +155,16 @@ export type MessageDictionary = {
   uiViewEditHistory: string;
   uiHideEditHistory: string;
   uiEditHistoryHeading: string;
+  uiAnalyticsHeading: string;
+  uiAnalyticsSubheading: string;
+  uiTotalCases: string;
+  uiTotalEvents: string;
+  uiConfirmedEvents: string;
+  uiUnconfirmedEvents: string;
+  uiReviewRequiredEvents: string;
+  uiEventsByType: string;
+  uiEventsByHospital: string;
+  uiAnalyticsEmpty: string;
 };
 
 export const messages: Record<LocaleCode, MessageDictionary> = {
@@ -312,7 +322,17 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiInvalidDate: "Use YYYY-MM-DD format.",
     uiViewEditHistory: "View edit history",
     uiHideEditHistory: "Hide edit history",
-    uiEditHistoryHeading: "Edit history"
+    uiEditHistoryHeading: "Edit history",
+    uiAnalyticsHeading: "Case Analytics",
+    uiAnalyticsSubheading: "Review aggregated case and event metrics across the workspace.",
+    uiTotalCases: "Total cases",
+    uiTotalEvents: "Total events",
+    uiConfirmedEvents: "Confirmed events",
+    uiUnconfirmedEvents: "Unconfirmed events",
+    uiReviewRequiredEvents: "Review required events",
+    uiEventsByType: "Events by type",
+    uiEventsByHospital: "Events by hospital",
+    uiAnalyticsEmpty: "No analytics data is available yet."
   },
   ko: {
     genericUnknownDate: "날짜 미확인",
@@ -468,7 +488,17 @@ export const messages: Record<LocaleCode, MessageDictionary> = {
     uiInvalidDate: "YYYY-MM-DD 형식을 사용하세요.",
     uiViewEditHistory: "수정 이력 보기",
     uiHideEditHistory: "수정 이력 숨기기",
-    uiEditHistoryHeading: "수정 이력"
+    uiEditHistoryHeading: "수정 이력",
+    uiAnalyticsHeading: "케이스 분석",
+    uiAnalyticsSubheading: "여러 케이스에서 집계된 이벤트 현황을 한눈에 확인합니다.",
+    uiTotalCases: "전체 케이스",
+    uiTotalEvents: "전체 이벤트",
+    uiConfirmedEvents: "확정 이벤트",
+    uiUnconfirmedEvents: "미확정 이벤트",
+    uiReviewRequiredEvents: "검토 필요 이벤트",
+    uiEventsByType: "유형별 이벤트",
+    uiEventsByHospital: "병원별 이벤트",
+    uiAnalyticsEmpty: "표시할 분석 데이터가 아직 없습니다."
   }
 };
 
