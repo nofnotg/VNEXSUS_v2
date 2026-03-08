@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  consumerSummaryJsonSchema,
   dateCandidateResponseContractSchema,
   dateCenteredWindowResponseContractSchema,
   entityCandidateResponseContractSchema,
   eventAtomResponseContractSchema,
   eventBundleResponseContractSchema,
+  investigatorSlotJsonSchema,
   loadAppEnv,
   ocrBlockResponseContractSchema,
   ocrIngestionJobPayloadSchema,
@@ -262,6 +264,62 @@ describe("Epic 0 contracts", () => {
         symptoms: ["Cough"]
       },
       createdAt: "2026-03-08T00:00:00.000Z"
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates investigator structured JSON contract", () => {
+    const parsed = investigatorSlotJsonSchema.safeParse({
+      caseId: "case-1",
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      bundles: [
+        {
+          eventBundleId: "bundle-1",
+          canonicalDate: "2024-03-07",
+          hospital: "Seoul Hospital",
+          department: "Internal Medicine",
+          diagnosis: "Pneumonia",
+          test: "CT",
+          treatment: null,
+          procedure: null,
+          surgery: null,
+          admissionStatus: null,
+          pathologySummary: null,
+          medicationSummary: "Aspirin",
+          symptomSummary: "Cough",
+          bundleTypeCandidate: "exam",
+          ambiguityScore: 0.21,
+          requiresReview: false,
+          notes: []
+        }
+      ]
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates consumer structured summary contract", () => {
+    const parsed = consumerSummaryJsonSchema.safeParse({
+      caseId: "case-1",
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      timelineSummary: [
+        {
+          canonicalDate: "2024-03-07",
+          hospital: "Seoul Hospital",
+          diagnosis: "Pneumonia",
+          test: "CT",
+          treatment: null,
+          surgery: null,
+          admissionStatus: null,
+          reviewFlag: false
+        }
+      ],
+      hospitalSummary: ["Seoul Hospital"],
+      riskSignals: ["review_required_bundle"],
+      checkPoints: ["review_required_bundle_exists"],
+      recommendedNextActions: ["review_original_documents"],
+      requiresReview: true
     });
 
     expect(parsed.success).toBe(true);

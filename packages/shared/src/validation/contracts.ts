@@ -281,6 +281,68 @@ export const eventBundleResponseContractSchema = eventBundleSchema.extend({
   createdAt: z.string().datetime()
 });
 
+export const investigatorSlotBundleSchema = z.object({
+  eventBundleId: z.string().min(1),
+  canonicalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  hospital: z.string().nullable(),
+  department: z.string().nullable(),
+  diagnosis: z.string().nullable(),
+  test: z.string().nullable(),
+  treatment: z.string().nullable(),
+  procedure: z.string().nullable(),
+  surgery: z.string().nullable(),
+  admissionStatus: z.enum(["admitted", "discharged", "both"]).nullable(),
+  pathologySummary: z.string().nullable(),
+  medicationSummary: z.string().nullable(),
+  symptomSummary: z.string().nullable(),
+  bundleTypeCandidate: bundleTypeCandidateSchema,
+  ambiguityScore: z.number().min(0).max(1),
+  requiresReview: z.boolean(),
+  notes: z.array(z.string())
+});
+
+export const investigatorSlotJsonSchema = z.object({
+  caseId: z.string().min(1),
+  generatedAt: z.string().datetime(),
+  bundles: z.array(investigatorSlotBundleSchema)
+});
+
+export const consumerTimelineItemSchema = z.object({
+  canonicalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  hospital: z.string().nullable(),
+  diagnosis: z.string().nullable(),
+  test: z.string().nullable(),
+  treatment: z.string().nullable(),
+  surgery: z.string().nullable(),
+  admissionStatus: z.enum(["admitted", "discharged", "both"]).nullable(),
+  reviewFlag: z.boolean()
+});
+
+export const consumerSummaryJsonSchema = z.object({
+  caseId: z.string().min(1),
+  generatedAt: z.string().datetime(),
+  timelineSummary: z.array(consumerTimelineItemSchema),
+  hospitalSummary: z.array(z.string()),
+  riskSignals: z.array(z.string()),
+  checkPoints: z.array(
+    z.enum([
+      "review_required_bundle_exists",
+      "surgery_history_detected",
+      "admission_history_detected",
+      "mixed_bundle_detected"
+    ])
+  ),
+  recommendedNextActions: z.array(
+    z.enum([
+      "review_original_documents",
+      "check_hospital_history",
+      "check_surgery_records",
+      "manual_review_recommended"
+    ])
+  ),
+  requiresReview: z.boolean()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -379,3 +441,7 @@ export type EventAtomResponseContract = z.infer<typeof eventAtomResponseContract
 export type UnresolvedBundleSlots = z.infer<typeof unresolvedBundleSlotsSchema>;
 export type EventBundleInput = z.infer<typeof eventBundleSchema>;
 export type EventBundleResponseContract = z.infer<typeof eventBundleResponseContractSchema>;
+export type InvestigatorSlotBundle = z.infer<typeof investigatorSlotBundleSchema>;
+export type InvestigatorSlotJson = z.infer<typeof investigatorSlotJsonSchema>;
+export type ConsumerTimelineItem = z.infer<typeof consumerTimelineItemSchema>;
+export type ConsumerSummaryJson = z.infer<typeof consumerSummaryJsonSchema>;
