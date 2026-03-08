@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   dateCandidateResponseContractSchema,
+  entityCandidateResponseContractSchema,
   loadAppEnv,
   ocrBlockResponseContractSchema,
   ocrIngestionJobPayloadSchema,
@@ -101,6 +102,29 @@ describe("Epic 0 contracts", () => {
       normalizedDate: "2024-03-07",
       dateTypeCandidate: "visit",
       confidence: 0.92,
+      createdAt: "2026-03-08T00:00:00.000Z"
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates persisted EntityCandidate response contract", () => {
+    const parsed = entityCandidateResponseContractSchema.safeParse({
+      id: "entity-1",
+      caseId: "case-1",
+      sourceFileId: "doc-1",
+      sourcePageId: "page-1",
+      relatedDateCandidateId: "date-1",
+      fileOrder: 1,
+      pageOrder: 1,
+      blockIndex: 0,
+      candidateType: "hospital",
+      rawText: "서울병원",
+      normalizedText: "서울병원",
+      confidence: 0.88,
+      metadataJson: {
+        source: "keyword"
+      },
       createdAt: "2026-03-08T00:00:00.000Z"
     });
 

@@ -51,6 +51,23 @@ export const dateTypeCandidateSchema = z.enum([
   "irrelevant"
 ]);
 
+export const entityCandidateTypeSchema = z.enum([
+  "hospital",
+  "department",
+  "diagnosis",
+  "test",
+  "treatment",
+  "procedure",
+  "surgery",
+  "admission",
+  "discharge",
+  "pathology",
+  "medication",
+  "symptom",
+  "admin",
+  "unknown"
+]);
+
 export const ocrBlockSchema = z.object({
   id: z.string().optional(),
   caseId: z.string().min(1),
@@ -95,6 +112,28 @@ export const dateCandidateSchema = z.object({
 });
 
 export const dateCandidateResponseContractSchema = dateCandidateSchema.extend({
+  id: z.string(),
+  createdAt: z.string().datetime()
+});
+
+export const entityCandidateSchema = z.object({
+  id: z.string().optional(),
+  caseId: z.string().min(1),
+  sourceFileId: z.string().min(1),
+  sourcePageId: z.string().min(1),
+  relatedDateCandidateId: z.string().min(1).nullable().optional(),
+  fileOrder: z.number().int().positive(),
+  pageOrder: z.number().int().positive(),
+  blockIndex: z.number().int().nonnegative(),
+  candidateType: entityCandidateTypeSchema,
+  rawText: z.string().min(1),
+  normalizedText: z.string().min(1),
+  confidence: z.number().min(0).max(1),
+  metadataJson: z.record(z.string(), z.unknown()).nullable().optional(),
+  createdAt: z.string().datetime().optional()
+});
+
+export const entityCandidateResponseContractSchema = entityCandidateSchema.extend({
   id: z.string(),
   createdAt: z.string().datetime()
 });
@@ -186,3 +225,5 @@ export type OcrBlockInput = z.infer<typeof ocrBlockSchema>;
 export type OcrBlockResponseContract = z.infer<typeof ocrBlockResponseContractSchema>;
 export type DateCandidateInput = z.infer<typeof dateCandidateSchema>;
 export type DateCandidateResponseContract = z.infer<typeof dateCandidateResponseContractSchema>;
+export type EntityCandidateInput = z.infer<typeof entityCandidateSchema>;
+export type EntityCandidateResponseContract = z.infer<typeof entityCandidateResponseContractSchema>;

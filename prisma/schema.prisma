@@ -119,6 +119,23 @@ enum DateTypeCandidate {
   irrelevant
 }
 
+enum EntityCandidateType {
+  hospital
+  department
+  diagnosis
+  test
+  treatment
+  procedure
+  surgery
+  admission
+  discharge
+  pathology
+  medication
+  symptom
+  admin
+  unknown
+}
+
 enum ReportType {
   consumer_summary
   investigator_report
@@ -261,6 +278,7 @@ model Case {
   sourceDocuments    SourceDocument[]
   ocrBlocks          OcrBlock[]
   dateCandidates     DateCandidate[]
+  entityCandidates   EntityCandidate[]
   evidenceRefs       EvidenceRef[]
   eventAtoms         EventAtom[]
   eventBundles       EventBundle[]
@@ -296,6 +314,7 @@ model SourceDocument {
   pages            SourcePage[]
   ocrBlocks        OcrBlock[]
   dateCandidates   DateCandidate[]
+  entityCandidates EntityCandidate[]
   evidenceRefs     EvidenceRef[]
 
   @@unique([caseId, fileOrder])
@@ -311,6 +330,7 @@ model SourcePage {
   sourceFile    SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
   ocrBlocks     OcrBlock[]
   dateCandidates DateCandidate[]
+  entityCandidates EntityCandidate[]
   evidenceRefs  EvidenceRef[]
 
   @@unique([sourceFileId, pageOrder])
@@ -354,9 +374,35 @@ model DateCandidate {
   case              Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
   sourceFile        SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
   sourcePage        SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
+  relatedEntities   EntityCandidate[]
 
   @@index([caseId, fileOrder, pageOrder, blockIndex])
   @@index([caseId, normalizedDate])
+}
+
+model EntityCandidate {
+  id                     String              @id @default(cuid())
+  caseId                 String
+  sourceFileId           String
+  sourcePageId           String
+  relatedDateCandidateId String?
+  fileOrder              Int
+  pageOrder              Int
+  blockIndex             Int
+  candidateType          EntityCandidateType
+  rawText                String
+  normalizedText         String
+  confidence             Float
+  metadataJson           Json?
+  createdAt              DateTime            @default(now())
+  case                   Case                @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  sourceFile             SourceDocument      @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  sourcePage             SourcePage          @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
+  relatedDateCandidate   DateCandidate?      @relation(fields: [relatedDateCandidateId], references: [id], onDelete: SetNull)
+
+  @@index([caseId, fileOrder, pageOrder, blockIndex])
+  @@index([caseId, candidateType])
+  @@index([relatedDateCandidateId])
 }
 
 model EvidenceRef {
