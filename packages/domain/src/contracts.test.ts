@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  dateCenteredWindowResponseContractSchema,
   dateCandidateResponseContractSchema,
   entityCandidateResponseContractSchema,
   loadAppEnv,
@@ -124,6 +125,39 @@ describe("Epic 0 contracts", () => {
       confidence: 0.88,
       metadataJson: {
         source: "keyword"
+      },
+      createdAt: "2026-03-08T00:00:00.000Z"
+    });
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it("validates persisted DateCenteredWindow response contract", () => {
+    const parsed = dateCenteredWindowResponseContractSchema.safeParse({
+      id: "window-1",
+      caseId: "case-1",
+      dateCandidateId: "date-1",
+      sourceFileId: "doc-1",
+      sourcePageId: "page-1",
+      canonicalDate: "2024-03-07",
+      fileOrder: 1,
+      pageOrder: 1,
+      anchorBlockIndex: 3,
+      windowStartBlockIndex: 1,
+      windowEndBlockIndex: 5,
+      candidateSummaryJson: {
+        hospitals: ["서울병원"],
+        departments: ["내과"],
+        diagnoses: ["주상병"],
+        tests: ["CT"],
+        treatments: [],
+        procedures: [],
+        surgeries: [],
+        admissions: [],
+        discharges: [],
+        pathologies: [],
+        medications: ["처방"],
+        symptoms: []
       },
       createdAt: "2026-03-08T00:00:00.000Z"
     });

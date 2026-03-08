@@ -83,8 +83,10 @@ export async function listEntityCandidates(caseId: string, userId: string, role:
     orderBy: [{ fileOrder: "asc" }, { pageOrder: "asc" }, { blockIndex: "asc" }, { createdAt: "asc" }]
   });
 
-  return candidates.map((candidate) =>
-    entityCandidateResponseContractSchema.parse({
+  return candidates.map((candidate) => {
+    const rawMetadata = candidate.metadataJson as unknown;
+
+    return entityCandidateResponseContractSchema.parse({
       id: candidate.id,
       caseId: candidate.caseId,
       sourceFileId: candidate.sourceFileId,
@@ -98,10 +100,12 @@ export async function listEntityCandidates(caseId: string, userId: string, role:
       normalizedText: candidate.normalizedText,
       confidence: candidate.confidence,
       metadataJson:
-        candidate.metadataJson && typeof candidate.metadataJson === "object" && !Array.isArray(candidate.metadataJson)
-          ? (candidate.metadataJson as Record<string, unknown>)
+        rawMetadata === Prisma.JsonNull
+          ? null
+          : rawMetadata && typeof rawMetadata === "object" && !Array.isArray(rawMetadata)
+            ? (rawMetadata as Record<string, unknown>)
           : null,
       createdAt: candidate.createdAt.toISOString()
-    })
-  );
+    });
+  });
 }

@@ -138,6 +138,42 @@ export const entityCandidateResponseContractSchema = entityCandidateSchema.exten
   createdAt: z.string().datetime()
 });
 
+export const candidateSummarySchema = z.object({
+  hospitals: z.array(z.string()),
+  departments: z.array(z.string()),
+  diagnoses: z.array(z.string()),
+  tests: z.array(z.string()),
+  treatments: z.array(z.string()),
+  procedures: z.array(z.string()),
+  surgeries: z.array(z.string()),
+  admissions: z.array(z.string()),
+  discharges: z.array(z.string()),
+  pathologies: z.array(z.string()),
+  medications: z.array(z.string()),
+  symptoms: z.array(z.string())
+});
+
+export const dateCenteredWindowSchema = z.object({
+  id: z.string().optional(),
+  caseId: z.string().min(1),
+  dateCandidateId: z.string().min(1),
+  sourceFileId: z.string().min(1),
+  sourcePageId: z.string().min(1),
+  canonicalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  fileOrder: z.number().int().positive(),
+  pageOrder: z.number().int().positive(),
+  anchorBlockIndex: z.number().int().nonnegative(),
+  windowStartBlockIndex: z.number().int().nonnegative(),
+  windowEndBlockIndex: z.number().int().nonnegative(),
+  candidateSummaryJson: candidateSummarySchema,
+  createdAt: z.string().datetime().optional()
+});
+
+export const dateCenteredWindowResponseContractSchema = dateCenteredWindowSchema.extend({
+  id: z.string(),
+  createdAt: z.string().datetime()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -227,3 +263,6 @@ export type DateCandidateInput = z.infer<typeof dateCandidateSchema>;
 export type DateCandidateResponseContract = z.infer<typeof dateCandidateResponseContractSchema>;
 export type EntityCandidateInput = z.infer<typeof entityCandidateSchema>;
 export type EntityCandidateResponseContract = z.infer<typeof entityCandidateResponseContractSchema>;
+export type CandidateSummary = z.infer<typeof candidateSummarySchema>;
+export type DateCenteredWindowInput = z.infer<typeof dateCenteredWindowSchema>;
+export type DateCenteredWindowResponseContract = z.infer<typeof dateCenteredWindowResponseContractSchema>;

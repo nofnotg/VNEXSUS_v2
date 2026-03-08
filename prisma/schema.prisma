@@ -279,6 +279,7 @@ model Case {
   ocrBlocks          OcrBlock[]
   dateCandidates     DateCandidate[]
   entityCandidates   EntityCandidate[]
+  dateCenteredWindows DateCenteredWindow[]
   evidenceRefs       EvidenceRef[]
   eventAtoms         EventAtom[]
   eventBundles       EventBundle[]
@@ -315,6 +316,7 @@ model SourceDocument {
   ocrBlocks        OcrBlock[]
   dateCandidates   DateCandidate[]
   entityCandidates EntityCandidate[]
+  dateCenteredWindows DateCenteredWindow[]
   evidenceRefs     EvidenceRef[]
 
   @@unique([caseId, fileOrder])
@@ -331,6 +333,7 @@ model SourcePage {
   ocrBlocks     OcrBlock[]
   dateCandidates DateCandidate[]
   entityCandidates EntityCandidate[]
+  dateCenteredWindows DateCenteredWindow[]
   evidenceRefs  EvidenceRef[]
 
   @@unique([sourceFileId, pageOrder])
@@ -375,6 +378,7 @@ model DateCandidate {
   sourceFile        SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
   sourcePage        SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
   relatedEntities   EntityCandidate[]
+  windows           DateCenteredWindow[]
 
   @@index([caseId, fileOrder, pageOrder, blockIndex])
   @@index([caseId, normalizedDate])
@@ -403,6 +407,29 @@ model EntityCandidate {
   @@index([caseId, fileOrder, pageOrder, blockIndex])
   @@index([caseId, candidateType])
   @@index([relatedDateCandidateId])
+}
+
+model DateCenteredWindow {
+  id                    String         @id @default(cuid())
+  caseId                String
+  dateCandidateId       String
+  sourceFileId          String
+  sourcePageId          String
+  canonicalDate         String
+  fileOrder             Int
+  pageOrder             Int
+  anchorBlockIndex      Int
+  windowStartBlockIndex Int
+  windowEndBlockIndex   Int
+  candidateSummaryJson  Json
+  createdAt             DateTime       @default(now())
+  case                  Case           @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  dateCandidate         DateCandidate  @relation(fields: [dateCandidateId], references: [id], onDelete: Cascade)
+  sourceFile            SourceDocument @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  sourcePage            SourcePage     @relation(fields: [sourcePageId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, fileOrder, pageOrder, anchorBlockIndex])
+  @@index([dateCandidateId])
 }
 
 model EvidenceRef {

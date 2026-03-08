@@ -5,6 +5,7 @@ export * from "./documents/invariants";
 export * from "./entities";
 export * from "./plans/plan-gating";
 export * from "./reports/contracts";
+export * from "./windows";
 
 export function createWorkerRuntimeSummary() {
   return {
