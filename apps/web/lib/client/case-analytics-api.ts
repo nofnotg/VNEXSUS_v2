@@ -1,13 +1,16 @@
 import {
   apiErrorEnvelopeSchema,
   apiSuccessEnvelopeSchema,
+  analyticsPresetSchema,
   caseAnalyticsFilterSchema,
   caseAnalyticsSchema,
   caseAnalyticsTrendSchema,
   type CaseAnalytics,
   type CaseAnalyticsFilter,
+  type CaseAnalyticsPreset,
   type CaseAnalyticsTrend
 } from "@vnexus/shared";
+import { z } from "zod";
 
 export class CaseAnalyticsApiError extends Error {
   constructor(
@@ -19,6 +22,10 @@ export class CaseAnalyticsApiError extends Error {
     this.name = "CaseAnalyticsApiError";
   }
 }
+
+const analyticsPresetListSchema = z.object({
+  items: z.array(analyticsPresetSchema)
+});
 
 function buildQuery(filter?: CaseAnalyticsFilter) {
   const parsed = caseAnalyticsFilterSchema.parse(filter ?? {});
@@ -96,4 +103,56 @@ export async function getCaseAnalyticsTrend(
   }
 
   return parsed.data.data;
+}
+
+export async function getAnalyticsPresets(): Promise<CaseAnalyticsPreset[]> {
+  const response = await fetch("/api/cases/analytics/presets", {
+    method: "GET",
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+
+  const json = await parseError(response);
+  const parsed = apiSuccessEnvelopeSchema(analyticsPresetListSchema).safeParse(json);
+
+  if (!parsed.success) {
+    throw new CaseAnalyticsApiError("Invalid analytics preset response", response.status, "INVALID_ANALYTICS_RESPONSE");
+  }
+
+  return parsed.data.data.items;
+}
+
+export async function createAnalyticsPreset(input: {
+  name: string;
+  filter: CaseAnalyticsFilter;
+  interval: CaseAnalyticsTrend["interval"];
+}): Promise<CaseAnalyticsPreset> {
+  const response = await fetch("/api/cases/analytics/presets", {
+    method: "POST",
+    credentials: "same-origin",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(input)
+  });
+
+  const json = await parseError(response);
+  const parsed = apiSuccessEnvelopeSchema(analyticsPresetSchema).safeParse(json);
+
+  if (!parsed.success) {
+    throw new CaseAnalyticsApiError("Invalid analytics preset response", response.status, "INVALID_ANALYTICS_RESPONSE");
+  }
+
+  return parsed.data.data;
+}
+
+export async function deleteAnalyticsPreset(presetId: string): Promise<void> {
+  const response = await fetch(`/api/cases/analytics/presets?presetId=${encodeURIComponent(presetId)}`, {
+    method: "DELETE",
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+
+  await parseError(response);
 }

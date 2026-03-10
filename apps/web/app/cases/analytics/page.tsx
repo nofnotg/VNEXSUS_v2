@@ -1,9 +1,11 @@
 import React from "react";
 import { getLocaleMessages } from "@vnexus/shared";
 import { AppShell } from "../../../components/app-shell";
+import { getDefaultAnalyticsFilter } from "../../../lib/server/case-analytics-query";
 import { getRequestLocale } from "../../../lib/server/report-locale";
 import { getSessionUser } from "../../../lib/session";
 import { getCaseAnalytics, getCaseAnalyticsTrend } from "../../../lib/server/services/case-analytics-service";
+import { getPresetsForUser } from "../../../lib/server/services/analytics-preset-service";
 import { CaseAnalyticsClient } from "./case-analytics-client";
 
 export default async function CaseAnalyticsPage() {
@@ -27,14 +29,16 @@ export default async function CaseAnalyticsPage() {
     );
   }
 
-  const [analytics, trend] = await Promise.all([
-    getCaseAnalytics(user.id, user.role),
-    getCaseAnalyticsTrend(user.id, user.role, {}, "daily")
+  const defaultFilter = getDefaultAnalyticsFilter();
+  const [analytics, trend, presets] = await Promise.all([
+    getCaseAnalytics(user.id, user.role, defaultFilter),
+    getCaseAnalyticsTrend(user.id, user.role, defaultFilter, "daily"),
+    getPresetsForUser(user.id)
   ]);
 
   return (
     <AppShell heading={localeMessages.uiAnalyticsHeading} subheading={localeMessages.uiAnalyticsSubheading}>
-      <CaseAnalyticsClient initialAnalytics={analytics} initialTrend={trend} />
+      <CaseAnalyticsClient initialAnalytics={analytics} initialTrend={trend} initialFilter={defaultFilter} initialPresets={presets} />
     </AppShell>
   );
 }

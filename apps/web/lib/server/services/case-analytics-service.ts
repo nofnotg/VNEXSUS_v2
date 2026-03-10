@@ -27,7 +27,10 @@ function normalizeFilter(filter?: CaseAnalyticsFilter) {
   return caseAnalyticsFilterSchema.parse(filter ?? {});
 }
 
-type AnalyticsRepository = Pick<typeof caseAnalyticsRepository, "getAnalyticsForUser" | "getTrendForUser">;
+type AnalyticsRepository = Pick<
+  typeof caseAnalyticsRepository,
+  "getAnalyticsForUser" | "getTrendForUser" | "getTopHospitalsForUser"
+>;
 
 export async function getCaseAnalytics(
   userId: string,
@@ -38,7 +41,10 @@ export async function getCaseAnalytics(
   assertAnalyticsRole(role);
 
   const parsedFilter = normalizeFilter(filter);
-  const result = await repository.getAnalyticsForUser(userId, role === "admin", parsedFilter);
+  const [result, topHospitals] = await Promise.all([
+    repository.getAnalyticsForUser(userId, role === "admin", parsedFilter),
+    repository.getTopHospitalsForUser(userId, role === "admin", parsedFilter, 5)
+  ]);
 
   return caseAnalyticsSchema.parse({
     totalCases: result.totalCases,
@@ -47,7 +53,8 @@ export async function getCaseAnalytics(
     unconfirmedEvents: result.unconfirmedEvents,
     reviewRequiredEvents: result.reviewRequiredEvents,
     eventsByType: toCountMap(result.eventsByType),
-    eventsByHospital: toCountMap(result.eventsByHospital.slice(0, 8))
+    eventsByHospital: toCountMap(result.eventsByHospital.slice(0, 8)),
+    topHospitals
   });
 }
 

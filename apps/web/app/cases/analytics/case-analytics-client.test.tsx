@@ -7,9 +7,16 @@ import { LocaleProvider } from "../../../components/locale-provider";
 import { ThemeProvider } from "../../../components/theme-provider";
 import { CaseAnalyticsClient } from "./case-analytics-client";
 
-const { getCaseAnalyticsMock, getCaseAnalyticsTrendMock } = vi.hoisted(() => ({
+const {
+  getCaseAnalyticsMock,
+  getCaseAnalyticsTrendMock,
+  createAnalyticsPresetMock,
+  deleteAnalyticsPresetMock
+} = vi.hoisted(() => ({
   getCaseAnalyticsMock: vi.fn(),
-  getCaseAnalyticsTrendMock: vi.fn()
+  getCaseAnalyticsTrendMock: vi.fn(),
+  createAnalyticsPresetMock: vi.fn(),
+  deleteAnalyticsPresetMock: vi.fn()
 }));
 
 vi.mock("recharts", () => ({
@@ -30,7 +37,9 @@ vi.mock("../../../lib/client/case-analytics-api", () => ({
     }
   },
   getCaseAnalytics: getCaseAnalyticsMock,
-  getCaseAnalyticsTrend: getCaseAnalyticsTrendMock
+  getCaseAnalyticsTrend: getCaseAnalyticsTrendMock,
+  createAnalyticsPreset: createAnalyticsPresetMock,
+  deleteAnalyticsPreset: deleteAnalyticsPresetMock
 }));
 
 describe("case analytics client", () => {
@@ -38,7 +47,7 @@ describe("case analytics client", () => {
     vi.clearAllMocks();
   });
 
-  it("applies filters and refreshes trend data", async () => {
+  it("applies filters, saves presets, and supports hospital drill-down", async () => {
     getCaseAnalyticsMock.mockResolvedValue({
       totalCases: 1,
       totalEvents: 2,
@@ -46,12 +55,22 @@ describe("case analytics client", () => {
       unconfirmedEvents: 1,
       reviewRequiredEvents: 0,
       eventsByType: { exam: 2 },
-      eventsByHospital: { "Seoul Hospital": 2 }
+      eventsByHospital: { "Seoul Hospital": 2 },
+      topHospitals: [{ hospital: "Seoul Hospital", events: 2 }]
     });
     getCaseAnalyticsTrendMock.mockResolvedValue({
       interval: "weekly",
-      points: [{ date: "2026-01-05", total: 2, confirmed: 1, unconfirmed: 1 }]
+      points: [{ date: "2026-03-03", total: 2, confirmed: 1, unconfirmed: 1 }]
     });
+    createAnalyticsPresetMock.mockResolvedValue({
+      presetId: "preset-1",
+      userId: "user-1",
+      name: "Recent exams",
+      filter: { eventTypes: ["exam"] },
+      interval: "weekly",
+      createdAt: "2026-03-10T00:00:00.000Z"
+    });
+    deleteAnalyticsPresetMock.mockResolvedValue(undefined);
 
     render(
       <ThemeProvider initialTheme="light">
@@ -64,69 +83,54 @@ describe("case analytics client", () => {
               unconfirmedEvents: 3,
               reviewRequiredEvents: 2,
               eventsByType: { exam: 4, surgery: 1 },
-              eventsByHospital: { "Seoul Hospital": 5, "Busan Hospital": 2 }
+              eventsByHospital: { "Seoul Hospital": 5, "Busan Hospital": 2 },
+              topHospitals: [{ hospital: "Seoul Hospital", events: 5 }]
             }}
             initialTrend={{
               interval: "daily",
-              points: [{ date: "2026-01-01", total: 2, confirmed: 1, unconfirmed: 1 }]
+              points: [{ date: "2026-03-10", total: 2, confirmed: 1, unconfirmed: 1 }]
             }}
+            initialFilter={{
+              startDate: "2026-02-09",
+              endDate: "2026-03-10"
+            }}
+            initialPresets={[]}
           />
         </LocaleProvider>
       </ThemeProvider>
     );
 
     expect(screen.getByTestId("line-chart")).toBeTruthy();
+    expect((screen.getByLabelText("Start date") as HTMLInputElement).value).toBe("2026-02-09");
 
-    fireEvent.change(screen.getByLabelText("Start date"), {
-      target: { value: "2026-01-01" }
-    });
-    fireEvent.change(screen.getByLabelText("End date"), {
-      target: { value: "2026-01-31" }
-    });
     fireEvent.change(screen.getByLabelText("Interval"), {
       target: { value: "weekly" }
     });
-    const eventTypesSelect = screen.getByLabelText("Event types") as HTMLSelectElement;
-    const hospitalsSelect = screen.getByLabelText("Hospitals") as HTMLSelectElement;
-
-    for (const option of Array.from(eventTypesSelect.options)) {
-      option.selected = option.value === "exam";
-    }
-    for (const option of Array.from(hospitalsSelect.options)) {
-      option.selected = option.value === "Seoul Hospital";
-    }
-
-    Object.defineProperty(eventTypesSelect, "selectedOptions", {
-      configurable: true,
-      value: [{ value: "exam" }]
-    });
-    Object.defineProperty(hospitalsSelect, "selectedOptions", {
-      configurable: true,
-      value: [{ value: "Seoul Hospital" }]
+    fireEvent.change(screen.getByLabelText("Preset name"), {
+      target: { value: "Recent exams" }
     });
 
-    fireEvent.change(eventTypesSelect);
-    fireEvent.change(hospitalsSelect);
-
-    fireEvent.click(screen.getByRole("button", { name: "Apply filters" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save preset" }));
 
     await waitFor(() => {
-      expect(getCaseAnalyticsMock).toHaveBeenCalledWith({
-        startDate: "2026-01-01",
-        endDate: "2026-01-31",
-        eventTypes: ["exam"],
-        hospitals: ["Seoul Hospital"]
+      expect(createAnalyticsPresetMock).toHaveBeenCalledWith({
+        name: "Recent exams",
+        filter: {
+          startDate: "2026-02-09",
+          endDate: "2026-03-10"
+        },
+        interval: "weekly"
       });
     });
 
-    expect(getCaseAnalyticsTrendMock).toHaveBeenCalledWith(
-      {
-        startDate: "2026-01-01",
-        endDate: "2026-01-31",
-        eventTypes: ["exam"],
+    fireEvent.click(screen.getByRole("button", { name: "View details" }));
+
+    await waitFor(() => {
+      expect(getCaseAnalyticsMock).toHaveBeenCalledWith({
+        startDate: "2026-02-09",
+        endDate: "2026-03-10",
         hospitals: ["Seoul Hospital"]
-      },
-      "weekly"
-    );
+      });
+    });
   });
 });

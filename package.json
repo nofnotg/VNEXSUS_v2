@@ -22,6 +22,7 @@
     "test:epic8": "vitest run apps/web/lib/server/services/case-detail-service.test.ts apps/web/app/api/cases/[caseId]/detail/route.test.ts apps/web/app/api/cases/[caseId]/events/[eventId]/confirmation/route.test.ts apps/web/app/api/cases/[caseId]/events/[eventId]/edit/route.test.ts apps/web/app/cases/[caseId]/case-detail-client.test.tsx apps/web/app/cases/[caseId]/page.test.tsx",
     "test:epic9": "vitest run apps/web/lib/server/services/case-analytics-service.test.ts apps/web/app/api/cases/analytics/route.test.ts apps/web/app/cases/analytics/page.test.tsx",
     "test:epic10": "vitest run apps/web/lib/server/services/case-analytics-service.test.ts apps/web/app/api/cases/analytics/route.test.ts apps/web/app/api/cases/analytics/trend/route.test.ts apps/web/app/cases/analytics/case-analytics-client.test.tsx apps/web/app/cases/analytics/page.test.tsx",
+    "test:epic11": "vitest run apps/web/lib/server/services/case-analytics-service.test.ts apps/web/lib/server/services/analytics-preset-service.test.ts apps/web/app/api/cases/analytics/route.test.ts apps/web/app/api/cases/analytics/trend/route.test.ts apps/web/app/api/cases/analytics/presets/route.test.ts apps/web/app/cases/analytics/case-analytics-client.test.tsx apps/web/app/cases/analytics/page.test.tsx",
     "test:e2e": "playwright test",
     "typecheck": "turbo run typecheck",
     "db:generate": "prisma generate",

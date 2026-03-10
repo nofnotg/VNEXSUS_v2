@@ -218,6 +218,7 @@ model User {
   ownedCases    Case[]
   consents      Consent[]
   requests      ConnectionRequest[]
+  analyticsPresets AnalyticsPreset[]
 }
 
 model Profile {
@@ -644,4 +645,18 @@ model ConnectionRequest {
   createdAt           DateTime                @default(now())
   user                User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   case                Case                    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+}
+
+model AnalyticsPreset {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  filterJson Json
+  interval   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+  @@index([userId, createdAt])
 }

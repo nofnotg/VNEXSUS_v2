@@ -43,7 +43,8 @@ describe("case analytics route", () => {
       unconfirmedEvents: 3,
       reviewRequiredEvents: 2,
       eventsByType: { exam: 4 },
-      eventsByHospital: { "Seoul Hospital": 5 }
+      eventsByHospital: { "Seoul Hospital": 5 },
+      topHospitals: [{ hospital: "Seoul Hospital", events: 5 }]
     });
 
     const response = await GET(

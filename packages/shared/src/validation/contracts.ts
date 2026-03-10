@@ -484,7 +484,13 @@ export const caseAnalyticsSchema = z.object({
   unconfirmedEvents: z.number().int().nonnegative(),
   reviewRequiredEvents: z.number().int().nonnegative(),
   eventsByType: z.record(z.string(), z.number().int().nonnegative()),
-  eventsByHospital: z.record(z.string(), z.number().int().nonnegative())
+  eventsByHospital: z.record(z.string(), z.number().int().nonnegative()),
+  topHospitals: z.array(
+    z.object({
+      hospital: z.string().min(1),
+      events: z.number().int().nonnegative()
+    })
+  )
 });
 
 export const caseAnalyticsFilterSchema = z
@@ -518,6 +524,15 @@ export const caseAnalyticsTrendPointSchema = z.object({
 export const caseAnalyticsTrendSchema = z.object({
   interval: z.enum(["daily", "weekly", "monthly"]),
   points: z.array(caseAnalyticsTrendPointSchema)
+});
+
+export const analyticsPresetSchema = z.object({
+  presetId: z.string().min(1),
+  userId: z.string().min(1),
+  name: z.string().min(1),
+  filter: caseAnalyticsFilterSchema,
+  interval: z.enum(["daily", "weekly", "monthly"]),
+  createdAt: z.string().datetime()
 });
 
 export const ocrIngestionJobPayloadSchema = z.object({
@@ -641,3 +656,4 @@ export type EventEditHistory = NonNullable<CaseEvent["editHistory"]>[number];
 export type CaseAnalytics = z.infer<typeof caseAnalyticsSchema>;
 export type CaseAnalyticsFilter = z.infer<typeof caseAnalyticsFilterSchema>;
 export type CaseAnalyticsTrend = z.infer<typeof caseAnalyticsTrendSchema>;
+export type CaseAnalyticsPreset = z.infer<typeof analyticsPresetSchema>;

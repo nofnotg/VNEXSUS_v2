@@ -10,6 +10,7 @@ export type CaseAnalyticsRepositoryResult = {
   reviewRequiredEvents: number;
   eventsByType: Array<{ key: string; count: number }>;
   eventsByHospital: Array<{ key: string; count: number }>;
+  topHospitals: Array<{ hospital: string; events: number }>;
 };
 
 type TrendPoint = CaseAnalyticsTrend["points"][number];
@@ -101,6 +102,14 @@ export const caseAnalyticsRepository = {
       })
     ]);
 
+    const eventsByHospital = hospitalGroups
+      .filter((item) => item.primaryHospital)
+      .map((item) => ({
+        key: item.primaryHospital ?? "Unknown hospital",
+        count: item._count._all
+      }))
+      .sort((left, right) => right.count - left.count || left.key.localeCompare(right.key));
+
     return {
       totalCases: caseGroups.length,
       totalEvents,
@@ -111,13 +120,37 @@ export const caseAnalyticsRepository = {
         key: item.eventTypeCandidate,
         count: item._count._all
       })),
-      eventsByHospital: hospitalGroups
-        .filter((item) => item.primaryHospital)
-        .map((item) => ({
-          key: item.primaryHospital ?? "Unknown hospital",
-          count: item._count._all
-        }))
+      eventsByHospital,
+      topHospitals: eventsByHospital.slice(0, 5).map((item) => ({
+        hospital: item.key,
+        events: item.count
+      }))
     };
+  },
+
+  async getTopHospitalsForUser(
+    userId: string,
+    isAdmin: boolean,
+    filter?: CaseAnalyticsFilter,
+    limit = 5
+  ): Promise<Array<{ hospital: string; events: number }>> {
+    const eventWhere = buildEventWhere(userId, isAdmin, filter);
+    const hospitalGroups = await prisma.eventAtom.groupBy({
+      by: ["primaryHospital"],
+      where: eventWhere,
+      _count: {
+        _all: true
+      }
+    });
+
+    return hospitalGroups
+      .filter((item) => item.primaryHospital)
+      .map((item) => ({
+        hospital: item.primaryHospital ?? "Unknown hospital",
+        events: item._count._all
+      }))
+      .sort((left, right) => right.events - left.events || left.hospital.localeCompare(right.hospital))
+      .slice(0, limit);
   },
 
   async getTrendForUser(

@@ -24,9 +24,14 @@ describe("case analytics service", () => {
           eventsByHospital: [
             { key: "Seoul Hospital", count: 5 },
             { key: "Busan Hospital", count: 2 }
-          ]
+          ],
+          topHospitals: []
         };
       },
+      getTopHospitalsForUser: async () => [
+        { hospital: "Seoul Hospital", events: 5 },
+        { hospital: "Busan Hospital", events: 2 }
+      ],
       getTrendForUser: async () => ({
         interval: "daily",
         points: []
@@ -47,7 +52,11 @@ describe("case analytics service", () => {
       eventsByHospital: {
         "Seoul Hospital": 5,
         "Busan Hospital": 2
-      }
+      },
+      topHospitals: [
+        { hospital: "Seoul Hospital", events: 5 },
+        { hospital: "Busan Hospital", events: 2 }
+      ]
     });
   });
 
@@ -65,8 +74,10 @@ describe("case analytics service", () => {
           unconfirmedEvents: 0,
           reviewRequiredEvents: 0,
           eventsByType: [],
-          eventsByHospital: []
+          eventsByHospital: [],
+          topHospitals: []
         }),
+        getTopHospitalsForUser: async () => [],
         getTrendForUser: async (_userId, isAdmin, filter, interval) => {
           expect(isAdmin).toBe(true);
           expect(filter).toEqual({
@@ -104,8 +115,10 @@ describe("case analytics service", () => {
             unconfirmedEvents: 0,
             reviewRequiredEvents: 0,
             eventsByType: [],
-            eventsByHospital: []
+            eventsByHospital: [],
+            topHospitals: []
           }),
+          getTopHospitalsForUser: async () => [],
           getTrendForUser: async () => ({
             interval: "daily",
             points: []

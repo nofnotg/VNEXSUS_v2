@@ -8,11 +8,20 @@ import { LocaleProvider } from "../../../components/locale-provider";
 import { ThemeProvider } from "../../../components/theme-provider";
 import CaseAnalyticsPage from "./page.js";
 
-const { getSessionUserMock, getRequestLocaleMock, getCaseAnalyticsMock, getCaseAnalyticsTrendMock } = vi.hoisted(() => ({
+const {
+  getSessionUserMock,
+  getRequestLocaleMock,
+  getCaseAnalyticsMock,
+  getCaseAnalyticsTrendMock,
+  getPresetsForUserMock,
+  getDefaultAnalyticsFilterMock
+} = vi.hoisted(() => ({
   getSessionUserMock: vi.fn(),
   getRequestLocaleMock: vi.fn(),
   getCaseAnalyticsMock: vi.fn(),
-  getCaseAnalyticsTrendMock: vi.fn()
+  getCaseAnalyticsTrendMock: vi.fn(),
+  getPresetsForUserMock: vi.fn(),
+  getDefaultAnalyticsFilterMock: vi.fn()
 }));
 
 vi.mock("recharts", () => ({
@@ -33,9 +42,17 @@ vi.mock("../../../lib/server/report-locale", () => ({
   getRequestLocale: getRequestLocaleMock
 }));
 
+vi.mock("../../../lib/server/case-analytics-query", () => ({
+  getDefaultAnalyticsFilter: getDefaultAnalyticsFilterMock
+}));
+
 vi.mock("../../../lib/server/services/case-analytics-service", () => ({
   getCaseAnalytics: getCaseAnalyticsMock,
   getCaseAnalyticsTrend: getCaseAnalyticsTrendMock
+}));
+
+vi.mock("../../../lib/server/services/analytics-preset-service", () => ({
+  getPresetsForUser: getPresetsForUserMock
 }));
 
 describe("case analytics page", () => {
@@ -44,9 +61,13 @@ describe("case analytics page", () => {
     window.localStorage.clear();
     document.cookie = "vnexus_lang=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "vnexus_theme=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    getDefaultAnalyticsFilterMock.mockReturnValue({
+      startDate: "2026-02-09",
+      endDate: "2026-03-10"
+    });
   });
 
-  it("renders analytics page and localizes UI labels", async () => {
+  it("renders analytics page, localizes UI labels, and uses the default 30-day filter", async () => {
     const ko = getLocaleMessages("ko");
 
     getSessionUserMock.mockResolvedValue({
@@ -69,12 +90,14 @@ describe("case analytics page", () => {
       eventsByHospital: {
         "Seoul Hospital": 5,
         "Busan Hospital": 2
-      }
+      },
+      topHospitals: [{ hospital: "Seoul Hospital", events: 5 }]
     });
     getCaseAnalyticsTrendMock.mockResolvedValue({
       interval: "daily",
-      points: [{ date: "2026-01-01", total: 2, confirmed: 1, unconfirmed: 1 }]
+      points: [{ date: "2026-03-10", total: 2, confirmed: 1, unconfirmed: 1 }]
     });
+    getPresetsForUserMock.mockResolvedValue([]);
 
     vi.stubGlobal(
       "fetch",
@@ -95,6 +118,11 @@ describe("case analytics page", () => {
 
     const ui = await CaseAnalyticsPage();
 
+    expect(getCaseAnalyticsMock).toHaveBeenCalledWith("user-1", "investigator", {
+      startDate: "2026-02-09",
+      endDate: "2026-03-10"
+    });
+
     render(
       <ThemeProvider initialTheme="light">
         <LocaleProvider initialLocale="en">{ui}</LocaleProvider>
@@ -102,8 +130,8 @@ describe("case analytics page", () => {
     );
 
     expect(screen.getByRole("heading", { level: 1, name: "Case Analytics" })).toBeTruthy();
-    expect(screen.getByText("Filters")).toBeTruthy();
-    expect(screen.getByText("Trend over time")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Saved presets" })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Top hospitals" })).toBeTruthy();
 
     fireEvent.change(screen.getByRole("combobox", { name: "Select language" }), {
       target: { value: "ko" }
@@ -113,8 +141,8 @@ describe("case analytics page", () => {
       expect(screen.getByText(ko.uiAnalyticsHeading)).toBeTruthy();
     });
 
-    expect(screen.getByText(ko.uiAnalyticsFilters)).toBeTruthy();
-    expect(screen.getByText(ko.uiTrendHeading)).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: ko.uiAnalyticsPresets })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: ko.uiTopHospitals })).toBeTruthy();
   });
 
   it("blocks analytics for consumer users", async () => {

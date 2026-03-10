@@ -1,19 +1,13 @@
 "use client";
 
 import React, { startTransition, useMemo, useState } from "react";
-import type { CaseAnalytics, CaseAnalyticsFilter, CaseAnalyticsTrend } from "@vnexus/shared";
-import {
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  Tooltip,
-  XAxis,
-  YAxis
-} from "recharts";
+import type { CaseAnalytics, CaseAnalyticsFilter, CaseAnalyticsPreset, CaseAnalyticsTrend } from "@vnexus/shared";
+import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useLocaleMessages } from "../../../components/locale-provider";
 import {
   CaseAnalyticsApiError,
+  createAnalyticsPreset,
+  deleteAnalyticsPreset,
   getCaseAnalytics,
   getCaseAnalyticsTrend
 } from "../../../lib/client/case-analytics-api";
@@ -21,6 +15,8 @@ import {
 type CaseAnalyticsClientProps = {
   initialAnalytics: CaseAnalytics;
   initialTrend: CaseAnalyticsTrend;
+  initialFilter: CaseAnalyticsFilter;
+  initialPresets: CaseAnalyticsPreset[];
 };
 
 type FilterState = {
@@ -51,6 +47,15 @@ function renderBarItems(items: Record<string, number>) {
   ));
 }
 
+function toFilterState(filter: CaseAnalyticsFilter): FilterState {
+  return {
+    startDate: filter.startDate ?? "",
+    endDate: filter.endDate ?? "",
+    eventTypes: filter.eventTypes ?? [],
+    hospitals: filter.hospitals ?? []
+  };
+}
+
 function toRequestFilter(filter: FilterState): CaseAnalyticsFilter {
   return {
     startDate: filter.startDate || undefined,
@@ -64,22 +69,28 @@ function mergeOptions(current: string[], incoming: string[]) {
   return [...new Set([...current, ...incoming])].sort((left, right) => left.localeCompare(right));
 }
 
-export function CaseAnalyticsClient({ initialAnalytics, initialTrend }: CaseAnalyticsClientProps) {
+export function CaseAnalyticsClient({
+  initialAnalytics,
+  initialTrend,
+  initialFilter,
+  initialPresets
+}: CaseAnalyticsClientProps) {
   const localeMessages = useLocaleMessages();
-  const [filter, setFilter] = useState<FilterState>({
-    startDate: "",
-    endDate: "",
-    eventTypes: [],
-    hospitals: []
-  });
+  const [filter, setFilter] = useState<FilterState>(toFilterState(initialFilter));
   const [interval, setInterval] = useState<CaseAnalyticsTrend["interval"]>(initialTrend.interval);
   const [analytics, setAnalytics] = useState(initialAnalytics);
   const [trend, setTrend] = useState(initialTrend);
+  const [presets, setPresets] = useState(initialPresets);
+  const [presetName, setPresetName] = useState("");
+  const [selectedPresetId, setSelectedPresetId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [eventTypeOptions, setEventTypeOptions] = useState(() => Object.keys(initialAnalytics.eventsByType).sort((a, b) => a.localeCompare(b)));
   const [hospitalOptions, setHospitalOptions] = useState(() =>
-    Object.keys(initialAnalytics.eventsByHospital).sort((a, b) => a.localeCompare(b))
+    mergeOptions([], [
+      ...Object.keys(initialAnalytics.eventsByHospital),
+      ...initialAnalytics.topHospitals.map((item) => item.hospital)
+    ])
   );
 
   const summaryCards = [
@@ -124,7 +135,12 @@ export function CaseAnalyticsClient({ initialAnalytics, initialTrend }: CaseAnal
         setAnalytics(nextAnalytics);
         setTrend(nextTrend);
         setEventTypeOptions((current) => mergeOptions(current, Object.keys(nextAnalytics.eventsByType)));
-        setHospitalOptions((current) => mergeOptions(current, Object.keys(nextAnalytics.eventsByHospital)));
+        setHospitalOptions((current) =>
+          mergeOptions(current, [
+            ...Object.keys(nextAnalytics.eventsByHospital),
+            ...nextAnalytics.topHospitals.map((item) => item.hospital)
+          ])
+        );
       });
     } catch (caught) {
       const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiAnalyticsError;
@@ -145,8 +161,130 @@ export function CaseAnalyticsClient({ initialAnalytics, initialTrend }: CaseAnal
     }));
   }
 
+  async function handleSavePreset() {
+    if (!presetName.trim()) {
+      setError(localeMessages.uiPresetNameRequired);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const created = await createAnalyticsPreset({
+        name: presetName.trim(),
+        filter: toRequestFilter(filter),
+        interval
+      });
+      startTransition(() => {
+        setPresets((current) => [created, ...current.filter((preset) => preset.presetId !== created.presetId)]);
+        setPresetName("");
+        setSelectedPresetId(created.presetId);
+      });
+    } catch (caught) {
+      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiAnalyticsError;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDeletePreset(presetId: string) {
+    setLoading(true);
+    setError(null);
+
+    try {
+      await deleteAnalyticsPreset(presetId);
+      startTransition(() => {
+        setPresets((current) => current.filter((preset) => preset.presetId !== presetId));
+        setSelectedPresetId((current) => (current === presetId ? "" : current));
+      });
+    } catch (caught) {
+      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiAnalyticsError;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleApplyPreset(presetId: string) {
+    const preset = presets.find((item) => item.presetId === presetId);
+    if (!preset) {
+      return;
+    }
+
+    const nextFilter = toFilterState(preset.filter);
+    setSelectedPresetId(presetId);
+    setFilter(nextFilter);
+    setInterval(preset.interval);
+    await refresh(nextFilter, preset.interval);
+  }
+
+  async function handleHospitalDrillDown(hospital: string) {
+    const nextFilter = {
+      ...filter,
+      hospitals: [hospital]
+    };
+    setFilter(nextFilter);
+    await refresh(nextFilter, interval);
+  }
+
   return (
     <div style={{ display: "grid", gap: "24px" }}>
+      <section style={panelStyle}>
+        <h2 style={panelTitleStyle}>{localeMessages.uiAnalyticsPresets}</h2>
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "end" }}>
+          <div style={fieldStyle}>
+            <label htmlFor="analytics-preset-select">{localeMessages.uiAnalyticsPresets}</label>
+            <select
+              id="analytics-preset-select"
+              value={selectedPresetId}
+              onChange={(event) => {
+                void handleApplyPreset(event.target.value);
+              }}
+            >
+              <option value="">{localeMessages.uiSelectPreset}</option>
+              {presets.map((preset) => (
+                <option key={preset.presetId} value={preset.presetId}>
+                  {preset.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={fieldStyle}>
+            <label htmlFor="analytics-preset-name">{localeMessages.uiPresetName}</label>
+            <input
+              id="analytics-preset-name"
+              type="text"
+              value={presetName}
+              onChange={(event) => setPresetName(event.target.value)}
+              placeholder={localeMessages.uiPresetName}
+            />
+          </div>
+
+          <button type="button" onClick={() => void handleSavePreset()} disabled={loading}>
+            {localeMessages.uiSavePreset}
+          </button>
+        </div>
+
+        {presets.length > 0 ? (
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            {presets.map((preset) => (
+              <button
+                key={preset.presetId}
+                type="button"
+                onClick={() => void handleDeletePreset(preset.presetId)}
+                disabled={loading}
+                aria-label={`${localeMessages.uiDeletePreset} ${preset.name}`}
+              >
+                {localeMessages.uiDeletePreset}: {preset.name}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
       <section style={panelStyle}>
         <h2 style={panelTitleStyle}>{localeMessages.uiAnalyticsFilters}</h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "end" }}>
@@ -225,9 +363,10 @@ export function CaseAnalyticsClient({ initialAnalytics, initialTrend }: CaseAnal
           <button
             type="button"
             onClick={() => {
-              const resetFilter = { startDate: "", endDate: "", eventTypes: [], hospitals: [] };
+              const resetFilter = toFilterState(initialFilter);
               setFilter(resetFilter);
-              void refresh(resetFilter, interval);
+              setInterval("daily");
+              void refresh(resetFilter, "daily");
             }}
             disabled={loading}
           >
@@ -237,6 +376,25 @@ export function CaseAnalyticsClient({ initialAnalytics, initialTrend }: CaseAnal
 
         {error ? <p style={{ margin: 0, color: "#b42318" }}>{error}</p> : null}
       </section>
+
+      {analytics.topHospitals.length > 0 ? (
+        <section style={panelStyle}>
+          <h2 style={panelTitleStyle}>{localeMessages.uiTopHospitals}</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
+            {analytics.topHospitals.map((item) => (
+              <article key={item.hospital} style={{ border: "1px solid var(--border)", borderRadius: "16px", padding: "16px" }}>
+                <div style={{ fontWeight: 700 }}>{item.hospital}</div>
+                <div style={{ marginTop: "8px", color: "var(--muted)" }}>
+                  {localeMessages.uiEvents}: {formatCount(item.events)}
+                </div>
+                <button type="button" style={{ marginTop: "12px" }} onClick={() => void handleHospitalDrillDown(item.hospital)} disabled={loading}>
+                  {localeMessages.uiViewDetails}
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {!hasAnalytics ? (
         <div style={{ border: "1px dashed var(--border)", borderRadius: "16px", padding: "20px", color: "var(--muted)" }}>
@@ -277,20 +435,8 @@ export function CaseAnalyticsClient({ initialAnalytics, initialTrend }: CaseAnal
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey={localeMessages.uiTrendTotal} stroke="#14532d" strokeWidth={2} dot={false} />
-                <Line
-                  type="monotone"
-                  dataKey={localeMessages.uiTrendConfirmed}
-                  stroke="#1d4ed8"
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  type="monotone"
-                  dataKey={localeMessages.uiTrendUnconfirmed}
-                  stroke="#b45309"
-                  strokeWidth={2}
-                  dot={false}
-                />
+                <Line type="monotone" dataKey={localeMessages.uiTrendConfirmed} stroke="#1d4ed8" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey={localeMessages.uiTrendUnconfirmed} stroke="#b45309" strokeWidth={2} dot={false} />
               </LineChart>
             </div>
           </section>
