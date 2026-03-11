@@ -4,6 +4,7 @@
 
 - Epic 3-17 hardens analytics preset sharing and analytics export for release preparation.
 - This document covers the permission model, performance safeguards, observability points, and deployment checks for the analytics dashboard.
+- Active development now proceeds on `main` only. Treat `codex/v2` as a backup branch and do not use it as the primary delivery branch.
 
 ## Permission Model
 

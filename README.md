@@ -1,5 +1,12 @@
 # VNEXSUS V2
 
+## Development Branch Policy
+
+- Use `main` as the only active development branch.
+- Start local work with `git checkout main && git pull`.
+- Push completed work with `git push origin main`.
+- Keep `codex/v2` as a backup/reference branch only; do not treat it as an active development target.
+
 ## Localization
 
 Narrative JSON builders, PDF export routes, and the report UI support `en` and `ko`.

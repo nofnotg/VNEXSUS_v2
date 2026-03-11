@@ -88,3 +88,14 @@ export function getPresetCacheStatsSnapshot() {
     shared: { ...sharedStats }
   };
 }
+
+export function resetPresetCacheStateForTests() {
+  ownedPresetCache.clear();
+  sharedPresetCache.clear();
+  ownedStats.hits = 0;
+  ownedStats.misses = 0;
+  ownedStats.size = 0;
+  sharedStats.hits = 0;
+  sharedStats.misses = 0;
+  sharedStats.size = 0;
+}
