@@ -36,15 +36,18 @@ describe("analytics preset share search route", () => {
     requireAuthorizedSessionMock.mockResolvedValue({
       user: { id: "user-1", role: "investigator" }
     });
-    searchShareCandidatesMock.mockResolvedValue([
-      { userId: "user-2", email: "reviewer@example.com", displayName: "Reviewer" }
-    ]);
+    searchShareCandidatesMock.mockResolvedValue({
+      items: [{ userId: "user-2", email: "reviewer@example.com", displayName: "Reviewer" }],
+      page: 2,
+      hasMore: true
+    });
 
-    const response = await GET(new Request("http://localhost/api/cases/analytics/presets/share/search?q=rev"));
+    const response = await GET(new Request("http://localhost/api/cases/analytics/presets/share/search?q=rev&page=2"));
     const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(body.data.items).toHaveLength(1);
-    expect(searchShareCandidatesMock).toHaveBeenCalledWith("user-1", "rev");
+    expect(body.data.hasMore).toBe(true);
+    expect(searchShareCandidatesMock).toHaveBeenCalledWith("user-1", "rev", 2);
   });
 });

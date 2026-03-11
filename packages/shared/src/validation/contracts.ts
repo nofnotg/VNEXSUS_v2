@@ -558,6 +558,12 @@ export const analyticsShareCandidateSchema = z.object({
   displayName: z.string().nullable()
 });
 
+export const analyticsShareCandidateSearchSchema = z.object({
+  items: z.array(analyticsShareCandidateSchema),
+  page: z.number().int().positive(),
+  hasMore: z.boolean()
+});
+
 export const ocrIngestionJobPayloadSchema = z.object({
   caseId: z.string().min(1),
   sourceDocumentIds: z.array(z.string().min(1)).min(1),
@@ -684,3 +690,4 @@ export type AnalyticsExportInput = z.infer<typeof analyticsExportSchema>;
 export type AnalyticsExportFileType = z.infer<typeof analyticsExportFileTypeSchema>;
 export type AnalyticsPresetShareInput = z.infer<typeof analyticsPresetShareSchema>;
 export type AnalyticsShareCandidate = z.infer<typeof analyticsShareCandidateSchema>;
+export type AnalyticsShareCandidateSearchResult = z.infer<typeof analyticsShareCandidateSearchSchema>;

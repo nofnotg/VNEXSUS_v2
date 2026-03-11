@@ -2,14 +2,16 @@ import {
   ApiError,
   analyticsIntervalSchema,
   analyticsPresetSchema,
+  analyticsShareCandidateSearchSchema,
   analyticsShareCandidateSchema,
   caseAnalyticsFilterSchema,
   type AnalyticsShareCandidate,
+  type AnalyticsShareCandidateSearchResult,
   type CaseAnalyticsPreset
 } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getOwnedPresetCache, getSharedPresetCache, invalidatePresetCaches, setOwnedPresetCache, setSharedPresetCache } from "./analytics-preset-cache";
-import { logAnalyticsEvent, recordAnalyticsMetric } from "../analytics-observability";
+import { logAnalyticsEvent, measureAnalyticsOperation, recordAnalyticsMetric } from "../analytics-observability";
 
 type PresetRecord = {
   id: string;
@@ -40,7 +42,7 @@ type PresetRepository = {
   findSharedForUser(email: string, organizationIds: string[], userId: string): Promise<PresetRecord[]>;
   findUserContext(userId: string): Promise<UserContextRecord | null>;
   findUsersInOrganizations(organizationIds: string[], excludeUserId: string): Promise<UserContextRecord[]>;
-  searchUsersInOrganizations(organizationIds: string[], query: string, excludeUserId: string): Promise<UserContextRecord[]>;
+  searchUsersInOrganizations(organizationIds: string[], query: string, excludeUserId: string, skip: number, take: number): Promise<UserContextRecord[]>;
   delete(id: string): Promise<void>;
 };
 
@@ -55,10 +57,18 @@ const analyticsPresetRepository: PresetRepository = {
       }
     }),
   findManyByUser: (userId) =>
-    prisma.analyticsPreset.findMany({
-      where: { userId },
-      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }]
-    }),
+    measureAnalyticsOperation(
+      "analytics.query.preset_lookup",
+      () =>
+        prisma.analyticsPreset.findMany({
+          where: { userId },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }]
+        }),
+      {
+        metricKey: "query_preset_lookup",
+        payload: { viewerRole: "owner" }
+      }
+    ),
   findByUserAndName: (userId, name) =>
     prisma.analyticsPreset.findFirst({
       where: { userId, name }
@@ -77,27 +87,35 @@ const analyticsPresetRepository: PresetRepository = {
     });
   },
   findSharedForUser: (email, organizationIds, userId) =>
-    prisma.analyticsPreset.findMany({
-      where: {
-        userId: {
-          not: userId
-        },
-        isShared: true,
-        sharedWith: {
-          has: email
-        },
-        user: {
-          memberships: {
-            some: {
-              organizationId: {
-                in: organizationIds
+    measureAnalyticsOperation(
+      "analytics.query.shared_preset_lookup",
+      () =>
+        prisma.analyticsPreset.findMany({
+          where: {
+            userId: {
+              not: userId
+            },
+            isShared: true,
+            sharedWith: {
+              has: email
+            },
+            user: {
+              memberships: {
+                some: {
+                  organizationId: {
+                    in: organizationIds
+                  }
+                }
               }
             }
-          }
-        }
-      },
-      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }]
-    }),
+          },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }]
+        }),
+      {
+        metricKey: "query_shared_preset_lookup",
+        payload: { organizationCount: organizationIds.length }
+      }
+    ),
   findUserContext: async (userId) => {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -176,61 +194,70 @@ const analyticsPresetRepository: PresetRepository = {
       organizationIds: user.memberships.map((membership) => membership.organizationId)
     }));
   },
-  searchUsersInOrganizations: async (organizationIds, query, excludeUserId) => {
+  searchUsersInOrganizations: async (organizationIds, query, excludeUserId, skip, take) => {
     if (organizationIds.length === 0 || !query.trim()) {
       return [];
     }
 
-    const users = await prisma.user.findMany({
-      where: {
-        id: { not: excludeUserId },
-        status: "active",
-        role: {
-          not: "consumer"
-        },
-        memberships: {
-          some: {
-            organizationId: { in: organizationIds }
-          }
-        },
-        OR: [
-          {
-            email: {
-              contains: query,
-              mode: "insensitive"
-            }
+    const users = await measureAnalyticsOperation(
+      "analytics.query.share_candidate_lookup",
+      () =>
+        prisma.user.findMany({
+          where: {
+            id: { not: excludeUserId },
+            status: "active",
+            role: {
+              not: "consumer"
+            },
+            memberships: {
+              some: {
+                organizationId: { in: organizationIds }
+              }
+            },
+            OR: [
+              {
+                email: {
+                  contains: query,
+                  mode: "insensitive"
+                }
+              },
+              {
+                profile: {
+                  displayName: {
+                    contains: query,
+                    mode: "insensitive"
+                  }
+                }
+              }
+            ]
           },
-          {
+          skip,
+          take,
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            status: true,
             profile: {
-              displayName: {
-                contains: query,
-                mode: "insensitive"
+              select: {
+                displayName: true
+              }
+            },
+            memberships: {
+              where: {
+                organizationId: { in: organizationIds }
+              },
+              select: {
+                organizationId: true
               }
             }
           }
-        ]
-      },
-      take: 8,
-      select: {
-        id: true,
-        email: true,
-        role: true,
-        status: true,
-        profile: {
-          select: {
-            displayName: true
-          }
-        },
-        memberships: {
-          where: {
-            organizationId: { in: organizationIds }
-          },
-          select: {
-            organizationId: true
-          }
-        }
+        }),
+      {
+        metricKey: "query_share_candidate_lookup",
+        payload: { organizationCount: organizationIds.length, pageSize: take }
       }
-    });
+    );
 
     return users.map((user) => ({
       id: user.id,
@@ -355,9 +382,15 @@ export async function sharePreset(
     throw new ApiError("VALIDATION_ERROR", "At least one share target is required");
   }
 
-  const teamMembers = (await repository.findUsersInOrganizations(owner.organizationIds, ownerId)).filter(
-    (user) => user.status === "active" && user.role !== "consumer"
-  );
+  const teamMembers = (
+    await measureAnalyticsOperation(
+      "analytics.team_members.lookup",
+      () => repository.findUsersInOrganizations(owner.organizationIds, ownerId),
+      {
+        payload: { organizationCount: owner.organizationIds.length }
+      }
+    )
+  ).filter((user) => user.status === "active" && user.role !== "consumer");
   const { byEmail, byName } = buildMatchIndex(teamMembers);
 
   const resolvedEmails: string[] = [];
@@ -392,8 +425,7 @@ export async function sharePreset(
     logAnalyticsEvent(
       "preset.share.rejected",
       {
-        ownerId,
-        presetId,
+        organizationCount: owner.organizationIds.length,
         ambiguous,
         unresolved
       },
@@ -406,12 +438,19 @@ export async function sharePreset(
   }
 
   const uniqueEmails = [...new Set(resolvedEmails)].sort((left, right) => left.localeCompare(right));
-  await repository.updateShare(presetId, uniqueEmails);
+  await measureAnalyticsOperation(
+    "analytics.preset.share_update",
+    () => repository.updateShare(presetId, uniqueEmails),
+    {
+      metricKey: "preset_share",
+      payload: {
+        sharedWithCount: uniqueEmails.length,
+        organizationCount: owner.organizationIds.length
+      }
+    }
+  );
   invalidatePresetCaches({ ownerUserId: ownerId, sharedEmails: uniqueEmails });
-  recordAnalyticsMetric("preset_share");
   logAnalyticsEvent("preset.share.completed", {
-    ownerId,
-    presetId,
     sharedWithCount: uniqueEmails.length
   });
 }
@@ -443,8 +482,9 @@ export async function getSharedPresets(
 export async function searchShareCandidates(
   ownerId: string,
   query: string,
+  page = 1,
   repository: PresetRepository = analyticsPresetRepository
-): Promise<AnalyticsShareCandidate[]> {
+): Promise<AnalyticsShareCandidateSearchResult> {
   const owner = await repository.findUserContext(ownerId);
   if (!owner) {
     throw new ApiError("NOT_FOUND", "Owner not found");
@@ -456,11 +496,19 @@ export async function searchShareCandidates(
 
   const normalized = query.trim();
   if (normalized.length < 2) {
-    return [];
+    return analyticsShareCandidateSearchSchema.parse({
+      items: [],
+      page: 1,
+      hasMore: false
+    });
   }
 
-  const users = await repository.searchUsersInOrganizations(owner.organizationIds, normalized, ownerId);
+  const normalizedPage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+  const pageSize = 5;
+  const users = await repository.searchUsersInOrganizations(owner.organizationIds, normalized, ownerId, (normalizedPage - 1) * pageSize, pageSize + 1);
+  const hasMore = users.length > pageSize;
   const candidates = users
+    .slice(0, pageSize)
     .filter((user) => user.status === "active" && user.role !== "consumer")
     .map((user) =>
       analyticsShareCandidateSchema.parse({
@@ -470,14 +518,21 @@ export async function searchShareCandidates(
       })
     );
 
-  recordAnalyticsMetric("preset_share_search");
+  recordAnalyticsMetric("preset_share_search", {
+    rows: candidates.length
+  });
   logAnalyticsEvent("preset.share.search", {
-    ownerId,
-    query: normalized,
-    resultCount: candidates.length
+    page: normalizedPage,
+    queryLength: normalized.length,
+    resultCount: candidates.length,
+    hasMore
   });
 
-  return candidates;
+  return analyticsShareCandidateSearchSchema.parse({
+    items: candidates,
+    page: normalizedPage,
+    hasMore
+  });
 }
 
 export async function deletePreset(

@@ -10,6 +10,8 @@ import { CaseAnalyticsClient } from "./case-analytics-client";
 const {
   getCaseAnalyticsMock,
   getCaseAnalyticsTrendMock,
+  getAnalyticsPresetsMock,
+  getSharedAnalyticsPresetsMock,
   createAnalyticsPresetMock,
   deleteAnalyticsPresetMock,
   shareAnalyticsPresetMock,
@@ -18,6 +20,8 @@ const {
 } = vi.hoisted(() => ({
   getCaseAnalyticsMock: vi.fn(),
   getCaseAnalyticsTrendMock: vi.fn(),
+  getAnalyticsPresetsMock: vi.fn(),
+  getSharedAnalyticsPresetsMock: vi.fn(),
   createAnalyticsPresetMock: vi.fn(),
   deleteAnalyticsPresetMock: vi.fn(),
   shareAnalyticsPresetMock: vi.fn(),
@@ -44,6 +48,8 @@ vi.mock("../../../lib/client/case-analytics-api", () => ({
   },
   getCaseAnalytics: getCaseAnalyticsMock,
   getCaseAnalyticsTrend: getCaseAnalyticsTrendMock,
+  getAnalyticsPresets: getAnalyticsPresetsMock,
+  getSharedAnalyticsPresets: getSharedAnalyticsPresetsMock,
   createAnalyticsPreset: createAnalyticsPresetMock,
   deleteAnalyticsPreset: deleteAnalyticsPresetMock,
   shareAnalyticsPreset: shareAnalyticsPresetMock,
@@ -105,15 +111,43 @@ describe("case analytics client", () => {
       createdAt: "2026-03-10T00:00:00.000Z"
     });
     shareAnalyticsPresetMock.mockResolvedValue(undefined);
-    searchAnalyticsShareCandidatesMock.mockResolvedValue([
+    getAnalyticsPresetsMock.mockResolvedValue([
       {
-        userId: "user-3",
-        email: "reviewer@example.com",
-        displayName: "Reviewer"
+        presetId: "owned-1",
+        userId: "user-1",
+        name: "My preset",
+        filter: {},
+        interval: "daily",
+        isShared: true,
+        sharedWith: ["reviewer@example.com"],
+        createdAt: "2026-03-10T00:00:00.000Z"
       }
     ]);
+    getSharedAnalyticsPresetsMock.mockResolvedValue([
+      {
+        presetId: "shared-1",
+        userId: "user-2",
+        name: "Shared preset",
+        filter: { hospitals: ["Seoul Hospital"] },
+        interval: "weekly",
+        isShared: true,
+        sharedWith: ["user-1@example.com"],
+        createdAt: "2026-03-10T00:00:00.000Z"
+      }
+    ]);
+    searchAnalyticsShareCandidatesMock.mockResolvedValue({
+      items: [
+        {
+          userId: "user-3",
+          email: "reviewer@example.com",
+          displayName: "Reviewer"
+        }
+      ],
+      page: 1,
+      hasMore: true
+    });
     downloadAnalyticsExportMock.mockImplementation(async ({ onProgress }) => {
-      onProgress?.(55);
+      onProgress?.({ percent: 55, receivedBytes: 550, totalBytes: 1000 });
       return {
         filename: "analytics-weekly-20260311.csv",
         blob: new Blob(["section,key,value"], { type: "text/csv" })
@@ -205,8 +239,9 @@ describe("case analytics client", () => {
     });
 
     await waitFor(() => {
-      expect(searchAnalyticsShareCandidatesMock).toHaveBeenCalledWith("review");
+      expect(searchAnalyticsShareCandidatesMock).toHaveBeenCalledWith("review", 1);
     });
+    expect(screen.getByRole("button", { name: "Load more teammates" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Reviewer (reviewer@example.com)" }));
     fireEvent.click(screen.getAllByRole("button", { name: "Share" })[1]!);
 
@@ -221,6 +256,12 @@ describe("case analytics client", () => {
     });
     await waitFor(() => {
       expect(screen.getByText("Preset sharing updated.")).toBeTruthy();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Refresh presets" }));
+    await waitFor(() => {
+      expect(getAnalyticsPresetsMock).toHaveBeenCalledTimes(1);
+      expect(getSharedAnalyticsPresetsMock).toHaveBeenCalledTimes(1);
     });
 
     expect(appendChildSpy).toHaveBeenCalled();

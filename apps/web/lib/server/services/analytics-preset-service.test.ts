@@ -253,7 +253,7 @@ describe("analytics preset service", () => {
   });
 
   it("searches share candidates within the same organization only", async () => {
-    const results = await searchShareCandidates("owner-1", "review", {
+    const results = await searchShareCandidates("owner-1", "review", 1, {
       create: async () => {
         throw new Error("not used");
       },
@@ -284,12 +284,16 @@ describe("analytics preset service", () => {
       delete: async () => undefined
     });
 
-    expect(results).toEqual([
-      {
-        userId: "user-2",
-        email: "reviewer@example.com",
-        displayName: "Reviewer"
-      }
-    ]);
+    expect(results).toEqual({
+      items: [
+        {
+          userId: "user-2",
+          email: "reviewer@example.com",
+          displayName: "Reviewer"
+        }
+      ],
+      page: 1,
+      hasMore: false
+    });
   });
 });

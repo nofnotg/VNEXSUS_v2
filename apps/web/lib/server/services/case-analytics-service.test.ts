@@ -194,4 +194,37 @@ describe("case analytics service", () => {
     expect(workbook.SheetNames).toContain("Summary");
     expect(workbook.SheetNames).toContain("Trend");
   });
+
+  it("rejects exports outside the accessible filter scope", async () => {
+    await expect(
+      exportAnalytics(
+        "user-1",
+        "investigator",
+        { hospitals: ["Secret Hospital"] },
+        "weekly",
+        "csv",
+        {
+          getAnalyticsForUser: async () => ({
+            totalCases: 0,
+            totalEvents: 0,
+            confirmedEvents: 0,
+            unconfirmedEvents: 0,
+            reviewRequiredEvents: 0,
+            eventsByType: [],
+            eventsByHospital: [],
+            topHospitals: []
+          }),
+          getTopHospitalsForUser: async () => [],
+          getAccessibleFilterValues: async () => ({
+            eventTypes: ["exam"],
+            hospitals: ["Seoul Hospital"]
+          }),
+          getTrendForUser: async () => ({
+            interval: "weekly",
+            points: []
+          })
+        }
+      )
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
 });

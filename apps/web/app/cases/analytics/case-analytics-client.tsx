@@ -11,6 +11,8 @@ import {
   deleteAnalyticsPreset,
   downloadAnalyticsExport,
   getCaseAnalytics,
+  getAnalyticsPresets,
+  getSharedAnalyticsPresets,
   getCaseAnalyticsTrend,
   searchAnalyticsShareCandidates,
   shareAnalyticsPreset
@@ -74,6 +76,28 @@ function mergeOptions(current: string[], incoming: string[]) {
   return [...new Set([...current, ...incoming])].sort((left, right) => left.localeCompare(right));
 }
 
+function mergeShareCandidates(current: AnalyticsShareCandidate[], incoming: AnalyticsShareCandidate[]) {
+  const byId = new Map(current.map((item) => [item.userId, item]));
+
+  for (const candidate of incoming) {
+    byId.set(candidate.userId, candidate);
+  }
+
+  return [...byId.values()];
+}
+
+function formatBytes(value: number) {
+  if (value >= 1024 * 1024) {
+    return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  if (value >= 1024) {
+    return `${Math.round(value / 1024)} KB`;
+  }
+
+  return `${value} B`;
+}
+
 export function CaseAnalyticsClient({
   initialAnalytics,
   initialTrend,
@@ -95,10 +119,19 @@ export function CaseAnalyticsClient({
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
+  const [downloadBytes, setDownloadBytes] = useState<{ received: number; total: number | null } | null>(null);
   const [activeSharePresetId, setActiveSharePresetId] = useState<string | null>(null);
   const [shareQuery, setShareQuery] = useState("");
   const [shareCandidates, setShareCandidates] = useState<AnalyticsShareCandidate[]>([]);
+  const [shareSearchPage, setShareSearchPage] = useState(1);
+  const [shareSearchHasMore, setShareSearchHasMore] = useState(false);
   const [shareSelection, setShareSelection] = useState<string[]>([]);
+  const [refreshingPresets, setRefreshingPresets] = useState(false);
+  const [lastExportRequest, setLastExportRequest] = useState<{
+    fileType: AnalyticsExportFileType;
+    filter: CaseAnalyticsFilter;
+    interval: CaseAnalyticsTrend["interval"];
+  } | null>(null);
   const [eventTypeOptions, setEventTypeOptions] = useState(() => Object.keys(initialAnalytics.eventsByType).sort((a, b) => a.localeCompare(b)));
   const [hospitalOptions, setHospitalOptions] = useState(() =>
     mergeOptions([], [
@@ -144,22 +177,24 @@ export function CaseAnalyticsClient({
       return;
     }
 
-    void searchAnalyticsShareCandidates(deferredShareQuery.trim())
-      .then((items) => {
+    void searchAnalyticsShareCandidates(deferredShareQuery.trim(), shareSearchPage)
+      .then((result) => {
         if (!cancelled) {
-          setShareCandidates(items);
+          setShareCandidates((current) => (shareSearchPage === 1 ? result.items : mergeShareCandidates(current, result.items)));
+          setShareSearchHasMore(result.hasMore);
         }
       })
       .catch(() => {
         if (!cancelled) {
           setShareCandidates([]);
+          setShareSearchHasMore(false);
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [activeSharePresetId, deferredShareQuery]);
+  }, [activeSharePresetId, deferredShareQuery, shareSearchPage]);
 
   async function refresh(nextFilter: FilterState, nextInterval: CaseAnalyticsTrend["interval"]) {
     setLoading(true);
@@ -279,6 +314,8 @@ export function CaseAnalyticsClient({
     setShareSelection(preset.sharedWith);
     setShareQuery("");
     setShareCandidates([]);
+    setShareSearchPage(1);
+    setShareSearchHasMore(false);
     setError(null);
     setNotice(null);
   }
@@ -289,6 +326,8 @@ export function CaseAnalyticsClient({
     );
     setShareQuery("");
     setShareCandidates([]);
+    setShareSearchPage(1);
+    setShareSearchHasMore(false);
   }
 
   function handleRemoveShareRecipient(email: string) {
@@ -331,19 +370,51 @@ export function CaseAnalyticsClient({
     }
   }
 
-  async function handleExport() {
+  async function handleRefreshPresets() {
+    setRefreshingPresets(true);
+    setError(null);
+    setNotice(null);
+
+    try {
+      const [nextOwned, nextShared] = await Promise.all([getAnalyticsPresets(), getSharedAnalyticsPresets()]);
+      startTransition(() => {
+        setOwnedPresets(nextOwned);
+        setSharedPresets(nextShared);
+        setSelectedPresetId((current) =>
+          nextOwned.some((preset) => preset.presetId === current) || nextShared.some((preset) => preset.presetId === current) ? current : ""
+        );
+      });
+    } catch (caught) {
+      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiAnalyticsError;
+      setError(message);
+    } finally {
+      setRefreshingPresets(false);
+    }
+  }
+
+  async function handleExport(
+    exportRequest = {
+      fileType: exportType,
+      filter: toRequestFilter(filter),
+      interval
+    }
+  ) {
     setLoading(true);
     setError(null);
     setNotice(null);
     setDownloadProgress(null);
+    setDownloadBytes(null);
+    setLastExportRequest(exportRequest);
 
     try {
       const file = await downloadAnalyticsExport({
-        fileType: exportType,
-        filter: toRequestFilter(filter),
-        interval,
+        ...exportRequest,
         onProgress: (progress) => {
-          setDownloadProgress(progress);
+          setDownloadProgress(progress.percent);
+          setDownloadBytes({
+            received: progress.receivedBytes,
+            total: progress.totalBytes
+          });
         }
       });
       const objectUrl = URL.createObjectURL(file.blob);
@@ -361,6 +432,7 @@ export function CaseAnalyticsClient({
     } finally {
       setLoading(false);
       setDownloadProgress(null);
+      setDownloadBytes(null);
     }
   }
 
@@ -401,6 +473,9 @@ export function CaseAnalyticsClient({
           <button type="button" onClick={() => void handleSavePreset()} disabled={loading}>
             {localeMessages.uiSavePreset}
           </button>
+          <button type="button" onClick={() => void handleRefreshPresets()} disabled={loading || refreshingPresets}>
+            {refreshingPresets ? localeMessages.uiRefreshingPresets : localeMessages.uiRefreshPresets}
+          </button>
         </div>
 
         {ownedPresets.length > 0 ? (
@@ -438,7 +513,10 @@ export function CaseAnalyticsClient({
                         <input
                           type="text"
                           value={shareQuery}
-                          onChange={(event) => setShareQuery(event.target.value)}
+                          onChange={(event) => {
+                            setShareQuery(event.target.value);
+                            setShareSearchPage(1);
+                          }}
                           placeholder={localeMessages.uiShareSearchPlaceholder}
                         />
                       </label>
@@ -454,6 +532,11 @@ export function CaseAnalyticsClient({
                               {candidate.displayName ? `${candidate.displayName} (${candidate.email})` : candidate.email}
                             </button>
                           ))}
+                          {shareSearchHasMore ? (
+                            <button type="button" onClick={() => setShareSearchPage((current) => current + 1)} style={shareCandidateButtonStyle}>
+                              {localeMessages.uiShareLoadMore}
+                            </button>
+                          ) : null}
                         </div>
                       ) : shareQuery.trim().length >= 2 ? (
                         <div style={{ color: "var(--muted)", fontSize: "14px" }}>{localeMessages.uiShareNoMatches}</div>
@@ -604,15 +687,28 @@ export function CaseAnalyticsClient({
           <button type="button" onClick={() => void handleExport()} disabled={loading}>
             {localeMessages.uiExport}
           </button>
+          {error && lastExportRequest ? (
+            <button type="button" onClick={() => void handleExport(lastExportRequest)} disabled={loading}>
+              {localeMessages.uiRetryExport}
+            </button>
+          ) : null}
         </div>
 
         {error ? <p style={{ margin: 0, color: "#b42318" }}>{error}</p> : null}
         {notice ? <p style={{ margin: 0, color: "#166534" }}>{notice}</p> : null}
         {loading && downloadProgress === null ? <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.uiExportPreparing}</p> : null}
         {loading && downloadProgress !== null ? (
-          <p style={{ margin: 0, color: "var(--muted)" }}>
-            {formatMessage(localeMessages.uiExportDownloading, { progress: String(downloadProgress) })}
-          </p>
+          <div style={{ display: "grid", gap: "4px", color: "var(--muted)" }}>
+            <p style={{ margin: 0 }}>{formatMessage(localeMessages.uiExportDownloading, { progress: String(downloadProgress) })}</p>
+            {downloadBytes ? (
+              <p style={{ margin: 0, fontSize: "14px" }}>
+                {formatMessage(localeMessages.uiExportProgressDetail, {
+                  received: formatBytes(downloadBytes.received),
+                  total: downloadBytes.total ? formatBytes(downloadBytes.total) : "unknown"
+                })}
+              </p>
+            ) : null}
+          </div>
         ) : null}
       </section>
 

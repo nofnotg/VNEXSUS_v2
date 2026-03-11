@@ -16,7 +16,12 @@ export const envSchema = z.object({
     .default("application/pdf,image/png,image/jpeg")
     .transform((value) => value.split(",").map((item) => item.trim()).filter(Boolean)),
   OCR_PROVIDER: z.literal("google-vision"),
-  LLM_PROVIDER: z.literal("openai")
+  LLM_PROVIDER: z.literal("openai"),
+  ANALYTICS_PRESET_CACHE_TTL_MS: z.coerce.number().int().positive().default(60_000),
+  ANALYTICS_EXPORT_MAX_DAYS: z.coerce.number().int().positive().default(366),
+  ANALYTICS_EXPORT_MAX_FILTER_VALUES: z.coerce.number().int().positive().default(20),
+  ANALYTICS_SLOW_QUERY_MS: z.coerce.number().int().positive().default(400),
+  ANALYTICS_ALERT_WEBHOOK_URL: z.string().url().optional()
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

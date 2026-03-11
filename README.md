@@ -59,16 +59,20 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
 - Saved presets are available from `/api/cases/analytics/presets`, and each preset stores the current filter JSON plus the selected interval for the signed-in user.
 - Presets can be shared with team members through `/api/cases/analytics/presets/share`; only active non-consumer users who share an organization with the preset owner can be selected.
 - The share picker uses `/api/cases/analytics/presets/share/search?q=...` and only returns teammates from the same organization scope as the preset owner.
+- Share search now supports paged loading with `page` so the UI can request more teammates without loading the full directory into memory.
 - Share requests reject unknown emails, users outside the current organization boundary, and users without analytics-compatible roles.
 - Shared presets are listed separately from personal presets through `/api/cases/analytics/presets/shared` so teams can reuse common analytics views without duplicating filters.
 - Analytics exports are available from `/api/cases/analytics/export` in `csv` and `xlsx` formats, using the current filter and interval from the dashboard.
 - Export files are generated from aggregated analytics and trend data, not raw OCR text or unrestricted case payloads, to keep the output aligned with the dashboard contract.
 - Export requests are revalidated on the server against the requester's case access scope and against the event type / hospital values actually accessible to that user.
 - Export generation now writes CSV/XLSX output to a temporary file and streams the response to the client, which reduces peak memory usage for larger analytics datasets.
-- The dashboard shows export progress while the browser downloads the file and displays a completion message after the file link is created.
+- The dashboard shows export progress while the browser downloads the file, includes byte-level progress details when `Content-Length` is available, and lets the reviewer retry the most recent export request after a failure.
 - Current safeguards keep export ranges to at most 366 days and limit explicit event type / hospital filters to 20 values each. If larger exports are needed later, move the flow to background jobs before expanding these limits.
 - Analytics preset lookups now use database indexes plus a short-lived in-memory cache for owned/shared preset lists. Clear or replace this cache with Redis when deploying multiple web instances.
-- Server-side analytics events are logged for preset sharing, export requests, export completion, and export failures. A lightweight metrics snapshot is exposed through `/api/cases/analytics/metrics` for admin users.
+- Server-side analytics events are logged for preset sharing, search, export requests, export completion, export failures, cache hit/miss, and slow analytics operations. These logs avoid raw teammate search text and email values so PII does not leak into operational telemetry.
+- An admin-only metrics snapshot is exposed through `/api/cases/analytics/metrics`, and Prometheus text output is available from `/api/cases/analytics/metrics?format=prometheus`.
+- Optional analytics runtime settings can be supplied with `ANALYTICS_PRESET_CACHE_TTL_MS`, `ANALYTICS_EXPORT_MAX_DAYS`, `ANALYTICS_EXPORT_MAX_FILTER_VALUES`, `ANALYTICS_SLOW_QUERY_MS`, and `ANALYTICS_ALERT_WEBHOOK_URL`.
+- The presets panel now includes a manual `Refresh presets` action so reviewers can bypass cache staleness after team activity.
 - The dashboard also highlights top hospitals; selecting a hospital card drills the board into that hospital and refreshes the trend view.
 - Aggregations are computed in the service/repository layer so route handlers remain thin and testable.
 - Filter parsing and validation also happen before the service layer runs; invalid dates or unsupported intervals return `400 VALIDATION_ERROR`.

@@ -19,7 +19,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { logAnalyticsEvent, recordAnalyticsMetric } from "../analytics-observability";
+import { logAnalyticsEvent, measureAnalyticsOperation, recordAnalyticsMetric } from "../analytics-observability";
+
+const MAX_EXPORT_ROWS = 10000;
+const MAX_EXPORT_DAYS = Number(process.env.ANALYTICS_EXPORT_MAX_DAYS ?? 366);
+const MAX_EXPORT_FILTER_VALUES = Number(process.env.ANALYTICS_EXPORT_MAX_FILTER_VALUES ?? 20);
 
 function toCountMap(items: Array<{ key: string; count: number }>) {
   return Object.fromEntries(
@@ -164,16 +168,26 @@ async function ensureExportScope(
     const end = new Date(`${normalized.endDate}T00:00:00.000Z`);
     const diffDays = Math.floor((end.getTime() - start.getTime()) / 86_400_000);
 
-    if (diffDays > 366) {
-      throw new ApiError("VALIDATION_ERROR", "Analytics export date range cannot exceed 366 days");
+    if (diffDays > MAX_EXPORT_DAYS) {
+      throw new ApiError("VALIDATION_ERROR", `Analytics export date range cannot exceed ${MAX_EXPORT_DAYS} days`);
     }
   }
 
-  if ((normalized.eventTypes?.length ?? 0) > 20 || (normalized.hospitals?.length ?? 0) > 20) {
+  if ((normalized.eventTypes?.length ?? 0) > MAX_EXPORT_FILTER_VALUES || (normalized.hospitals?.length ?? 0) > MAX_EXPORT_FILTER_VALUES) {
     throw new ApiError("VALIDATION_ERROR", "Analytics export filter is too broad");
   }
 
-  const accessible = await repository.getAccessibleFilterValues(userId, role === "admin");
+  const accessible = await measureAnalyticsOperation(
+    "analytics.export.scope_lookup",
+    () => repository.getAccessibleFilterValues(userId, role === "admin"),
+    {
+      payload: {
+        role,
+        requestedEventTypeCount: normalized.eventTypes?.length ?? 0,
+        requestedHospitalCount: normalized.hospitals?.length ?? 0
+      }
+    }
+  );
   const allowedEventTypes = new Set<string>(accessible.eventTypes);
   const allowedHospitals = new Set<string>(accessible.hospitals);
 
@@ -244,7 +258,18 @@ export async function getCaseAnalytics(
 
   const parsedFilter = normalizeFilter(filter);
   const [result, topHospitals] = await Promise.all([
-    repository.getAnalyticsForUser(userId, role === "admin", parsedFilter),
+    measureAnalyticsOperation(
+      "analytics.query.case_analytics",
+      () => repository.getAnalyticsForUser(userId, role === "admin", parsedFilter),
+      {
+        metricKey: "query_case_analytics",
+        payload: {
+          role,
+          filterEventTypeCount: parsedFilter.eventTypes?.length ?? 0,
+          filterHospitalCount: parsedFilter.hospitals?.length ?? 0
+        }
+      }
+    ),
     repository.getTopHospitalsForUser(userId, role === "admin", parsedFilter, 5)
   ]);
 
@@ -270,11 +295,21 @@ export async function getCaseAnalyticsTrend(
   assertAnalyticsRole(role);
 
   const parsedFilter = normalizeFilter(filter);
-  const trend = await repository.getTrendForUser(userId, role === "admin", parsedFilter, interval);
+  const trend = await measureAnalyticsOperation(
+    "analytics.query.case_analytics_trend",
+    () => repository.getTrendForUser(userId, role === "admin", parsedFilter, interval),
+    {
+      metricKey: "query_case_analytics_trend",
+      payload: {
+        role,
+        interval,
+        filterEventTypeCount: parsedFilter.eventTypes?.length ?? 0,
+        filterHospitalCount: parsedFilter.hospitals?.length ?? 0
+      }
+    }
+  );
   return caseAnalyticsTrendSchema.parse(trend);
 }
-
-const MAX_EXPORT_ROWS = 10000;
 
 export async function exportAnalytics(
   userId: string,
@@ -289,55 +324,89 @@ export async function exportAnalytics(
   const parsedFilter = normalizeFilter(filter);
   const parsedInterval = analyticsIntervalSchema.parse(interval);
   const parsedFileType = analyticsExportFileTypeSchema.parse(fileType);
-  await ensureExportScope(userId, role, parsedFilter, repository);
-  recordAnalyticsMetric("export_request");
-  logAnalyticsEvent("analytics.export.requested", {
-    userId,
-    role,
-    fileType: parsedFileType,
-    interval: parsedInterval
-  });
+  const exportStartedAt = Date.now();
 
-  const [analytics, trend] = await Promise.all([
-    getCaseAnalytics(userId, role, parsedFilter, repository),
-    getCaseAnalyticsTrend(userId, role, parsedFilter, parsedInterval, repository)
-  ]);
-
-  const rows = buildExportRows(analytics, trend);
-  if (rows.length > MAX_EXPORT_ROWS) {
-    throw new ApiError("VALIDATION_ERROR", "Analytics export exceeds the maximum row limit");
-  }
-
-  const baseFilename = `analytics-${parsedInterval}-${buildTimestamp()}`;
-  const workspace = await createExportWorkspace();
-
-  if (parsedFileType === "csv") {
-    const filePath = join(workspace, `${baseFilename}.csv`);
-    await buildCsvExportFile(rows, filePath);
-    const exportFile = await toStreamedExportFile(filePath, `${baseFilename}.csv`, "text/csv; charset=utf-8");
-    recordAnalyticsMetric("export_complete", { bytes: exportFile.size });
-    logAnalyticsEvent("analytics.export.completed", {
-      userId,
+  try {
+    await ensureExportScope(userId, role, parsedFilter, repository);
+    recordAnalyticsMetric("export_request");
+    logAnalyticsEvent("analytics.export.requested", {
+      role,
       fileType: parsedFileType,
-      size: exportFile.size
+      interval: parsedInterval,
+      filterEventTypeCount: parsedFilter.eventTypes?.length ?? 0,
+      filterHospitalCount: parsedFilter.hospitals?.length ?? 0
+    });
+
+    const [analytics, trend] = await Promise.all([
+      getCaseAnalytics(userId, role, parsedFilter, repository),
+      getCaseAnalyticsTrend(userId, role, parsedFilter, parsedInterval, repository)
+    ]);
+
+    const rows = buildExportRows(analytics, trend);
+    if (rows.length > MAX_EXPORT_ROWS) {
+      throw new ApiError("VALIDATION_ERROR", "Analytics export exceeds the maximum row limit");
+    }
+
+    const baseFilename = `analytics-${parsedInterval}-${buildTimestamp()}`;
+    const workspace = await createExportWorkspace();
+
+    if (parsedFileType === "csv") {
+      const filePath = join(workspace, `${baseFilename}.csv`);
+      await measureAnalyticsOperation(
+        "analytics.export.csv_build",
+        () => buildCsvExportFile(rows, filePath),
+        {
+          payload: { fileType: parsedFileType, rows: rows.length },
+          rows: rows.length
+        }
+      );
+      const exportFile = await toStreamedExportFile(filePath, `${baseFilename}.csv`, "text/csv; charset=utf-8");
+      recordAnalyticsMetric("export_complete", { bytes: exportFile.size, durationMs: Date.now() - exportStartedAt, rows: rows.length });
+      logAnalyticsEvent("analytics.export.completed", {
+        fileType: parsedFileType,
+        size: exportFile.size,
+        durationMs: Date.now() - exportStartedAt,
+        rows: rows.length
+      });
+
+      return exportFile;
+    }
+
+    const filePath = join(workspace, `${baseFilename}.xlsx`);
+    await measureAnalyticsOperation(
+      "analytics.export.xlsx_build",
+      () => buildXlsxExportFile(analytics, trend, parsedFilter, parsedInterval, filePath),
+      {
+        payload: { fileType: parsedFileType, rows: rows.length },
+        rows: rows.length
+      }
+    );
+    const exportFile = await toStreamedExportFile(
+      filePath,
+      `${baseFilename}.xlsx`,
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    recordAnalyticsMetric("export_complete", { bytes: exportFile.size, durationMs: Date.now() - exportStartedAt, rows: rows.length });
+    logAnalyticsEvent("analytics.export.completed", {
+      fileType: parsedFileType,
+      size: exportFile.size,
+      durationMs: Date.now() - exportStartedAt,
+      rows: rows.length
     });
 
     return exportFile;
+  } catch (error) {
+    recordAnalyticsMetric("export_request", { failed: true, durationMs: Date.now() - exportStartedAt });
+    logAnalyticsEvent(
+      "analytics.export.failed",
+      {
+        fileType: parsedFileType,
+        interval: parsedInterval,
+        durationMs: Date.now() - exportStartedAt,
+        errorMessage: error instanceof Error ? error.message : "Unknown analytics export error"
+      },
+      "error"
+    );
+    throw error;
   }
-
-  const filePath = join(workspace, `${baseFilename}.xlsx`);
-  await buildXlsxExportFile(analytics, trend, parsedFilter, parsedInterval, filePath);
-  const exportFile = await toStreamedExportFile(
-    filePath,
-    `${baseFilename}.xlsx`,
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  );
-  recordAnalyticsMetric("export_complete", { bytes: exportFile.size });
-  logAnalyticsEvent("analytics.export.completed", {
-    userId,
-    fileType: parsedFileType,
-    size: exportFile.size
-  });
-
-  return exportFile;
 }

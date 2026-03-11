@@ -204,6 +204,11 @@ export type MessageDictionary = {
   uiShareSearchPlaceholder: string;
   uiShareNoMatches: string;
   uiShareSelectedUsers: string;
+  uiShareLoadMore: string;
+  uiRefreshPresets: string;
+  uiRefreshingPresets: string;
+  uiRetryExport: string;
+  uiExportProgressDetail: string;
   uiTopHospitals: string;
   uiEvents: string;
   uiViewDetails: string;
@@ -414,6 +419,11 @@ export const messages = {
     uiShareSearchPlaceholder: "Search teammates by name or email",
     uiShareNoMatches: "No matching teammates found.",
     uiShareSelectedUsers: "Selected recipients",
+    uiShareLoadMore: "Load more teammates",
+    uiRefreshPresets: "Refresh presets",
+    uiRefreshingPresets: "Refreshing presets...",
+    uiRetryExport: "Retry export",
+    uiExportProgressDetail: "Downloaded {received} of {total}",
     uiTopHospitals: "Top hospitals",
     uiEvents: "Events",
     uiViewDetails: "View details"
@@ -616,6 +626,11 @@ Object.assign(messages.ko, {
   uiShareSearchPlaceholder: "\uC774\uB984 \uB610\uB294 \uC774\uBA54\uC77C\uB85C \uD300\uC6D0 \uAC80\uC0C9",
   uiShareNoMatches: "\uC77C\uCE58\uD558\uB294 \uD300\uC6D0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
   uiShareSelectedUsers: "\uC120\uD0DD\uB41C \uACF5\uC720 \uB300\uC0C1",
+  uiShareLoadMore: "\uD300\uC6D0 \uB354 \uBCF4\uAE30",
+  uiRefreshPresets: "\uD504\uB9AC\uC14B \uC0C8\uB85C\uACE0\uCE68",
+  uiRefreshingPresets: "\uD504\uB9AC\uC14B \uBAA9\uB85D\uC744 \uC0C8\uB85C \uBD88\uB7EC\uC624\uB294 \uC911\uC785\uB2C8\uB2E4...",
+  uiRetryExport: "\uB0B4\uBCF4\uB0B4\uAE30 \uB2E4\uC2DC \uC2DC\uB3C4",
+  uiExportProgressDetail: "{received} / {total} \uB2E4\uC6B4\uB85C\uB4DC",
   uiTrendHeading: "\uC2DC\uAC04\uBCC4 \uCD94\uC774",
   uiTrendInterval: "\uAD6C\uAC04",
   uiTrendDaily: "\uC77C\uBCC4",

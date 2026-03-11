@@ -12,9 +12,11 @@ export async function GET(request: Request) {
   try {
     const { user } = await requireAuthorizedSession();
     assertAnalyticsRole(user.role);
-    const query = new URL(request.url).searchParams.get("q") ?? "";
-    const items = await searchShareCandidates(user.id, query);
-    return apiSuccess({ items });
+    const searchParams = new URL(request.url).searchParams;
+    const query = searchParams.get("q") ?? "";
+    const page = Number(searchParams.get("page") ?? "1");
+    const result = await searchShareCandidates(user.id, query, page);
+    return apiSuccess(result);
   } catch (error) {
     return apiFailure(error);
   }
