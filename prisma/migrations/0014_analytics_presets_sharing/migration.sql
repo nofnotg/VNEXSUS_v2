@@ -1,0 +1,3 @@
+ALTER TABLE "AnalyticsPreset"
+ADD COLUMN "isShared" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN "sharedWith" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];

@@ -14,6 +14,7 @@ const {
   getCaseAnalyticsMock,
   getCaseAnalyticsTrendMock,
   getPresetsForUserMock,
+  getSharedPresetsMock,
   getDefaultAnalyticsFilterMock
 } = vi.hoisted(() => ({
   getSessionUserMock: vi.fn(),
@@ -21,6 +22,7 @@ const {
   getCaseAnalyticsMock: vi.fn(),
   getCaseAnalyticsTrendMock: vi.fn(),
   getPresetsForUserMock: vi.fn(),
+  getSharedPresetsMock: vi.fn(),
   getDefaultAnalyticsFilterMock: vi.fn()
 }));
 
@@ -52,7 +54,8 @@ vi.mock("../../../lib/server/services/case-analytics-service", () => ({
 }));
 
 vi.mock("../../../lib/server/services/analytics-preset-service", () => ({
-  getPresetsForUser: getPresetsForUserMock
+  getPresetsForUser: getPresetsForUserMock,
+  getSharedPresets: getSharedPresetsMock
 }));
 
 describe("case analytics page", () => {
@@ -98,6 +101,18 @@ describe("case analytics page", () => {
       points: [{ date: "2026-03-10", total: 2, confirmed: 1, unconfirmed: 1 }]
     });
     getPresetsForUserMock.mockResolvedValue([]);
+    getSharedPresetsMock.mockResolvedValue([
+      {
+        presetId: "shared-1",
+        userId: "user-9",
+        name: "Team preset",
+        filter: {},
+        interval: "daily",
+        isShared: true,
+        sharedWith: ["investigator@example.com"],
+        createdAt: "2026-03-10T00:00:00.000Z"
+      }
+    ]);
 
     vi.stubGlobal(
       "fetch",
@@ -132,6 +147,7 @@ describe("case analytics page", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Case Analytics" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Saved presets" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Top hospitals" })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 3, name: "Shared presets" })).toBeTruthy();
 
     fireEvent.change(screen.getByRole("combobox", { name: "Select language" }), {
       target: { value: "ko" }
@@ -143,6 +159,7 @@ describe("case analytics page", () => {
 
     expect(screen.getByRole("heading", { level: 2, name: ko.uiAnalyticsPresets })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: ko.uiTopHospitals })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 3, name: ko.uiSharedPresets })).toBeTruthy();
   });
 
   it("blocks analytics for consumer users", async () => {

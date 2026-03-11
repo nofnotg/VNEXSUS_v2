@@ -1,22 +1,25 @@
 "use client";
 
 import React, { startTransition, useMemo, useState } from "react";
-import type { CaseAnalytics, CaseAnalyticsFilter, CaseAnalyticsPreset, CaseAnalyticsTrend } from "@vnexus/shared";
+import type { AnalyticsExportFileType, CaseAnalytics, CaseAnalyticsFilter, CaseAnalyticsPreset, CaseAnalyticsTrend } from "@vnexus/shared";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useLocaleMessages } from "../../../components/locale-provider";
 import {
   CaseAnalyticsApiError,
   createAnalyticsPreset,
   deleteAnalyticsPreset,
+  downloadAnalyticsExport,
   getCaseAnalytics,
-  getCaseAnalyticsTrend
+  getCaseAnalyticsTrend,
+  shareAnalyticsPreset
 } from "../../../lib/client/case-analytics-api";
 
 type CaseAnalyticsClientProps = {
   initialAnalytics: CaseAnalytics;
   initialTrend: CaseAnalyticsTrend;
   initialFilter: CaseAnalyticsFilter;
-  initialPresets: CaseAnalyticsPreset[];
+  initialOwnedPresets: CaseAnalyticsPreset[];
+  initialSharedPresets: CaseAnalyticsPreset[];
 };
 
 type FilterState = {
@@ -73,18 +76,22 @@ export function CaseAnalyticsClient({
   initialAnalytics,
   initialTrend,
   initialFilter,
-  initialPresets
+  initialOwnedPresets,
+  initialSharedPresets
 }: CaseAnalyticsClientProps) {
   const localeMessages = useLocaleMessages();
   const [filter, setFilter] = useState<FilterState>(toFilterState(initialFilter));
   const [interval, setInterval] = useState<CaseAnalyticsTrend["interval"]>(initialTrend.interval);
   const [analytics, setAnalytics] = useState(initialAnalytics);
   const [trend, setTrend] = useState(initialTrend);
-  const [presets, setPresets] = useState(initialPresets);
+  const [ownedPresets, setOwnedPresets] = useState(initialOwnedPresets);
+  const [sharedPresets, setSharedPresets] = useState(initialSharedPresets);
   const [presetName, setPresetName] = useState("");
   const [selectedPresetId, setSelectedPresetId] = useState("");
+  const [exportType, setExportType] = useState<AnalyticsExportFileType>("csv");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [eventTypeOptions, setEventTypeOptions] = useState(() => Object.keys(initialAnalytics.eventsByType).sort((a, b) => a.localeCompare(b)));
   const [hospitalOptions, setHospitalOptions] = useState(() =>
     mergeOptions([], [
@@ -92,6 +99,7 @@ export function CaseAnalyticsClient({
       ...initialAnalytics.topHospitals.map((item) => item.hospital)
     ])
   );
+  const allPresets = useMemo(() => [...ownedPresets, ...sharedPresets], [ownedPresets, sharedPresets]);
 
   const summaryCards = [
     { label: localeMessages.uiTotalCases, value: analytics.totalCases },
@@ -123,6 +131,7 @@ export function CaseAnalyticsClient({
   async function refresh(nextFilter: FilterState, nextInterval: CaseAnalyticsTrend["interval"]) {
     setLoading(true);
     setError(null);
+    setNotice(null);
 
     try {
       const requestFilter = toRequestFilter(nextFilter);
@@ -164,11 +173,13 @@ export function CaseAnalyticsClient({
   async function handleSavePreset() {
     if (!presetName.trim()) {
       setError(localeMessages.uiPresetNameRequired);
+      setNotice(null);
       return;
     }
 
     setLoading(true);
     setError(null);
+    setNotice(null);
 
     try {
       const created = await createAnalyticsPreset({
@@ -177,7 +188,7 @@ export function CaseAnalyticsClient({
         interval
       });
       startTransition(() => {
-        setPresets((current) => [created, ...current.filter((preset) => preset.presetId !== created.presetId)]);
+        setOwnedPresets((current) => [created, ...current.filter((preset) => preset.presetId !== created.presetId)]);
         setPresetName("");
         setSelectedPresetId(created.presetId);
       });
@@ -192,11 +203,12 @@ export function CaseAnalyticsClient({
   async function handleDeletePreset(presetId: string) {
     setLoading(true);
     setError(null);
+    setNotice(null);
 
     try {
       await deleteAnalyticsPreset(presetId);
       startTransition(() => {
-        setPresets((current) => current.filter((preset) => preset.presetId !== presetId));
+        setOwnedPresets((current) => current.filter((preset) => preset.presetId !== presetId));
         setSelectedPresetId((current) => (current === presetId ? "" : current));
       });
     } catch (caught) {
@@ -208,7 +220,7 @@ export function CaseAnalyticsClient({
   }
 
   async function handleApplyPreset(presetId: string) {
-    const preset = presets.find((item) => item.presetId === presetId);
+    const preset = allPresets.find((item) => item.presetId === presetId);
     if (!preset) {
       return;
     }
@@ -229,6 +241,76 @@ export function CaseAnalyticsClient({
     await refresh(nextFilter, interval);
   }
 
+  async function handleSharePreset(preset: CaseAnalyticsPreset) {
+    const raw = window.prompt(localeMessages.uiSharedWith, preset.sharedWith.join(", "));
+    if (raw === null) {
+      return;
+    }
+
+    const sharedWith = raw
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
+
+    setLoading(true);
+    setError(null);
+    setNotice(null);
+
+    try {
+      await shareAnalyticsPreset({
+        presetId: preset.presetId,
+        sharedWith
+      });
+
+      startTransition(() => {
+        setOwnedPresets((current) =>
+          current.map((item) =>
+            item.presetId === preset.presetId
+              ? {
+                  ...item,
+                  isShared: sharedWith.length > 0,
+                  sharedWith
+                }
+              : item
+          )
+        );
+      });
+    } catch (caught) {
+      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiAnalyticsError;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleExport() {
+    setLoading(true);
+    setError(null);
+    setNotice(null);
+
+    try {
+      const file = await downloadAnalyticsExport({
+        fileType: exportType,
+        filter: toRequestFilter(filter),
+        interval
+      });
+      const objectUrl = URL.createObjectURL(file.blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = file.filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+      setNotice(localeMessages.uiExportSuccess);
+    } catch (caught) {
+      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiExportError;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div style={{ display: "grid", gap: "24px" }}>
       <section style={panelStyle}>
@@ -244,7 +326,7 @@ export function CaseAnalyticsClient({
               }}
             >
               <option value="">{localeMessages.uiSelectPreset}</option>
-              {presets.map((preset) => (
+              {allPresets.map((preset) => (
                 <option key={preset.presetId} value={preset.presetId}>
                   {preset.name}
                 </option>
@@ -268,19 +350,60 @@ export function CaseAnalyticsClient({
           </button>
         </div>
 
-        {presets.length > 0 ? (
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            {presets.map((preset) => (
-              <button
-                key={preset.presetId}
-                type="button"
-                onClick={() => void handleDeletePreset(preset.presetId)}
-                disabled={loading}
-                aria-label={`${localeMessages.uiDeletePreset} ${preset.name}`}
-              >
-                {localeMessages.uiDeletePreset}: {preset.name}
-              </button>
-            ))}
+        {ownedPresets.length > 0 ? (
+          <div style={{ display: "grid", gap: "12px" }}>
+            <h3 style={{ margin: 0, fontSize: "16px" }}>{localeMessages.uiMyPresets}</h3>
+            <div style={{ display: "grid", gap: "12px" }}>
+              {ownedPresets.map((preset) => (
+                <article key={preset.presetId} style={presetCardStyle}>
+                  <strong>{preset.name}</strong>
+                  {preset.sharedWith.length > 0 ? (
+                    <span style={{ color: "var(--muted)", fontSize: "14px" }}>
+                      {localeMessages.uiSharedWith}: {preset.sharedWith.join(", ")}
+                    </span>
+                  ) : null}
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <button type="button" onClick={() => void handleApplyPreset(preset.presetId)} disabled={loading}>
+                      {localeMessages.uiSelectPreset}
+                    </button>
+                    <button type="button" onClick={() => void handleSharePreset(preset)} disabled={loading}>
+                      {localeMessages.uiSharePreset}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void handleDeletePreset(preset.presetId)}
+                      disabled={loading}
+                      aria-label={`${localeMessages.uiDeletePreset} ${preset.name}`}
+                    >
+                      {localeMessages.uiDeletePreset}
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {sharedPresets.length > 0 ? (
+          <div style={{ display: "grid", gap: "12px" }}>
+            <h3 style={{ margin: 0, fontSize: "16px" }}>{localeMessages.uiSharedPresets}</h3>
+            <div style={{ display: "grid", gap: "12px" }}>
+              {sharedPresets.map((preset) => (
+                <article key={preset.presetId} style={presetCardStyle}>
+                  <strong>{preset.name}</strong>
+                  {preset.sharedWith.length > 0 ? (
+                    <span style={{ color: "var(--muted)", fontSize: "14px" }}>
+                      {localeMessages.uiSharedWith}: {preset.sharedWith.join(", ")}
+                    </span>
+                  ) : null}
+                  <div>
+                    <button type="button" onClick={() => void handleApplyPreset(preset.presetId)} disabled={loading}>
+                      {localeMessages.uiSelectPreset}
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         ) : null}
       </section>
@@ -372,9 +495,22 @@ export function CaseAnalyticsClient({
           >
             {localeMessages.uiClearFilters}
           </button>
+          <select
+            aria-label={localeMessages.uiExport}
+            value={exportType}
+            onChange={(event) => setExportType(event.target.value as AnalyticsExportFileType)}
+            disabled={loading}
+          >
+            <option value="csv">{localeMessages.uiExportCsv}</option>
+            <option value="xlsx">{localeMessages.uiExportXlsx}</option>
+          </select>
+          <button type="button" onClick={() => void handleExport()} disabled={loading}>
+            {localeMessages.uiExport}
+          </button>
         </div>
 
         {error ? <p style={{ margin: 0, color: "#b42318" }}>{error}</p> : null}
+        {notice ? <p style={{ margin: 0, color: "#166534" }}>{notice}</p> : null}
       </section>
 
       {analytics.topHospitals.length > 0 ? (
@@ -477,4 +613,12 @@ const fieldStyle = {
   gap: "8px",
   minWidth: "180px",
   flex: "1 1 180px"
+} as const;
+
+const presetCardStyle = {
+  border: "1px solid var(--border)",
+  borderRadius: "14px",
+  padding: "14px",
+  display: "grid",
+  gap: "10px"
 } as const;

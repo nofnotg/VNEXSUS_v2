@@ -11,12 +11,16 @@ const {
   getCaseAnalyticsMock,
   getCaseAnalyticsTrendMock,
   createAnalyticsPresetMock,
-  deleteAnalyticsPresetMock
+  deleteAnalyticsPresetMock,
+  shareAnalyticsPresetMock,
+  downloadAnalyticsExportMock
 } = vi.hoisted(() => ({
   getCaseAnalyticsMock: vi.fn(),
   getCaseAnalyticsTrendMock: vi.fn(),
   createAnalyticsPresetMock: vi.fn(),
-  deleteAnalyticsPresetMock: vi.fn()
+  deleteAnalyticsPresetMock: vi.fn(),
+  shareAnalyticsPresetMock: vi.fn(),
+  downloadAnalyticsExportMock: vi.fn()
 }));
 
 vi.mock("recharts", () => ({
@@ -39,15 +43,41 @@ vi.mock("../../../lib/client/case-analytics-api", () => ({
   getCaseAnalytics: getCaseAnalyticsMock,
   getCaseAnalyticsTrend: getCaseAnalyticsTrendMock,
   createAnalyticsPreset: createAnalyticsPresetMock,
-  deleteAnalyticsPreset: deleteAnalyticsPresetMock
+  deleteAnalyticsPreset: deleteAnalyticsPresetMock,
+  shareAnalyticsPreset: shareAnalyticsPresetMock,
+  downloadAnalyticsExport: downloadAnalyticsExportMock
 }));
 
 describe("case analytics client", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubGlobal("prompt", vi.fn(() => "reviewer@example.com"));
+    Object.defineProperty(globalThis.URL, "createObjectURL", {
+      configurable: true,
+      writable: true,
+      value: vi.fn(() => "blob:analytics")
+    });
+    Object.defineProperty(globalThis.URL, "revokeObjectURL", {
+      configurable: true,
+      writable: true,
+      value: vi.fn()
+    });
   });
 
-  it("applies filters, saves presets, and supports hospital drill-down", async () => {
+  it("exports analytics, shares presets, and renders shared preset sections", async () => {
+    const clickMock = vi.fn();
+    const originalCreateElement = document.createElement.bind(document);
+    const appendChildSpy = vi.spyOn(document.body, "appendChild");
+    vi.spyOn(document, "createElement").mockImplementation(((tagName: string) => {
+      if (tagName === "a") {
+        const anchor = originalCreateElement("a");
+        anchor.click = clickMock;
+        return anchor;
+      }
+
+      return originalCreateElement(tagName);
+    }) as typeof document.createElement);
+
     getCaseAnalyticsMock.mockResolvedValue({
       totalCases: 1,
       totalEvents: 2,
@@ -68,9 +98,15 @@ describe("case analytics client", () => {
       name: "Recent exams",
       filter: { eventTypes: ["exam"] },
       interval: "weekly",
+      isShared: false,
+      sharedWith: [],
       createdAt: "2026-03-10T00:00:00.000Z"
     });
-    deleteAnalyticsPresetMock.mockResolvedValue(undefined);
+    shareAnalyticsPresetMock.mockResolvedValue(undefined);
+    downloadAnalyticsExportMock.mockResolvedValue({
+      filename: "analytics-weekly-20260311.csv",
+      blob: new Blob(["section,key,value"], { type: "text/csv" })
+    });
 
     render(
       <ThemeProvider initialTheme="light">
@@ -94,43 +130,69 @@ describe("case analytics client", () => {
               startDate: "2026-02-09",
               endDate: "2026-03-10"
             }}
-            initialPresets={[]}
+            initialOwnedPresets={[
+              {
+                presetId: "owned-1",
+                userId: "user-1",
+                name: "My preset",
+                filter: {},
+                interval: "daily",
+                isShared: false,
+                sharedWith: [],
+                createdAt: "2026-03-10T00:00:00.000Z"
+              }
+            ]}
+            initialSharedPresets={[
+              {
+                presetId: "shared-1",
+                userId: "user-2",
+                name: "Shared preset",
+                filter: { hospitals: ["Seoul Hospital"] },
+                interval: "weekly",
+                isShared: true,
+                sharedWith: ["user-1@example.com"],
+                createdAt: "2026-03-10T00:00:00.000Z"
+              }
+            ]}
           />
         </LocaleProvider>
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId("line-chart")).toBeTruthy();
-    expect((screen.getByLabelText("Start date") as HTMLInputElement).value).toBe("2026-02-09");
+    expect(screen.getByRole("heading", { level: 3, name: "My presets" })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 3, name: "Shared presets" })).toBeTruthy();
 
-    fireEvent.change(screen.getByLabelText("Interval"), {
-      target: { value: "weekly" }
+    fireEvent.change(screen.getByLabelText("Export"), {
+      target: { value: "csv" }
     });
-    fireEvent.change(screen.getByLabelText("Preset name"), {
-      target: { value: "Recent exams" }
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "Save preset" }));
+    fireEvent.click(screen.getByRole("button", { name: "Export" }));
 
     await waitFor(() => {
-      expect(createAnalyticsPresetMock).toHaveBeenCalledWith({
-        name: "Recent exams",
+      expect(downloadAnalyticsExportMock).toHaveBeenCalledWith({
+        fileType: "csv",
         filter: {
           startDate: "2026-02-09",
           endDate: "2026-03-10"
         },
-        interval: "weekly"
+        interval: "daily"
       });
     });
+    await waitFor(() => {
+      expect(screen.getByText("Analytics export is ready.")).toBeTruthy();
+    });
 
-    fireEvent.click(screen.getByRole("button", { name: "View details" }));
+    fireEvent.click(screen.getByRole("button", { name: "Share" }));
 
     await waitFor(() => {
-      expect(getCaseAnalyticsMock).toHaveBeenCalledWith({
-        startDate: "2026-02-09",
-        endDate: "2026-03-10",
-        hospitals: ["Seoul Hospital"]
+      expect(shareAnalyticsPresetMock).toHaveBeenCalledWith({
+        presetId: "owned-1",
+        sharedWith: ["reviewer@example.com"]
       });
     });
+    await waitFor(() => {
+      expect(screen.getAllByText(/reviewer@example\.com/).length).toBeGreaterThan(0);
+    });
+
+    expect(appendChildSpy).toHaveBeenCalled();
   });
 });

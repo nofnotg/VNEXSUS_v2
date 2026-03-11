@@ -1,10 +1,13 @@
 import {
   apiErrorEnvelopeSchema,
   apiSuccessEnvelopeSchema,
+  analyticsExportSchema,
   analyticsPresetSchema,
+  analyticsPresetShareSchema,
   caseAnalyticsFilterSchema,
   caseAnalyticsSchema,
   caseAnalyticsTrendSchema,
+  type AnalyticsExportFileType,
   type CaseAnalytics,
   type CaseAnalyticsFilter,
   type CaseAnalyticsPreset,
@@ -25,6 +28,10 @@ export class CaseAnalyticsApiError extends Error {
 
 const analyticsPresetListSchema = z.object({
   items: z.array(analyticsPresetSchema)
+});
+
+const analyticsPresetShareResponseSchema = z.object({
+  shared: z.boolean()
 });
 
 function buildQuery(filter?: CaseAnalyticsFilter) {
@@ -155,4 +162,70 @@ export async function deleteAnalyticsPreset(presetId: string): Promise<void> {
   });
 
   await parseError(response);
+}
+
+export async function getSharedAnalyticsPresets(): Promise<CaseAnalyticsPreset[]> {
+  const response = await fetch("/api/cases/analytics/presets/shared", {
+    method: "GET",
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+
+  const json = await parseError(response);
+  const parsed = apiSuccessEnvelopeSchema(analyticsPresetListSchema).safeParse(json);
+
+  if (!parsed.success) {
+    throw new CaseAnalyticsApiError("Invalid analytics preset response", response.status, "INVALID_ANALYTICS_RESPONSE");
+  }
+
+  return parsed.data.data.items;
+}
+
+export async function shareAnalyticsPreset(input: { presetId: string; sharedWith: string[] }): Promise<void> {
+  const parsedInput = analyticsPresetShareSchema.parse(input);
+  const response = await fetch("/api/cases/analytics/presets/share", {
+    method: "POST",
+    credentials: "same-origin",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(parsedInput)
+  });
+
+  const json = await parseError(response);
+  const parsed = apiSuccessEnvelopeSchema(analyticsPresetShareResponseSchema).safeParse(json);
+
+  if (!parsed.success || !parsed.data.data.shared) {
+    throw new CaseAnalyticsApiError("Invalid analytics preset share response", response.status, "INVALID_ANALYTICS_RESPONSE");
+  }
+}
+
+export async function downloadAnalyticsExport(input: {
+  fileType: AnalyticsExportFileType;
+  filter: CaseAnalyticsFilter;
+  interval: CaseAnalyticsTrend["interval"];
+}) {
+  const parsedInput = analyticsExportSchema.parse(input);
+  const response = await fetch("/api/cases/analytics/export", {
+    method: "POST",
+    credentials: "same-origin",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(parsedInput)
+  });
+
+  if (!response.ok) {
+    await parseError(response);
+  }
+
+  const contentDisposition = response.headers.get("Content-Disposition") ?? "";
+  const filenameMatch = /filename="([^"]+)"/.exec(contentDisposition);
+
+  return {
+    blob: await response.blob(),
+    filename: filenameMatch?.[1] ?? `analytics.${parsedInput.fileType}`
+  };
 }

@@ -514,6 +514,10 @@ export const caseAnalyticsFilterSchema = z
     }
   );
 
+export const analyticsIntervalSchema = z.enum(["daily", "weekly", "monthly"]);
+
+export const analyticsExportFileTypeSchema = z.enum(["csv", "xlsx"]);
+
 export const caseAnalyticsTrendPointSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   total: z.number().int().nonnegative(),
@@ -522,7 +526,7 @@ export const caseAnalyticsTrendPointSchema = z.object({
 });
 
 export const caseAnalyticsTrendSchema = z.object({
-  interval: z.enum(["daily", "weekly", "monthly"]),
+  interval: analyticsIntervalSchema,
   points: z.array(caseAnalyticsTrendPointSchema)
 });
 
@@ -531,8 +535,21 @@ export const analyticsPresetSchema = z.object({
   userId: z.string().min(1),
   name: z.string().min(1),
   filter: caseAnalyticsFilterSchema,
-  interval: z.enum(["daily", "weekly", "monthly"]),
+  interval: analyticsIntervalSchema,
+  isShared: z.boolean().default(false),
+  sharedWith: z.array(z.string().min(1)).default([]),
   createdAt: z.string().datetime()
+});
+
+export const analyticsExportSchema = z.object({
+  fileType: analyticsExportFileTypeSchema,
+  filter: caseAnalyticsFilterSchema.default({}),
+  interval: analyticsIntervalSchema
+});
+
+export const analyticsPresetShareSchema = z.object({
+  presetId: z.string().min(1),
+  sharedWith: z.array(z.string().min(1)).min(1)
 });
 
 export const ocrIngestionJobPayloadSchema = z.object({
@@ -657,3 +674,6 @@ export type CaseAnalytics = z.infer<typeof caseAnalyticsSchema>;
 export type CaseAnalyticsFilter = z.infer<typeof caseAnalyticsFilterSchema>;
 export type CaseAnalyticsTrend = z.infer<typeof caseAnalyticsTrendSchema>;
 export type CaseAnalyticsPreset = z.infer<typeof analyticsPresetSchema>;
+export type AnalyticsExportInput = z.infer<typeof analyticsExportSchema>;
+export type AnalyticsExportFileType = z.infer<typeof analyticsExportFileTypeSchema>;
+export type AnalyticsPresetShareInput = z.infer<typeof analyticsPresetShareSchema>;

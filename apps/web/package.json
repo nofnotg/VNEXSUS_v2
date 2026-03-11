@@ -14,11 +14,13 @@
     "@vnexus/domain": "workspace:*",
     "@vnexus/shared": "workspace:*",
     "clsx": "^2.1.1",
+    "json2csv": "^6.0.0-alpha.2",
     "next": "^16.1.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "recharts": "^2.15.4",
     "tailwind-merge": "^3.3.1",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.5"
   },
   "devDependencies": {

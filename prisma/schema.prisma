@@ -653,6 +653,8 @@ model AnalyticsPreset {
   name       String
   filterJson Json
   interval   String
+  isShared   Boolean  @default(false)
+  sharedWith String[] @default([])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)

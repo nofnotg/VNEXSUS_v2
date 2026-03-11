@@ -5,7 +5,7 @@ import { getDefaultAnalyticsFilter } from "../../../lib/server/case-analytics-qu
 import { getRequestLocale } from "../../../lib/server/report-locale";
 import { getSessionUser } from "../../../lib/session";
 import { getCaseAnalytics, getCaseAnalyticsTrend } from "../../../lib/server/services/case-analytics-service";
-import { getPresetsForUser } from "../../../lib/server/services/analytics-preset-service";
+import { getPresetsForUser, getSharedPresets } from "../../../lib/server/services/analytics-preset-service";
 import { CaseAnalyticsClient } from "./case-analytics-client";
 
 export default async function CaseAnalyticsPage() {
@@ -30,15 +30,22 @@ export default async function CaseAnalyticsPage() {
   }
 
   const defaultFilter = getDefaultAnalyticsFilter();
-  const [analytics, trend, presets] = await Promise.all([
+  const [analytics, trend, presets, sharedPresets] = await Promise.all([
     getCaseAnalytics(user.id, user.role, defaultFilter),
     getCaseAnalyticsTrend(user.id, user.role, defaultFilter, "daily"),
-    getPresetsForUser(user.id)
+    getPresetsForUser(user.id),
+    getSharedPresets(user.id)
   ]);
 
   return (
     <AppShell heading={localeMessages.uiAnalyticsHeading} subheading={localeMessages.uiAnalyticsSubheading}>
-      <CaseAnalyticsClient initialAnalytics={analytics} initialTrend={trend} initialFilter={defaultFilter} initialPresets={presets} />
+      <CaseAnalyticsClient
+        initialAnalytics={analytics}
+        initialTrend={trend}
+        initialFilter={defaultFilter}
+        initialOwnedPresets={presets}
+        initialSharedPresets={sharedPresets}
+      />
     </AppShell>
   );
 }

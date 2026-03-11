@@ -57,6 +57,11 @@ Narrative JSON builders, PDF export routes, and the report UI support `en` and `
 - Trend data is available from `/api/cases/analytics/trend` and can be viewed in daily, weekly, or monthly intervals.
 - The trend chart shows total, confirmed, and unconfirmed event counts over time so reviewers can spot backlog or quality shifts.
 - Saved presets are available from `/api/cases/analytics/presets`, and each preset stores the current filter JSON plus the selected interval for the signed-in user.
+- Presets can be shared with team members through `/api/cases/analytics/presets/share`; only active non-consumer users who share an organization with the preset owner can be selected.
+- Shared presets are listed separately from personal presets through `/api/cases/analytics/presets/shared` so teams can reuse common analytics views without duplicating filters.
+- Analytics exports are available from `/api/cases/analytics/export` in `csv` and `xlsx` formats, using the current filter and interval from the dashboard.
+- Export files are generated from aggregated analytics and trend data, not raw OCR text or unrestricted case payloads, to keep the output aligned with the dashboard contract.
+- The export flow currently builds files in memory and applies a row limit; if future analytics payloads grow significantly, move the export path to streaming or background jobs before raising limits.
 - The dashboard also highlights top hospitals; selecting a hospital card drills the board into that hospital and refreshes the trend view.
 - Aggregations are computed in the service/repository layer so route handlers remain thin and testable.
 - Filter parsing and validation also happen before the service layer runs; invalid dates or unsupported intervals return `400 VALIDATION_ERROR`.

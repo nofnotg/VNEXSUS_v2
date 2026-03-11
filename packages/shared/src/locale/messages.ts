@@ -188,6 +188,15 @@ export type MessageDictionary = {
   uiSavePreset: string;
   uiDeletePreset: string;
   uiSelectPreset: string;
+  uiMyPresets: string;
+  uiSharedPresets: string;
+  uiSharePreset: string;
+  uiSharedWith: string;
+  uiExport: string;
+  uiExportCsv: string;
+  uiExportXlsx: string;
+  uiExportSuccess: string;
+  uiExportError: string;
   uiTopHospitals: string;
   uiEvents: string;
   uiViewDetails: string;
@@ -382,6 +391,15 @@ export const messages = {
     uiSavePreset: "Save preset",
     uiDeletePreset: "Delete preset",
     uiSelectPreset: "Select a preset",
+    uiMyPresets: "My presets",
+    uiSharedPresets: "Shared presets",
+    uiSharePreset: "Share",
+    uiSharedWith: "Shared with",
+    uiExport: "Export",
+    uiExportCsv: "CSV",
+    uiExportXlsx: "XLSX",
+    uiExportSuccess: "Analytics export is ready.",
+    uiExportError: "Failed to export analytics.",
     uiTopHospitals: "Top hospitals",
     uiEvents: "Events",
     uiViewDetails: "View details"
@@ -568,6 +586,15 @@ Object.assign(messages.ko, {
   uiSavePreset: "\uD504\uB9AC\uC14B \uC800\uC7A5",
   uiDeletePreset: "\uD504\uB9AC\uC14B \uC0AD\uC81C",
   uiSelectPreset: "\uD504\uB9AC\uC14B \uC120\uD0DD",
+  uiMyPresets: "\uB0B4 \uD504\uB9AC\uC14B",
+  uiSharedPresets: "\uACF5\uC720\uB41C \uD504\uB9AC\uC14B",
+  uiSharePreset: "\uACF5\uC720",
+  uiSharedWith: "\uACF5\uC720 \uB300\uC0C1",
+  uiExport: "\uB0B4\uBCF4\uB0B4\uAE30",
+  uiExportCsv: "CSV",
+  uiExportXlsx: "XLSX",
+  uiExportSuccess: "\uBD84\uC11D \uD30C\uC77C\uC744 \uC900\uBE44\uD588\uC2B5\uB2C8\uB2E4.",
+  uiExportError: "\uBD84\uC11D \uB0B4\uBCF4\uB0B4\uAE30\uB97C \uC218\uD589\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.",
   uiTrendHeading: "\uC2DC\uAC04\uBCC4 \uCD94\uC774",
   uiTrendInterval: "\uAD6C\uAC04",
   uiTrendDaily: "\uC77C\uBCC4",

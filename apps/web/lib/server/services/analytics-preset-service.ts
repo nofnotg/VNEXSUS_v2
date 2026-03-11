@@ -1,4 +1,10 @@
-import { ApiError, analyticsPresetSchema, caseAnalyticsFilterSchema, caseAnalyticsTrendSchema, type CaseAnalyticsPreset } from "@vnexus/shared";
+import {
+  ApiError,
+  analyticsIntervalSchema,
+  analyticsPresetSchema,
+  caseAnalyticsFilterSchema,
+  type CaseAnalyticsPreset
+} from "@vnexus/shared";
 import { prisma } from "../../prisma";
 
 type PresetRecord = {
@@ -7,7 +13,18 @@ type PresetRecord = {
   name: string;
   filterJson: unknown;
   interval: string;
+  isShared: boolean;
+  sharedWith: string[];
   createdAt: Date;
+};
+
+type UserContextRecord = {
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  displayName: string | null;
+  organizationIds: string[];
 };
 
 type PresetRepository = {
@@ -15,6 +32,10 @@ type PresetRepository = {
   findManyByUser(userId: string): Promise<PresetRecord[]>;
   findByUserAndName(userId: string, name: string): Promise<PresetRecord | null>;
   findById(id: string): Promise<PresetRecord | null>;
+  updateShare(id: string, sharedWith: string[]): Promise<void>;
+  findSharedForEmail(email: string): Promise<PresetRecord[]>;
+  findUserContext(userId: string): Promise<UserContextRecord | null>;
+  findUsersInOrganizations(organizationIds: string[], excludeUserId: string): Promise<UserContextRecord[]>;
   delete(id: string): Promise<void>;
 };
 
@@ -41,6 +62,103 @@ const analyticsPresetRepository: PresetRepository = {
     prisma.analyticsPreset.findUnique({
       where: { id }
     }),
+  updateShare: async (id, sharedWith) => {
+    await prisma.analyticsPreset.update({
+      where: { id },
+      data: {
+        isShared: sharedWith.length > 0,
+        sharedWith
+      }
+    });
+  },
+  findSharedForEmail: (email) =>
+    prisma.analyticsPreset.findMany({
+      where: {
+        isShared: true,
+        sharedWith: {
+          has: email
+        }
+      },
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }]
+    }),
+  findUserContext: async (userId) => {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        status: true,
+        profile: {
+          select: {
+            displayName: true
+          }
+        },
+        memberships: {
+          select: {
+            organizationId: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      displayName: user.profile?.displayName ?? null,
+      organizationIds: user.memberships.map((membership) => membership.organizationId)
+    };
+  },
+  findUsersInOrganizations: async (organizationIds, excludeUserId) => {
+    if (organizationIds.length === 0) {
+      return [];
+    }
+
+    const users = await prisma.user.findMany({
+      where: {
+        id: { not: excludeUserId },
+        memberships: {
+          some: {
+            organizationId: { in: organizationIds }
+          }
+        }
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        status: true,
+        profile: {
+          select: {
+            displayName: true
+          }
+        },
+        memberships: {
+          where: {
+            organizationId: { in: organizationIds }
+          },
+          select: {
+            organizationId: true
+          }
+        }
+      }
+    });
+
+    return users.map((user) => ({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      displayName: user.profile?.displayName ?? null,
+      organizationIds: user.memberships.map((membership) => membership.organizationId)
+    }));
+  },
   delete: async (id) => {
     await prisma.analyticsPreset.delete({
       where: { id }
@@ -54,9 +172,31 @@ function toPreset(record: PresetRecord): CaseAnalyticsPreset {
     userId: record.userId,
     name: record.name,
     filter: caseAnalyticsFilterSchema.parse(record.filterJson ?? {}),
-    interval: caseAnalyticsTrendSchema.shape.interval.parse(record.interval),
+    interval: analyticsIntervalSchema.parse(record.interval),
+    isShared: record.isShared,
+    sharedWith: record.sharedWith ?? [],
     createdAt: record.createdAt.toISOString()
   });
+}
+
+function normalizeShareTargets(sharedWith: string[]) {
+  return [...new Set(sharedWith.map((value) => value.trim()).filter(Boolean))];
+}
+
+function buildMatchIndex(users: UserContextRecord[]) {
+  const byEmail = new Map<string, UserContextRecord>();
+  const byName = new Map<string, UserContextRecord[]>();
+
+  for (const user of users) {
+    byEmail.set(user.email.trim().toLowerCase(), user);
+
+    if (user.displayName?.trim()) {
+      const key = user.displayName.trim().toLowerCase();
+      byName.set(key, [...(byName.get(key) ?? []), user]);
+    }
+  }
+
+  return { byEmail, byName };
 }
 
 export async function createPreset(
@@ -70,7 +210,7 @@ export async function createPreset(
   }
 
   const filter = caseAnalyticsFilterSchema.parse(input.filter ?? {});
-  const interval = caseAnalyticsTrendSchema.shape.interval.parse(input.interval);
+  const interval = analyticsIntervalSchema.parse(input.interval);
   const existing = await repository.findByUserAndName(userId, name);
 
   if (existing) {
@@ -93,6 +233,91 @@ export async function getPresetsForUser(
 ) {
   const records = await repository.findManyByUser(userId);
   return records.map(toPreset);
+}
+
+export async function sharePreset(
+  presetId: string,
+  ownerId: string,
+  sharedWith: string[],
+  repository: PresetRepository = analyticsPresetRepository
+) {
+  const preset = await repository.findById(presetId);
+
+  if (!preset) {
+    throw new ApiError("NOT_FOUND", "Preset not found");
+  }
+
+  if (preset.userId !== ownerId) {
+    throw new ApiError("FORBIDDEN", "Cannot share another user's preset");
+  }
+
+  const owner = await repository.findUserContext(ownerId);
+  if (!owner) {
+    throw new ApiError("NOT_FOUND", "Owner not found");
+  }
+
+  if (owner.organizationIds.length === 0) {
+    throw new ApiError("FORBIDDEN", "Preset sharing requires an organization membership");
+  }
+
+  const requestedTargets = normalizeShareTargets(sharedWith);
+  if (requestedTargets.length === 0) {
+    throw new ApiError("VALIDATION_ERROR", "At least one share target is required");
+  }
+
+  const teamMembers = (await repository.findUsersInOrganizations(owner.organizationIds, ownerId)).filter(
+    (user) => user.status === "active" && user.role !== "consumer"
+  );
+  const { byEmail, byName } = buildMatchIndex(teamMembers);
+
+  const resolvedEmails: string[] = [];
+  const unresolved: string[] = [];
+  const ambiguous: string[] = [];
+
+  for (const target of requestedTargets) {
+    const normalized = target.toLowerCase();
+    const byEmailMatch = byEmail.get(normalized);
+
+    if (byEmailMatch) {
+      resolvedEmails.push(byEmailMatch.email);
+      continue;
+    }
+
+    const nameMatches = byName.get(normalized) ?? [];
+    if (nameMatches.length === 1) {
+      resolvedEmails.push(nameMatches[0]!.email);
+      continue;
+    }
+
+    if (nameMatches.length > 1) {
+      ambiguous.push(target);
+      continue;
+    }
+
+    unresolved.push(target);
+  }
+
+  if (ambiguous.length > 0 || unresolved.length > 0) {
+    throw new ApiError("VALIDATION_ERROR", "Some share targets could not be resolved to team members", {
+      ambiguous,
+      unresolved
+    });
+  }
+
+  await repository.updateShare(presetId, [...new Set(resolvedEmails)].sort((left, right) => left.localeCompare(right)));
+}
+
+export async function getSharedPresets(
+  userId: string,
+  repository: PresetRepository = analyticsPresetRepository
+) {
+  const user = await repository.findUserContext(userId);
+  if (!user) {
+    return [];
+  }
+
+  const records = await repository.findSharedForEmail(user.email);
+  return records.filter((record) => record.userId !== userId).map(toPreset);
 }
 
 export async function deletePreset(

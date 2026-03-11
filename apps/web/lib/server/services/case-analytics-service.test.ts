@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getCaseAnalytics, getCaseAnalyticsTrend } from "./case-analytics-service";
+import * as xlsx from "xlsx";
+import { exportAnalytics, getCaseAnalytics, getCaseAnalyticsTrend } from "./case-analytics-service";
 
 describe("case analytics service", () => {
   it("aggregates and validates analytics data for investigators", async () => {
@@ -126,5 +127,36 @@ describe("case analytics service", () => {
         }
       )
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("exports analytics as csv and xlsx", async () => {
+    const repository = {
+      getAnalyticsForUser: async () => ({
+        totalCases: 2,
+        totalEvents: 4,
+        confirmedEvents: 3,
+        unconfirmedEvents: 1,
+        reviewRequiredEvents: 1,
+        eventsByType: [{ key: "exam", count: 3 }],
+        eventsByHospital: [{ key: "Seoul Hospital", count: 4 }],
+        topHospitals: [{ hospital: "Seoul Hospital", events: 4 }]
+      }),
+      getTopHospitalsForUser: async () => [{ hospital: "Seoul Hospital", events: 4 }],
+      getTrendForUser: async () => ({
+        interval: "weekly" as const,
+        points: [{ date: "2026-03-09", total: 4, confirmed: 3, unconfirmed: 1 }]
+      })
+    };
+
+    const csvFile = await exportAnalytics("user-1", "investigator", {}, "weekly", "csv", repository);
+    expect(csvFile.filename.endsWith(".csv")).toBe(true);
+    expect(csvFile.buffer.toString("utf8")).toContain('"summary","totalCases",2');
+
+    const xlsxFile = await exportAnalytics("user-1", "investigator", {}, "weekly", "xlsx", repository);
+    const workbook = xlsx.read(xlsxFile.buffer, { type: "buffer" });
+
+    expect(xlsxFile.filename.endsWith(".xlsx")).toBe(true);
+    expect(workbook.SheetNames).toContain("Summary");
+    expect(workbook.SheetNames).toContain("Trend");
   });
 });

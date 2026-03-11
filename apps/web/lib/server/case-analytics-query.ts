@@ -1,8 +1,11 @@
 import {
   ApiError,
+  analyticsExportFileTypeSchema,
   caseAnalyticsFilterSchema,
   caseAnalyticsTrendSchema,
+  analyticsExportSchema,
   type CaseAnalyticsFilter,
+  type AnalyticsExportInput,
   type CaseAnalyticsTrend
 } from "@vnexus/shared";
 
@@ -57,6 +60,30 @@ export function parseTrendInterval(searchParams: URLSearchParams): CaseAnalytics
 
   if (!parsed.success) {
     throw new ApiError("VALIDATION_ERROR", "Invalid analytics trend interval", parsed.error.flatten());
+  }
+
+  return parsed.data;
+}
+
+export function parseAnalyticsExportQuery(searchParams: URLSearchParams): AnalyticsExportInput {
+  const parsed = analyticsExportSchema.safeParse({
+    fileType: searchParams.get("fileType") ?? "csv",
+    interval: searchParams.get("interval") ?? "daily",
+    filter: parseCaseAnalyticsFilter(searchParams)
+  });
+
+  if (!parsed.success) {
+    throw new ApiError("VALIDATION_ERROR", "Invalid analytics export request", parsed.error.flatten());
+  }
+
+  return parsed.data;
+}
+
+export function parseAnalyticsFileType(value: string | null | undefined) {
+  const parsed = analyticsExportFileTypeSchema.safeParse(value ?? "csv");
+
+  if (!parsed.success) {
+    throw new ApiError("VALIDATION_ERROR", "Invalid analytics export file type", parsed.error.flatten());
   }
 
   return parsed.data;
