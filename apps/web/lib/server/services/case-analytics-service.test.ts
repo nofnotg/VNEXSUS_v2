@@ -1,6 +1,25 @@
 import { describe, expect, it } from "vitest";
 import * as xlsx from "xlsx";
+import { Readable } from "node:stream";
 import { exportAnalytics, getCaseAnalytics, getCaseAnalyticsTrend } from "./case-analytics-service";
+
+async function readStreamToString(stream: Readable) {
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+
+  return Buffer.concat(chunks).toString("utf8");
+}
+
+async function readStreamToBuffer(stream: Readable) {
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+
+  return Buffer.concat(chunks);
+}
 
 describe("case analytics service", () => {
   it("aggregates and validates analytics data for investigators", async () => {
@@ -33,6 +52,10 @@ describe("case analytics service", () => {
         { hospital: "Seoul Hospital", events: 5 },
         { hospital: "Busan Hospital", events: 2 }
       ],
+      getAccessibleFilterValues: async () => ({
+        eventTypes: ["exam", "outpatient", "surgery"],
+        hospitals: ["Busan Hospital", "Seoul Hospital"]
+      }),
       getTrendForUser: async () => ({
         interval: "daily",
         points: []
@@ -79,6 +102,10 @@ describe("case analytics service", () => {
           topHospitals: []
         }),
         getTopHospitalsForUser: async () => [],
+        getAccessibleFilterValues: async () => ({
+          eventTypes: ["exam"],
+          hospitals: ["Seoul Hospital"]
+        }),
         getTrendForUser: async (_userId, isAdmin, filter, interval) => {
           expect(isAdmin).toBe(true);
           expect(filter).toEqual({
@@ -120,6 +147,10 @@ describe("case analytics service", () => {
             topHospitals: []
           }),
           getTopHospitalsForUser: async () => [],
+          getAccessibleFilterValues: async () => ({
+            eventTypes: [],
+            hospitals: []
+          }),
           getTrendForUser: async () => ({
             interval: "daily",
             points: []
@@ -142,6 +173,10 @@ describe("case analytics service", () => {
         topHospitals: [{ hospital: "Seoul Hospital", events: 4 }]
       }),
       getTopHospitalsForUser: async () => [{ hospital: "Seoul Hospital", events: 4 }],
+      getAccessibleFilterValues: async () => ({
+        eventTypes: ["exam"],
+        hospitals: ["Seoul Hospital"]
+      }),
       getTrendForUser: async () => ({
         interval: "weekly" as const,
         points: [{ date: "2026-03-09", total: 4, confirmed: 3, unconfirmed: 1 }]
@@ -150,10 +185,10 @@ describe("case analytics service", () => {
 
     const csvFile = await exportAnalytics("user-1", "investigator", {}, "weekly", "csv", repository);
     expect(csvFile.filename.endsWith(".csv")).toBe(true);
-    expect(csvFile.buffer.toString("utf8")).toContain('"summary","totalCases",2');
+    expect(await readStreamToString(csvFile.stream)).toContain('"summary","totalCases",2');
 
     const xlsxFile = await exportAnalytics("user-1", "investigator", {}, "weekly", "xlsx", repository);
-    const workbook = xlsx.read(xlsxFile.buffer, { type: "buffer" });
+    const workbook = xlsx.read(await readStreamToBuffer(xlsxFile.stream), { type: "buffer" });
 
     expect(xlsxFile.filename.endsWith(".xlsx")).toBe(true);
     expect(workbook.SheetNames).toContain("Summary");

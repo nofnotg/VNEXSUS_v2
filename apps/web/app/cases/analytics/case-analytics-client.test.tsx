@@ -13,14 +13,16 @@ const {
   createAnalyticsPresetMock,
   deleteAnalyticsPresetMock,
   shareAnalyticsPresetMock,
-  downloadAnalyticsExportMock
+  downloadAnalyticsExportMock,
+  searchAnalyticsShareCandidatesMock
 } = vi.hoisted(() => ({
   getCaseAnalyticsMock: vi.fn(),
   getCaseAnalyticsTrendMock: vi.fn(),
   createAnalyticsPresetMock: vi.fn(),
   deleteAnalyticsPresetMock: vi.fn(),
   shareAnalyticsPresetMock: vi.fn(),
-  downloadAnalyticsExportMock: vi.fn()
+  downloadAnalyticsExportMock: vi.fn(),
+  searchAnalyticsShareCandidatesMock: vi.fn()
 }));
 
 vi.mock("recharts", () => ({
@@ -45,13 +47,13 @@ vi.mock("../../../lib/client/case-analytics-api", () => ({
   createAnalyticsPreset: createAnalyticsPresetMock,
   deleteAnalyticsPreset: deleteAnalyticsPresetMock,
   shareAnalyticsPreset: shareAnalyticsPresetMock,
-  downloadAnalyticsExport: downloadAnalyticsExportMock
+  downloadAnalyticsExport: downloadAnalyticsExportMock,
+  searchAnalyticsShareCandidates: searchAnalyticsShareCandidatesMock
 }));
 
 describe("case analytics client", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubGlobal("prompt", vi.fn(() => "reviewer@example.com"));
     Object.defineProperty(globalThis.URL, "createObjectURL", {
       configurable: true,
       writable: true,
@@ -103,12 +105,22 @@ describe("case analytics client", () => {
       createdAt: "2026-03-10T00:00:00.000Z"
     });
     shareAnalyticsPresetMock.mockResolvedValue(undefined);
-    downloadAnalyticsExportMock.mockResolvedValue({
-      filename: "analytics-weekly-20260311.csv",
-      blob: new Blob(["section,key,value"], { type: "text/csv" })
+    searchAnalyticsShareCandidatesMock.mockResolvedValue([
+      {
+        userId: "user-3",
+        email: "reviewer@example.com",
+        displayName: "Reviewer"
+      }
+    ]);
+    downloadAnalyticsExportMock.mockImplementation(async ({ onProgress }) => {
+      onProgress?.(55);
+      return {
+        filename: "analytics-weekly-20260311.csv",
+        blob: new Blob(["section,key,value"], { type: "text/csv" })
+      };
     });
 
-    render(
+    const view = render(
       <ThemeProvider initialTheme="light">
         <LocaleProvider initialLocale="en">
           <CaseAnalyticsClient
@@ -168,20 +180,35 @@ describe("case analytics client", () => {
     fireEvent.click(screen.getByRole("button", { name: "Export" }));
 
     await waitFor(() => {
-      expect(downloadAnalyticsExportMock).toHaveBeenCalledWith({
-        fileType: "csv",
-        filter: {
-          startDate: "2026-02-09",
-          endDate: "2026-03-10"
-        },
-        interval: "daily"
-      });
+      expect(downloadAnalyticsExportMock).toHaveBeenCalledTimes(1);
+      expect(downloadAnalyticsExportMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          fileType: "csv",
+          filter: {
+            startDate: "2026-02-09",
+            endDate: "2026-03-10",
+            eventTypes: undefined,
+            hospitals: undefined
+          },
+          interval: "daily",
+          onProgress: expect.any(Function)
+        })
+      );
     });
     await waitFor(() => {
       expect(screen.getByText("Analytics export is ready.")).toBeTruthy();
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Share" }));
+    fireEvent.change(screen.getByPlaceholderText("Search teammates by name or email"), {
+      target: { value: "review" }
+    });
+
+    await waitFor(() => {
+      expect(searchAnalyticsShareCandidatesMock).toHaveBeenCalledWith("review");
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Reviewer (reviewer@example.com)" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Share" })[1]!);
 
     await waitFor(() => {
       expect(shareAnalyticsPresetMock).toHaveBeenCalledWith({
@@ -192,7 +219,11 @@ describe("case analytics client", () => {
     await waitFor(() => {
       expect(screen.getAllByText(/reviewer@example\.com/).length).toBeGreaterThan(0);
     });
+    await waitFor(() => {
+      expect(screen.getByText("Preset sharing updated.")).toBeTruthy();
+    });
 
     expect(appendChildSpy).toHaveBeenCalled();
-  });
+    view.unmount();
+  }, 15000);
 });

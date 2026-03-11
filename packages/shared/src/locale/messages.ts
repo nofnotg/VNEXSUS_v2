@@ -197,6 +197,13 @@ export type MessageDictionary = {
   uiExportXlsx: string;
   uiExportSuccess: string;
   uiExportError: string;
+  uiExportPreparing: string;
+  uiExportDownloading: string;
+  uiShareSuccess: string;
+  uiShareError: string;
+  uiShareSearchPlaceholder: string;
+  uiShareNoMatches: string;
+  uiShareSelectedUsers: string;
   uiTopHospitals: string;
   uiEvents: string;
   uiViewDetails: string;
@@ -400,6 +407,13 @@ export const messages = {
     uiExportXlsx: "XLSX",
     uiExportSuccess: "Analytics export is ready.",
     uiExportError: "Failed to export analytics.",
+    uiExportPreparing: "Preparing export...",
+    uiExportDownloading: "Downloading... {progress}%",
+    uiShareSuccess: "Preset sharing updated.",
+    uiShareError: "Failed to update preset sharing.",
+    uiShareSearchPlaceholder: "Search teammates by name or email",
+    uiShareNoMatches: "No matching teammates found.",
+    uiShareSelectedUsers: "Selected recipients",
     uiTopHospitals: "Top hospitals",
     uiEvents: "Events",
     uiViewDetails: "View details"
@@ -595,6 +609,13 @@ Object.assign(messages.ko, {
   uiExportXlsx: "XLSX",
   uiExportSuccess: "\uBD84\uC11D \uD30C\uC77C\uC744 \uC900\uBE44\uD588\uC2B5\uB2C8\uB2E4.",
   uiExportError: "\uBD84\uC11D \uB0B4\uBCF4\uB0B4\uAE30\uB97C \uC218\uD589\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.",
+  uiExportPreparing: "\uB0B4\uBCF4\uB0B4\uAE30 \uD30C\uC77C\uC744 \uC900\uBE44\uD558\uB294 \uC911\uC785\uB2C8\uB2E4...",
+  uiExportDownloading: "\uB2E4\uC6B4\uB85C\uB4DC \uC911... {progress}%",
+  uiShareSuccess: "\uD504\uB9AC\uC14B \uACF5\uC720 \uC124\uC815\uC744 \uC5C5\uB370\uC774\uD2B8\uD588\uC2B5\uB2C8\uB2E4.",
+  uiShareError: "\uD504\uB9AC\uC14B \uACF5\uC720 \uC124\uC815\uC744 \uC5C5\uB370\uC774\uD2B8\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.",
+  uiShareSearchPlaceholder: "\uC774\uB984 \uB610\uB294 \uC774\uBA54\uC77C\uB85C \uD300\uC6D0 \uAC80\uC0C9",
+  uiShareNoMatches: "\uC77C\uCE58\uD558\uB294 \uD300\uC6D0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
+  uiShareSelectedUsers: "\uC120\uD0DD\uB41C \uACF5\uC720 \uB300\uC0C1",
   uiTrendHeading: "\uC2DC\uAC04\uBCC4 \uCD94\uC774",
   uiTrendInterval: "\uAD6C\uAC04",
   uiTrendDaily: "\uC77C\uBCC4",

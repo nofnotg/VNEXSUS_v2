@@ -4,10 +4,12 @@ import {
   analyticsExportSchema,
   analyticsPresetSchema,
   analyticsPresetShareSchema,
+  analyticsShareCandidateSchema,
   caseAnalyticsFilterSchema,
   caseAnalyticsSchema,
   caseAnalyticsTrendSchema,
   type AnalyticsExportFileType,
+  type AnalyticsShareCandidate,
   type CaseAnalytics,
   type CaseAnalyticsFilter,
   type CaseAnalyticsPreset,
@@ -32,6 +34,10 @@ const analyticsPresetListSchema = z.object({
 
 const analyticsPresetShareResponseSchema = z.object({
   shared: z.boolean()
+});
+
+const analyticsShareCandidateListSchema = z.object({
+  items: z.array(analyticsShareCandidateSchema)
 });
 
 function buildQuery(filter?: CaseAnalyticsFilter) {
@@ -205,8 +211,13 @@ export async function downloadAnalyticsExport(input: {
   fileType: AnalyticsExportFileType;
   filter: CaseAnalyticsFilter;
   interval: CaseAnalyticsTrend["interval"];
+  onProgress?: (progress: number | null) => void;
 }) {
-  const parsedInput = analyticsExportSchema.parse(input);
+  const parsedInput = analyticsExportSchema.parse({
+    fileType: input.fileType,
+    filter: input.filter,
+    interval: input.interval
+  });
   const response = await fetch("/api/cases/analytics/export", {
     method: "POST",
     credentials: "same-origin",
@@ -223,9 +234,54 @@ export async function downloadAnalyticsExport(input: {
 
   const contentDisposition = response.headers.get("Content-Disposition") ?? "";
   const filenameMatch = /filename="([^"]+)"/.exec(contentDisposition);
+  const contentLength = Number(response.headers.get("Content-Length") ?? "");
+
+  if (!response.body) {
+    throw new CaseAnalyticsApiError("Missing export response body", response.status, "INVALID_ANALYTICS_RESPONSE");
+  }
+
+  const reader = response.body.getReader();
+  const chunks: ArrayBuffer[] = [];
+  let received = 0;
+
+  while (true) {
+    const chunk = await reader.read();
+    if (chunk.done) {
+      break;
+    }
+
+    if (chunk.value) {
+      chunks.push(chunk.value.buffer.slice(chunk.value.byteOffset, chunk.value.byteOffset + chunk.value.byteLength));
+      received += chunk.value.byteLength;
+      input.onProgress?.(Number.isFinite(contentLength) && contentLength > 0 ? Math.round((received / contentLength) * 100) : null);
+    }
+  }
+
+  input.onProgress?.(100);
+
+  const blob = new Blob(chunks, {
+    type: response.headers.get("Content-Type") ?? "application/octet-stream"
+  });
 
   return {
-    blob: await response.blob(),
+    blob,
     filename: filenameMatch?.[1] ?? `analytics.${parsedInput.fileType}`
   };
+}
+
+export async function searchAnalyticsShareCandidates(query: string): Promise<AnalyticsShareCandidate[]> {
+  const response = await fetch(`/api/cases/analytics/presets/share/search?q=${encodeURIComponent(query)}`, {
+    method: "GET",
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+
+  const json = await parseError(response);
+  const parsed = apiSuccessEnvelopeSchema(analyticsShareCandidateListSchema).safeParse(json);
+
+  if (!parsed.success) {
+    throw new CaseAnalyticsApiError("Invalid analytics share candidate response", response.status, "INVALID_ANALYTICS_RESPONSE");
+  }
+
+  return parsed.data.data.items;
 }

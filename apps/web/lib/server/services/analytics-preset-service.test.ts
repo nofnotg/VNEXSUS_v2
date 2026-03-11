@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createPreset, deletePreset, getPresetsForUser, getSharedPresets, sharePreset } from "./analytics-preset-service";
+import { createPreset, deletePreset, getPresetsForUser, getSharedPresets, searchShareCandidates, sharePreset } from "./analytics-preset-service";
 
 describe("analytics preset service", () => {
   it("creates and validates a preset", async () => {
@@ -25,9 +25,10 @@ describe("analytics preset service", () => {
         findByUserAndName: async () => null,
         findById: async () => null,
         updateShare: async () => undefined,
-        findSharedForEmail: async () => [],
+        findSharedForUser: async () => [],
         findUserContext: async () => null,
         findUsersInOrganizations: async () => [],
+        searchUsersInOrganizations: async () => [],
         delete: async () => undefined
       }
     );
@@ -62,9 +63,10 @@ describe("analytics preset service", () => {
           }),
           findById: async () => null,
           updateShare: async () => undefined,
-          findSharedForEmail: async () => [],
+          findSharedForUser: async () => [],
           findUserContext: async () => null,
           findUsersInOrganizations: async () => [],
+          searchUsersInOrganizations: async () => [],
           delete: async () => undefined
         }
       )
@@ -100,9 +102,10 @@ describe("analytics preset service", () => {
         createdAt: new Date()
       }),
       updateShare: async () => undefined,
-      findSharedForEmail: async () => [],
+      findSharedForUser: async () => [],
       findUserContext: async () => null,
       findUsersInOrganizations: async () => [],
+      searchUsersInOrganizations: async () => [],
       delete: async () => undefined
     });
 
@@ -125,9 +128,10 @@ describe("analytics preset service", () => {
           createdAt: new Date()
         }),
         updateShare: async () => undefined,
-        findSharedForEmail: async () => [],
+        findSharedForUser: async () => [],
         findUserContext: async () => null,
         findUsersInOrganizations: async () => [],
+        searchUsersInOrganizations: async () => [],
         delete: async () => undefined
       })
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
@@ -159,7 +163,7 @@ describe("analytics preset service", () => {
         updateShare: async (id, sharedWith) => {
           updateShareCalls.push({ id, sharedWith });
         },
-        findSharedForEmail: async () => [
+        findSharedForUser: async () => [
           {
             id: "preset-2",
             userId: "user-9",
@@ -199,6 +203,7 @@ describe("analytics preset service", () => {
             organizationIds: ["org-1"]
           }
         ],
+        searchUsersInOrganizations: async () => [],
         delete: async () => undefined
       }
     );
@@ -218,7 +223,7 @@ describe("analytics preset service", () => {
       findByUserAndName: async () => null,
       findById: async () => null,
       updateShare: async () => undefined,
-      findSharedForEmail: async () => [
+      findSharedForUser: async () => [
         {
           id: "preset-2",
           userId: "user-9",
@@ -239,10 +244,52 @@ describe("analytics preset service", () => {
         organizationIds: ["org-1"]
       }),
       findUsersInOrganizations: async () => [],
+      searchUsersInOrganizations: async () => [],
       delete: async () => undefined
     });
 
     expect(shared).toHaveLength(1);
     expect(shared[0]?.isShared).toBe(true);
+  });
+
+  it("searches share candidates within the same organization only", async () => {
+    const results = await searchShareCandidates("owner-1", "review", {
+      create: async () => {
+        throw new Error("not used");
+      },
+      findManyByUser: async () => [],
+      findByUserAndName: async () => null,
+      findById: async () => null,
+      updateShare: async () => undefined,
+      findSharedForUser: async () => [],
+      findUserContext: async () => ({
+        id: "owner-1",
+        email: "owner@example.com",
+        role: "investigator",
+        status: "active",
+        displayName: "Owner",
+        organizationIds: ["org-1"]
+      }),
+      findUsersInOrganizations: async () => [],
+      searchUsersInOrganizations: async () => [
+        {
+          id: "user-2",
+          email: "reviewer@example.com",
+          role: "investigator",
+          status: "active",
+          displayName: "Reviewer",
+          organizationIds: ["org-1"]
+        }
+      ],
+      delete: async () => undefined
+    });
+
+    expect(results).toEqual([
+      {
+        userId: "user-2",
+        email: "reviewer@example.com",
+        displayName: "Reviewer"
+      }
+    ]);
   });
 });

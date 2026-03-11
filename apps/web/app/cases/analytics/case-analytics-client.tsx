@@ -1,7 +1,8 @@
 "use client";
 
-import React, { startTransition, useMemo, useState } from "react";
-import type { AnalyticsExportFileType, CaseAnalytics, CaseAnalyticsFilter, CaseAnalyticsPreset, CaseAnalyticsTrend } from "@vnexus/shared";
+import React, { startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
+import type { AnalyticsExportFileType, AnalyticsShareCandidate, CaseAnalytics, CaseAnalyticsFilter, CaseAnalyticsPreset, CaseAnalyticsTrend } from "@vnexus/shared";
+import { formatMessage } from "@vnexus/shared";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useLocaleMessages } from "../../../components/locale-provider";
 import {
@@ -11,6 +12,7 @@ import {
   downloadAnalyticsExport,
   getCaseAnalytics,
   getCaseAnalyticsTrend,
+  searchAnalyticsShareCandidates,
   shareAnalyticsPreset
 } from "../../../lib/client/case-analytics-api";
 
@@ -92,6 +94,11 @@ export function CaseAnalyticsClient({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
+  const [activeSharePresetId, setActiveSharePresetId] = useState<string | null>(null);
+  const [shareQuery, setShareQuery] = useState("");
+  const [shareCandidates, setShareCandidates] = useState<AnalyticsShareCandidate[]>([]);
+  const [shareSelection, setShareSelection] = useState<string[]>([]);
   const [eventTypeOptions, setEventTypeOptions] = useState(() => Object.keys(initialAnalytics.eventsByType).sort((a, b) => a.localeCompare(b)));
   const [hospitalOptions, setHospitalOptions] = useState(() =>
     mergeOptions([], [
@@ -100,6 +107,7 @@ export function CaseAnalyticsClient({
     ])
   );
   const allPresets = useMemo(() => [...ownedPresets, ...sharedPresets], [ownedPresets, sharedPresets]);
+  const deferredShareQuery = useDeferredValue(shareQuery);
 
   const summaryCards = [
     { label: localeMessages.uiTotalCases, value: analytics.totalCases },
@@ -127,6 +135,31 @@ export function CaseAnalyticsClient({
   );
 
   const chartWidth = Math.max(480, trend.points.length * 80);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!activeSharePresetId || deferredShareQuery.trim().length < 2) {
+      setShareCandidates([]);
+      return;
+    }
+
+    void searchAnalyticsShareCandidates(deferredShareQuery.trim())
+      .then((items) => {
+        if (!cancelled) {
+          setShareCandidates(items);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setShareCandidates([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeSharePresetId, deferredShareQuery]);
 
   async function refresh(nextFilter: FilterState, nextInterval: CaseAnalyticsTrend["interval"]) {
     setLoading(true);
@@ -241,16 +274,29 @@ export function CaseAnalyticsClient({
     await refresh(nextFilter, interval);
   }
 
-  async function handleSharePreset(preset: CaseAnalyticsPreset) {
-    const raw = window.prompt(localeMessages.uiSharedWith, preset.sharedWith.join(", "));
-    if (raw === null) {
-      return;
-    }
+  function handleOpenSharePanel(preset: CaseAnalyticsPreset) {
+    setActiveSharePresetId((current) => (current === preset.presetId ? null : preset.presetId));
+    setShareSelection(preset.sharedWith);
+    setShareQuery("");
+    setShareCandidates([]);
+    setError(null);
+    setNotice(null);
+  }
 
-    const sharedWith = raw
-      .split(",")
-      .map((value) => value.trim())
-      .filter(Boolean);
+  function handleAddShareRecipient(candidate: AnalyticsShareCandidate) {
+    setShareSelection((current) =>
+      current.includes(candidate.email) ? current : [...current, candidate.email].sort((left, right) => left.localeCompare(right))
+    );
+    setShareQuery("");
+    setShareCandidates([]);
+  }
+
+  function handleRemoveShareRecipient(email: string) {
+    setShareSelection((current) => current.filter((item) => item !== email));
+  }
+
+  async function handleSharePreset(preset: CaseAnalyticsPreset) {
+    const sharedWith = [...new Set(shareSelection)];
 
     setLoading(true);
     setError(null);
@@ -275,8 +321,10 @@ export function CaseAnalyticsClient({
           )
         );
       });
+      setNotice(localeMessages.uiShareSuccess);
+      setActiveSharePresetId(null);
     } catch (caught) {
-      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiAnalyticsError;
+      const message = caught instanceof CaseAnalyticsApiError ? caught.message : localeMessages.uiShareError;
       setError(message);
     } finally {
       setLoading(false);
@@ -287,12 +335,16 @@ export function CaseAnalyticsClient({
     setLoading(true);
     setError(null);
     setNotice(null);
+    setDownloadProgress(null);
 
     try {
       const file = await downloadAnalyticsExport({
         fileType: exportType,
         filter: toRequestFilter(filter),
-        interval
+        interval,
+        onProgress: (progress) => {
+          setDownloadProgress(progress);
+        }
       });
       const objectUrl = URL.createObjectURL(file.blob);
       const link = document.createElement("a");
@@ -308,6 +360,7 @@ export function CaseAnalyticsClient({
       setError(message);
     } finally {
       setLoading(false);
+      setDownloadProgress(null);
     }
   }
 
@@ -366,7 +419,7 @@ export function CaseAnalyticsClient({
                     <button type="button" onClick={() => void handleApplyPreset(preset.presetId)} disabled={loading}>
                       {localeMessages.uiSelectPreset}
                     </button>
-                    <button type="button" onClick={() => void handleSharePreset(preset)} disabled={loading}>
+                    <button type="button" onClick={() => handleOpenSharePanel(preset)} disabled={loading}>
                       {localeMessages.uiSharePreset}
                     </button>
                     <button
@@ -378,6 +431,50 @@ export function CaseAnalyticsClient({
                       {localeMessages.uiDeletePreset}
                     </button>
                   </div>
+                  {activeSharePresetId === preset.presetId ? (
+                    <div style={{ display: "grid", gap: "10px" }}>
+                      <label style={{ display: "grid", gap: "6px" }}>
+                        <span>{localeMessages.uiShareSearchPlaceholder}</span>
+                        <input
+                          type="text"
+                          value={shareQuery}
+                          onChange={(event) => setShareQuery(event.target.value)}
+                          placeholder={localeMessages.uiShareSearchPlaceholder}
+                        />
+                      </label>
+                      {shareCandidates.length > 0 ? (
+                        <div style={{ display: "grid", gap: "6px" }}>
+                          {shareCandidates.map((candidate) => (
+                            <button
+                              key={candidate.userId}
+                              type="button"
+                              onClick={() => handleAddShareRecipient(candidate)}
+                              style={shareCandidateButtonStyle}
+                            >
+                              {candidate.displayName ? `${candidate.displayName} (${candidate.email})` : candidate.email}
+                            </button>
+                          ))}
+                        </div>
+                      ) : shareQuery.trim().length >= 2 ? (
+                        <div style={{ color: "var(--muted)", fontSize: "14px" }}>{localeMessages.uiShareNoMatches}</div>
+                      ) : null}
+                      <div style={{ display: "grid", gap: "6px" }}>
+                        <strong style={{ fontSize: "14px" }}>{localeMessages.uiShareSelectedUsers}</strong>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                          {shareSelection.map((email) => (
+                            <button key={email} type="button" onClick={() => handleRemoveShareRecipient(email)} style={shareChipStyle}>
+                              {email}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <button type="button" onClick={() => void handleSharePreset(preset)} disabled={loading || shareSelection.length === 0}>
+                          {localeMessages.uiSharePreset}
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
                 </article>
               ))}
             </div>
@@ -511,6 +608,12 @@ export function CaseAnalyticsClient({
 
         {error ? <p style={{ margin: 0, color: "#b42318" }}>{error}</p> : null}
         {notice ? <p style={{ margin: 0, color: "#166534" }}>{notice}</p> : null}
+        {loading && downloadProgress === null ? <p style={{ margin: 0, color: "var(--muted)" }}>{localeMessages.uiExportPreparing}</p> : null}
+        {loading && downloadProgress !== null ? (
+          <p style={{ margin: 0, color: "var(--muted)" }}>
+            {formatMessage(localeMessages.uiExportDownloading, { progress: String(downloadProgress) })}
+          </p>
+        ) : null}
       </section>
 
       {analytics.topHospitals.length > 0 ? (
@@ -621,4 +724,19 @@ const presetCardStyle = {
   padding: "14px",
   display: "grid",
   gap: "10px"
+} as const;
+
+const shareCandidateButtonStyle = {
+  textAlign: "left",
+  border: "1px solid var(--border)",
+  borderRadius: "10px",
+  padding: "10px",
+  background: "rgba(255,255,255,0.7)"
+} as const;
+
+const shareChipStyle = {
+  border: "1px solid var(--border)",
+  borderRadius: "999px",
+  padding: "6px 10px",
+  background: "rgba(20, 83, 45, 0.08)"
 } as const;

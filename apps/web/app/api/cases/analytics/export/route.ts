@@ -2,6 +2,7 @@ import { ApiError, analyticsExportSchema } from "@vnexus/shared";
 import { apiFailure, parseJsonBody, requireAuthorizedSession } from "../../../../../lib/server/api";
 import { parseAnalyticsExportQuery } from "../../../../../lib/server/case-analytics-query";
 import { exportAnalytics } from "../../../../../lib/server/services/case-analytics-service";
+import { Readable } from "node:stream";
 
 function assertAnalyticsRole(role: string) {
   if (!["investigator", "admin"].includes(role)) {
@@ -10,11 +11,12 @@ function assertAnalyticsRole(role: string) {
 }
 
 function buildFileResponse(file: Awaited<ReturnType<typeof exportAnalytics>>) {
-  return new Response(new Uint8Array(file.buffer), {
+  return new Response(Readable.toWeb(file.stream) as ReadableStream, {
     status: 200,
     headers: {
       "Content-Type": file.mimeType,
       "Content-Disposition": `attachment; filename="${file.filename}"`,
+      "Content-Length": `${file.size}`,
       "Cache-Control": "no-store"
     }
   });

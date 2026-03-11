@@ -153,6 +153,31 @@ export const caseAnalyticsRepository = {
       .slice(0, limit);
   },
 
+  async getAccessibleFilterValues(
+    userId: string,
+    isAdmin: boolean
+  ): Promise<{ eventTypes: string[]; hospitals: string[] }> {
+    const eventWhere = buildEventWhere(userId, isAdmin, {});
+    const [eventTypes, hospitals] = await Promise.all([
+      prisma.eventAtom.groupBy({
+        by: ["eventTypeCandidate"],
+        where: eventWhere
+      }),
+      prisma.eventAtom.groupBy({
+        by: ["primaryHospital"],
+        where: eventWhere
+      })
+    ]);
+
+    return {
+      eventTypes: eventTypes.map((item) => item.eventTypeCandidate).sort((left, right) => left.localeCompare(right)),
+      hospitals: hospitals
+        .map((item) => item.primaryHospital)
+        .filter((value): value is string => Boolean(value))
+        .sort((left, right) => left.localeCompare(right))
+    };
+  },
+
   async getTrendForUser(
     userId: string,
     isAdmin: boolean,

@@ -11,8 +11,15 @@ import {
   type UserRole
 } from "@vnexus/shared";
 import { caseAnalyticsRepository } from "../data-access/case-analytics-repository";
-import { Parser as Json2CsvParser } from "json2csv";
+import { Transform as Json2CsvTransform } from "json2csv";
 import * as xlsx from "xlsx";
+import { createReadStream, createWriteStream } from "node:fs";
+import { mkdtemp, rm, stat } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
+import { logAnalyticsEvent, recordAnalyticsMetric } from "../analytics-observability";
 
 function toCountMap(items: Array<{ key: string; count: number }>) {
   return Object.fromEntries(
@@ -136,13 +143,96 @@ function toWorkbook(
 export type AnalyticsExportFile = {
   filename: string;
   mimeType: string;
-  buffer: Buffer;
+  size: number;
+  stream: Readable;
 };
 
 type AnalyticsRepository = Pick<
   typeof caseAnalyticsRepository,
-  "getAnalyticsForUser" | "getTrendForUser" | "getTopHospitalsForUser"
+  "getAnalyticsForUser" | "getTrendForUser" | "getTopHospitalsForUser" | "getAccessibleFilterValues"
 >;
+
+async function ensureExportScope(
+  userId: string,
+  role: UserRole,
+  filter: CaseAnalyticsFilter,
+  repository: AnalyticsRepository
+) {
+  const normalized = normalizeFilter(filter);
+  if (normalized.startDate && normalized.endDate) {
+    const start = new Date(`${normalized.startDate}T00:00:00.000Z`);
+    const end = new Date(`${normalized.endDate}T00:00:00.000Z`);
+    const diffDays = Math.floor((end.getTime() - start.getTime()) / 86_400_000);
+
+    if (diffDays > 366) {
+      throw new ApiError("VALIDATION_ERROR", "Analytics export date range cannot exceed 366 days");
+    }
+  }
+
+  if ((normalized.eventTypes?.length ?? 0) > 20 || (normalized.hospitals?.length ?? 0) > 20) {
+    throw new ApiError("VALIDATION_ERROR", "Analytics export filter is too broad");
+  }
+
+  const accessible = await repository.getAccessibleFilterValues(userId, role === "admin");
+  const allowedEventTypes = new Set<string>(accessible.eventTypes);
+  const allowedHospitals = new Set<string>(accessible.hospitals);
+
+  const invalidEventTypes = (normalized.eventTypes ?? []).filter((value) => !allowedEventTypes.has(value));
+  const invalidHospitals = (normalized.hospitals ?? []).filter((value) => !allowedHospitals.has(value));
+
+  if (invalidEventTypes.length > 0 || invalidHospitals.length > 0) {
+    throw new ApiError("FORBIDDEN", "Export filter contains values outside the accessible scope", {
+      invalidEventTypes,
+      invalidHospitals
+    });
+  }
+}
+
+async function createExportWorkspace() {
+  return mkdtemp(join(tmpdir(), "vnexus-analytics-"));
+}
+
+async function buildCsvExportFile(rows: ReturnType<typeof buildExportRows>, filePath: string) {
+  const transform = new Json2CsvTransform(
+    {
+      fields: ["section", "key", "value", "total", "confirmed", "unconfirmed"]
+    },
+    { objectMode: true }
+  );
+
+  await pipeline(Readable.from(rows, { objectMode: true }), transform as never, createWriteStream(filePath, { encoding: "utf8" }));
+}
+
+async function buildXlsxExportFile(
+  analytics: Awaited<ReturnType<typeof getCaseAnalytics>>,
+  trend: CaseAnalyticsTrend,
+  filter: CaseAnalyticsFilter,
+  interval: CaseAnalyticsTrend["interval"],
+  filePath: string
+) {
+  const workbook = toWorkbook(analytics, trend, filter, interval);
+  xlsx.writeFile(workbook, filePath, { bookType: "xlsx" });
+}
+
+async function toStreamedExportFile(
+  filePath: string,
+  filename: string,
+  mimeType: string
+): Promise<AnalyticsExportFile> {
+  const fileStat = await stat(filePath);
+  const stream = createReadStream(filePath);
+  const cleanup = () => void rm(filePath, { force: true }).catch(() => undefined);
+
+  stream.once("close", cleanup);
+  stream.once("error", cleanup);
+
+  return {
+    filename,
+    mimeType,
+    size: fileStat.size,
+    stream
+  };
+}
 
 export async function getCaseAnalytics(
   userId: string,
@@ -199,6 +289,14 @@ export async function exportAnalytics(
   const parsedFilter = normalizeFilter(filter);
   const parsedInterval = analyticsIntervalSchema.parse(interval);
   const parsedFileType = analyticsExportFileTypeSchema.parse(fileType);
+  await ensureExportScope(userId, role, parsedFilter, repository);
+  recordAnalyticsMetric("export_request");
+  logAnalyticsEvent("analytics.export.requested", {
+    userId,
+    role,
+    fileType: parsedFileType,
+    interval: parsedInterval
+  });
 
   const [analytics, trend] = await Promise.all([
     getCaseAnalytics(userId, role, parsedFilter, repository),
@@ -211,26 +309,35 @@ export async function exportAnalytics(
   }
 
   const baseFilename = `analytics-${parsedInterval}-${buildTimestamp()}`;
+  const workspace = await createExportWorkspace();
 
   if (parsedFileType === "csv") {
-    const parser = new Json2CsvParser({
-      fields: ["section", "key", "value", "total", "confirmed", "unconfirmed"]
+    const filePath = join(workspace, `${baseFilename}.csv`);
+    await buildCsvExportFile(rows, filePath);
+    const exportFile = await toStreamedExportFile(filePath, `${baseFilename}.csv`, "text/csv; charset=utf-8");
+    recordAnalyticsMetric("export_complete", { bytes: exportFile.size });
+    logAnalyticsEvent("analytics.export.completed", {
+      userId,
+      fileType: parsedFileType,
+      size: exportFile.size
     });
-    const csv = parser.parse(rows);
 
-    return {
-      filename: `${baseFilename}.csv`,
-      mimeType: "text/csv; charset=utf-8",
-      buffer: Buffer.from(csv, "utf8")
-    };
+    return exportFile;
   }
 
-  const workbook = toWorkbook(analytics, trend, parsedFilter, parsedInterval);
-  const buffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" }) as Buffer;
+  const filePath = join(workspace, `${baseFilename}.xlsx`);
+  await buildXlsxExportFile(analytics, trend, parsedFilter, parsedInterval, filePath);
+  const exportFile = await toStreamedExportFile(
+    filePath,
+    `${baseFilename}.xlsx`,
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  recordAnalyticsMetric("export_complete", { bytes: exportFile.size });
+  logAnalyticsEvent("analytics.export.completed", {
+    userId,
+    fileType: parsedFileType,
+    size: exportFile.size
+  });
 
-  return {
-    filename: `${baseFilename}.xlsx`,
-    mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    buffer
-  };
+  return exportFile;
 }

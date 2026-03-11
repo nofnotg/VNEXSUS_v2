@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@vnexus/shared";
+import { Readable } from "node:stream";
 
 const {
   requireAuthorizedSessionMock,
@@ -44,7 +45,8 @@ describe("analytics export route", () => {
     exportAnalyticsMock.mockResolvedValue({
       filename: "analytics-daily-20260311.csv",
       mimeType: "text/csv; charset=utf-8",
-      buffer: Buffer.from("section,key,value", "utf8")
+      size: 17,
+      stream: Readable.from(["section,key,value"])
     });
   });
 
@@ -76,7 +78,8 @@ describe("analytics export route", () => {
     exportAnalyticsMock.mockResolvedValue({
       filename: "analytics-weekly-20260311.xlsx",
       mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      buffer: Buffer.from("xlsx")
+      size: 4,
+      stream: Readable.from([Buffer.from("xlsx")])
     });
 
     const response = await POST(new Request("http://localhost/api/cases/analytics/export", { method: "POST" }));

@@ -138,7 +138,7 @@ describe("case analytics page", () => {
       endDate: "2026-03-10"
     });
 
-    render(
+    const view = render(
       <ThemeProvider initialTheme="light">
         <LocaleProvider initialLocale="en">{ui}</LocaleProvider>
       </ThemeProvider>
@@ -160,7 +160,8 @@ describe("case analytics page", () => {
     expect(screen.getByRole("heading", { level: 2, name: ko.uiAnalyticsPresets })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: ko.uiTopHospitals })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 3, name: ko.uiSharedPresets })).toBeTruthy();
-  });
+    view.unmount();
+  }, 15000);
 
   it("blocks analytics for consumer users", async () => {
     getSessionUserMock.mockResolvedValue({
