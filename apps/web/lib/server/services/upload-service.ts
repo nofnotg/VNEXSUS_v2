@@ -3,9 +3,13 @@ import { loadAppEnv } from "@vnexus/shared";
 import { getStorageAdapter } from "../storage/factory";
 import { createDocument } from "./document-service";
 import { getCaseForUser } from "./case-service";
+import { isLocalDemoMode } from "../demo-mode";
+import { addDemoDocument } from "../demo-store";
 
 export async function uploadDocumentFile(caseId: string, userId: string, role: UserRole, file: File) {
-  await getCaseForUser(caseId, userId, role);
+  if (!isLocalDemoMode()) {
+    await getCaseForUser(caseId, userId, role);
+  }
 
   const envResult = loadAppEnv();
   if (!envResult.ok) {
@@ -40,15 +44,24 @@ export async function uploadDocumentFile(caseId: string, userId: string, role: U
     buffer
   });
 
-  const created = await createDocument(caseId, userId, role, {
-    originalFileName: file.name,
-    mimeType: file.type,
-    pageCount: 1,
-    storagePath: stored.storagePath
-  });
+  const created = isLocalDemoMode()
+    ? await addDemoDocument({
+        caseId,
+        originalFileName: file.name,
+        mimeType: file.type,
+        pageCount: 1,
+        storagePath: stored.storagePath,
+        publicUrl: stored.publicUrl
+      })
+    : await createDocument(caseId, userId, role, {
+        originalFileName: file.name,
+        mimeType: file.type,
+        pageCount: 1,
+        storagePath: stored.storagePath
+      });
 
   return {
-    documentId: created.id,
+    documentId: "id" in created ? created.id : created.documentId,
     originalFileName: created.originalFileName,
     fileOrder: created.fileOrder,
     pageCount: created.pageCount,

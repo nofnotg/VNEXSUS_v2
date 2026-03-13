@@ -12,6 +12,8 @@ import {
 import { prisma } from "../../prisma";
 import { getOwnedPresetCache, getSharedPresetCache, invalidatePresetCaches, setOwnedPresetCache, setSharedPresetCache } from "./analytics-preset-cache";
 import { logAnalyticsEvent, measureAnalyticsOperation, recordAnalyticsMetric } from "../analytics-observability";
+import { isLocalDemoMode } from "../demo-mode";
+import { createDemoPreset, deleteDemoPreset, listDemoPresets } from "../demo-store";
 
 type PresetRecord = {
   id: string;
@@ -320,6 +322,15 @@ export async function createPreset(
 
   const filter = caseAnalyticsFilterSchema.parse(input.filter ?? {});
   const interval = analyticsIntervalSchema.parse(input.interval);
+
+  if (isLocalDemoMode()) {
+    return createDemoPreset(userId, `${userId}@vnexus.local`, {
+      name,
+      filter,
+      interval
+    });
+  }
+
   const existing = await repository.findByUserAndName(userId, name);
 
   if (existing) {
@@ -341,6 +352,10 @@ export async function getPresetsForUser(
   userId: string,
   repository: PresetRepository = analyticsPresetRepository
 ) {
+  if (isLocalDemoMode()) {
+    return listDemoPresets(userId, `${userId}@vnexus.local`);
+  }
+
   const cached = getOwnedPresetCache<CaseAnalyticsPreset[]>(userId);
   if (cached) {
     return cached;
@@ -459,6 +474,10 @@ export async function getSharedPresets(
   userId: string,
   repository: PresetRepository = analyticsPresetRepository
 ) {
+  if (isLocalDemoMode()) {
+    return [];
+  }
+
   const user = await repository.findUserContext(userId);
   if (!user) {
     return [];
@@ -485,6 +504,14 @@ export async function searchShareCandidates(
   page = 1,
   repository: PresetRepository = analyticsPresetRepository
 ): Promise<AnalyticsShareCandidateSearchResult> {
+  if (isLocalDemoMode()) {
+    return analyticsShareCandidateSearchSchema.parse({
+      items: [],
+      page: 1,
+      hasMore: false
+    });
+  }
+
   const owner = await repository.findUserContext(ownerId);
   if (!owner) {
     throw new ApiError("NOT_FOUND", "Owner not found");
@@ -540,6 +567,11 @@ export async function deletePreset(
   presetId: string,
   repository: PresetRepository = analyticsPresetRepository
 ) {
+  if (isLocalDemoMode()) {
+    await deleteDemoPreset(userId, presetId);
+    return;
+  }
+
   const preset = await repository.findById(presetId);
 
   if (!preset) {

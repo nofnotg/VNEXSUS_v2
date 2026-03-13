@@ -10,6 +10,8 @@ import {
   type UserRole
 } from "@vnexus/shared";
 import { caseDetailRepository } from "../data-access/case-detail-repository";
+import { isLocalDemoMode } from "../demo-mode";
+import { getDemoCaseDetail, updateDemoEventConfirmation, updateDemoEventDetails } from "../demo-store";
 
 type CaseDetailRepositoryRecord = Awaited<ReturnType<typeof caseDetailRepository.findCaseDetail>> extends infer T
   ? Exclude<T, null>
@@ -206,6 +208,10 @@ export async function getCaseDetail(
     throw new ApiError("FORBIDDEN", "This role cannot open case detail");
   }
 
+  if (isLocalDemoMode()) {
+    return getDemoCaseDetail(caseId);
+  }
+
   const record = await repository.findCaseDetail(caseId, userId, role === "admin");
   if (!record) {
     throw new ApiError("NOT_FOUND", "Case not found");
@@ -228,6 +234,11 @@ export async function updateEventConfirmation(
 ): Promise<void> {
   if (!canEditEvents(role)) {
     throw new ApiError("FORBIDDEN", "This role cannot confirm case events");
+  }
+
+  if (isLocalDemoMode()) {
+    await updateDemoEventConfirmation(caseId, eventId, confirmed);
+    return;
   }
 
   const record = await repository.findCaseDetail(caseId, userId, role === "admin");
@@ -256,6 +267,31 @@ export async function updateEventDetails(
   }
 
   const parsedEdit = caseEventEditSchema.parse(edit);
+
+  if (isLocalDemoMode()) {
+    const detail = await getDemoCaseDetail(caseId);
+    const currentEvent = detail.events.find((item) => item.eventId === parsedEdit.eventId);
+
+    if (!currentEvent) {
+      throw new ApiError("NOT_FOUND", "Event not found");
+    }
+
+    const editedAt = new Date().toISOString();
+    const nextHistoryEntry = buildEditHistoryEntry(userId, editedAt, currentEvent, parsedEdit);
+    const nextEvent = caseEventSchema.parse({
+      ...currentEvent,
+      ...(parsedEdit.date !== undefined ? { date: parsedEdit.date } : {}),
+      ...(parsedEdit.hospital !== undefined ? { hospital: parsedEdit.hospital } : {}),
+      ...(parsedEdit.details !== undefined ? { details: parsedEdit.details } : {}),
+      ...(parsedEdit.requiresReview !== undefined ? { requiresReview: parsedEdit.requiresReview } : {}),
+      editedAt,
+      editHistory: nextHistoryEntry ? [...(currentEvent.editHistory ?? []), nextHistoryEntry] : currentEvent.editHistory
+    });
+
+    await updateDemoEventDetails(caseId, nextEvent);
+    return nextEvent;
+  }
+
   const record = await repository.findCaseDetail(caseId, userId, role === "admin");
   if (!record) {
     throw new ApiError("NOT_FOUND", "Case not found");

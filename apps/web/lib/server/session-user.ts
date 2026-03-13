@@ -1,11 +1,24 @@
 import { prisma } from "../prisma";
 import { getSessionUser } from "../session";
+import { isLocalDemoMode } from "./demo-mode";
 
 export async function requireSessionRecord() {
   const sessionUser = await getSessionUser();
 
   if (!sessionUser) {
     return null;
+  }
+
+  if (isLocalDemoMode()) {
+    return {
+      sessionUser,
+      user: {
+        id: sessionUser.id,
+        email: sessionUser.email,
+        role: sessionUser.role,
+        status: sessionUser.status
+      }
+    };
   }
 
   // TODO(auth): remove this dev/test convenience path once a real auth provider

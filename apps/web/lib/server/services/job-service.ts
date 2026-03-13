@@ -8,6 +8,8 @@ import {
 } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
+import { isLocalDemoMode } from "../demo-mode";
+import { getDemoLatestOcrJob, runDemoOcrPipeline } from "../demo-store";
 
 export const OCR_JOB_STATUS_TRANSITIONS = ["queued", "processing", "completed", "failed"] as const;
 
@@ -37,6 +39,26 @@ function buildOcrJobPayload(
 }
 
 export async function createOcrJob(caseId: string, userId: string, role: UserRole, input: OcrJobCreateInput) {
+  if (isLocalDemoMode()) {
+    const job = await runDemoOcrPipeline(caseId);
+    return {
+      jobId: job.jobId,
+      documentCount: input.sourceDocumentIds.length,
+      status: job.status,
+      idempotentReused: false,
+      payload: {
+        caseId,
+        sourceDocumentIds: input.sourceDocumentIds,
+        fileOrders: [],
+        requestedByUserId: userId,
+        ingestionMode: "ocr",
+        enqueueReason: input.enqueueReason,
+        idempotencyKey: `demo-${job.jobId}`,
+        allowedTransitions: [...OCR_JOB_STATUS_TRANSITIONS]
+      }
+    };
+  }
+
   await getCaseForUser(caseId, userId, role);
 
   const targetDocuments = await prisma.sourceDocument.findMany({
@@ -110,6 +132,25 @@ export async function createOcrJob(caseId: string, userId: string, role: UserRol
 }
 
 export async function getJob(jobId: string, userId: string, role: UserRole) {
+  if (isLocalDemoMode()) {
+    const job = await getDemoLatestOcrJob("demo-case-1");
+    if (!job || job.jobId !== jobId) {
+      throw new ApiError("NOT_FOUND", "Job not found");
+    }
+
+    return {
+      jobId: job.jobId,
+      caseId: "demo-case-1",
+      status: job.status,
+      jobType: "ocr",
+      requestedBy: userId,
+      createdAt: job.createdAt,
+      updatedAt: job.completedAt ?? job.createdAt,
+      completedAt: job.completedAt ?? null,
+      payload: { mode: "demo" }
+    };
+  }
+
   const job = await prisma.analysisJob.findFirst({
     where:
       role === "admin"

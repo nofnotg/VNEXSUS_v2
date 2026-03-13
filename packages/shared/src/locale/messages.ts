@@ -128,6 +128,16 @@ export type MessageDictionary = {
   uiCaseDetailSubheading: string;
   uiCaseDetailEmpty: string;
   uiCaseDetailTimelineHeading: string;
+  uiCaseDocumentsHeading: string;
+  uiCaseDocumentsEmpty: string;
+  uiCaseUploadAction: string;
+  uiCaseUploadNoFile: string;
+  uiCaseUploadSuccess: string;
+  uiCaseUploadError: string;
+  uiCaseOcrAction: string;
+  uiCaseOcrSuccess: string;
+  uiCaseOcrError: string;
+  uiCaseOcrIdle: string;
   uiEventDateColumn: string;
   uiEventTypeColumn: string;
   uiEventDetailsColumn: string;
@@ -343,6 +353,16 @@ export const messages = {
     uiCaseDetailSubheading: "Review structured events and confirm timeline items.",
     uiCaseDetailEmpty: "No structured events are available for this case yet.",
     uiCaseDetailTimelineHeading: "Event timeline",
+    uiCaseDocumentsHeading: "Documents and OCR",
+    uiCaseDocumentsEmpty: "No documents have been uploaded for this case yet.",
+    uiCaseUploadAction: "Upload document",
+    uiCaseUploadNoFile: "Choose a file before uploading.",
+    uiCaseUploadSuccess: "Document uploaded successfully.",
+    uiCaseUploadError: "Document upload failed.",
+    uiCaseOcrAction: "Run mock OCR",
+    uiCaseOcrSuccess: "Mock OCR completed and refreshed the case timeline.",
+    uiCaseOcrError: "Mock OCR could not complete.",
+    uiCaseOcrIdle: "Upload a document to enable OCR processing.",
     uiEventDateColumn: "Date",
     uiEventTypeColumn: "Type",
     uiEventDetailsColumn: "Details",
@@ -641,6 +661,16 @@ Object.assign(messages.ko, {
   uiTopHospitals: "\uC0C1\uC704 \uBCD1\uC6D0",
   uiEvents: "\uC774\uBCA4\uD2B8",
   uiViewDetails: "\uC0C1\uC138 \uBCF4\uAE30",
+  uiCaseDocumentsHeading: "\uBB38\uC11C \uBC0F OCR",
+  uiCaseDocumentsEmpty: "\uC774 \uC0AC\uB840\uC5D0 \uC5C5\uB85C\uB4DC\uB41C \uBB38\uC11C\uAC00 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4.",
+  uiCaseUploadAction: "\uBB38\uC11C \uC5C5\uB85C\uB4DC",
+  uiCaseUploadNoFile: "\uC5C5\uB85C\uB4DC\uD560 \uD30C\uC77C\uC744 \uBA3C\uC800 \uC120\uD0DD\uD574\uC8FC\uC138\uC694.",
+  uiCaseUploadSuccess: "\uBB38\uC11C \uC5C5\uB85C\uB4DC\uAC00 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4.",
+  uiCaseUploadError: "\uBB38\uC11C \uC5C5\uB85C\uB4DC\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.",
+  uiCaseOcrAction: "Mock OCR \uC2E4\uD589",
+  uiCaseOcrSuccess: "Mock OCR\uAC00 \uC644\uB8CC\uB418\uC5C8\uACE0 \uD0C0\uC784\uB77C\uC778\uC744 \uC0C8\uB85C \uACE0\uCE68\uD588\uC2B5\uB2C8\uB2E4.",
+  uiCaseOcrError: "Mock OCR\uB97C \uC644\uB8CC\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.",
+  uiCaseOcrIdle: "OCR \uCC98\uB9AC\uB97C \uD558\uB824\uBA74 \uBA3C\uC800 \uBB38\uC11C\uB97C \uC5C5\uB85C\uB4DC\uD574\uC8FC\uC138\uC694.",
   uiTrendTotal: "\uC804\uCCB4",
   uiTrendConfirmed: "\uD655\uC815",
   uiTrendUnconfirmed: "\uBBF8\uD655\uC815"

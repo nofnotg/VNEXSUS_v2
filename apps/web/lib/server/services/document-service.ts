@@ -2,8 +2,14 @@ import { ApiError, DocumentCreateInput, UserRole } from "@vnexus/shared";
 import { assertContiguousFileOrders, assertContiguousPageOrders } from "@vnexus/domain";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
+import { isLocalDemoMode } from "../demo-mode";
+import { listDemoDocuments } from "../demo-store";
 
 export async function listDocuments(caseId: string, userId: string, role: UserRole) {
+  if (isLocalDemoMode()) {
+    return listDemoDocuments(caseId);
+  }
+
   await getCaseForUser(caseId, userId, role);
 
   return prisma.sourceDocument.findMany({

@@ -1,5 +1,7 @@
 import { ApiError, caseListJsonSchema, type UserRole } from "@vnexus/shared";
 import { caseListRepository, type CaseListRecord } from "../data-access/case-list-repository";
+import { isLocalDemoMode } from "../demo-mode";
+import { listDemoCases } from "../demo-store";
 
 function mapCaseListItem(item: CaseListRecord) {
   const readyReport = item.reports.find((report) => report.status === "ready");
@@ -24,6 +26,10 @@ export async function getCaseList(
 ) {
   if (!["consumer", "investigator", "admin"].includes(role)) {
     throw new ApiError("FORBIDDEN", "This role cannot access case list");
+  }
+
+  if (isLocalDemoMode()) {
+    return listDemoCases();
   }
 
   const items = await repository.findCasesForUser(userId, role === "admin");

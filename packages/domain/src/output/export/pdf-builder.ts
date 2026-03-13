@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, StandardFonts, rgb, type PDFFont } from "pdf-lib";
 import { formatMessage, messages, type ConsumerNarrativeJson, type InvestigatorNarrativeJson, type LocaleCode } from "@vnexus/shared";
@@ -14,8 +15,10 @@ const PARAGRAPH_GAP = 12;
 
 type NarrativeDocument = InvestigatorNarrativeJson | ConsumerNarrativeJson;
 
-const NOTO_SANS_KR_REGULAR = require.resolve("@fontsource/noto-sans-kr/files/noto-sans-kr-0-400-normal.woff");
-const NOTO_SANS_KR_BOLD = require.resolve("@fontsource/noto-sans-kr/files/noto-sans-kr-0-700-normal.woff");
+const NOTO_SANS_KR_PACKAGE = require.resolve("@fontsource/noto-sans-kr/package.json");
+const NOTO_SANS_KR_DIR = path.dirname(NOTO_SANS_KR_PACKAGE);
+const NOTO_SANS_KR_REGULAR = path.join(NOTO_SANS_KR_DIR, "files", "noto-sans-kr-0-400-normal.woff");
+const NOTO_SANS_KR_BOLD = path.join(NOTO_SANS_KR_DIR, "files", "noto-sans-kr-0-700-normal.woff");
 
 type EmbeddedFonts = {
   regularFont: PDFFont;

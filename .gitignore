@@ -10,3 +10,10 @@ test-results
 pnpm-lock.yaml
 generated
 *.tsbuildinfo
+.demo-cookies.txt
+.demo-sample.pdf
+.demo-web.log
+.demo-web.err.log
+apps/web/.demo/
+apps/web/.storage/
+apps/web/next-env.d.ts

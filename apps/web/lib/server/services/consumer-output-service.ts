@@ -2,8 +2,14 @@ import { buildConsumerStructuredOutput } from "@vnexus/domain";
 import { type UserRole } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
+import { isLocalDemoMode } from "../demo-mode";
+import { getDemoBundles } from "../demo-store";
 
 export async function getConsumerStructuredOutput(caseId: string, userId: string, role: UserRole) {
+  if (isLocalDemoMode()) {
+    return buildConsumerStructuredOutput(caseId, await getDemoBundles(caseId));
+  }
+
   await getCaseForUser(caseId, userId, role);
 
   const bundles = await prisma.eventBundle.findMany({

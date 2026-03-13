@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "node ./scripts/run-next-dev.mjs",
     "lint": "tsc --noEmit",
     "test": "vitest run --passWithNoTests \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit --incremental false"

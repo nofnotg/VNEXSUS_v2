@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useState } from "react";
 import type { CaseDetail, CaseEvent } from "@vnexus/shared";
 import { useLocale, useLocaleMessages } from "../../../components/locale-provider";
 import { updateCaseEventConfirmation, updateCaseEventDetails } from "../../../lib/client/case-detail-api";
+import { listCaseDocuments, runCaseOcr, uploadCaseDocument, type CaseDocumentItem } from "../../../lib/client/case-document-api";
 
 type CaseDetailClientProps = {
   caseId: string;
@@ -64,6 +66,71 @@ export function CaseDetailClient({ caseId, initialDetail, canEdit, canViewHistor
   const [historyEventId, setHistoryEventId] = useState<string | null>(null);
   const [draft, setDraft] = useState<EditDraft | null>(null);
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
+  const [documents, setDocuments] = useState<CaseDocumentItem[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [runningOcr, setRunningOcr] = useState(false);
+
+  async function refreshDocuments() {
+    try {
+      const nextDocuments = await listCaseDocuments(caseId);
+      setDocuments(nextDocuments);
+    } catch {
+      // Keep the page usable even if the document list cannot refresh.
+    }
+  }
+
+  async function handleUpload() {
+    if (!selectedFile) {
+      setFeedback({ kind: "error", message: localeMessages.uiCaseUploadNoFile });
+      return;
+    }
+
+    setUploading(true);
+    setFeedback({ kind: "pending", message: localeMessages.uiConfirmationSaving });
+
+    try {
+      await uploadCaseDocument(caseId, selectedFile);
+      await refreshDocuments();
+      setSelectedFile(null);
+      setFeedback({ kind: "success", message: localeMessages.uiCaseUploadSuccess });
+    } catch (error) {
+      setFeedback({ kind: "error", message: error instanceof Error ? error.message : localeMessages.uiCaseUploadError });
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleMockOcr() {
+    const sourceDocumentIds = documents.map((item) => item.documentId);
+    if (sourceDocumentIds.length === 0) {
+      setFeedback({ kind: "error", message: localeMessages.uiCaseOcrIdle });
+      return;
+    }
+
+    setRunningOcr(true);
+    setFeedback({ kind: "pending", message: localeMessages.uiConfirmationSaving });
+
+    try {
+      await runCaseOcr(caseId, sourceDocumentIds);
+      const response = await fetch(`/api/cases/${caseId}/detail`, {
+        method: "GET",
+        credentials: "same-origin",
+        cache: "no-store"
+      });
+      const json = await response.json().catch(() => null);
+      const nextDetail = (json as { data?: CaseDetail })?.data;
+      if (nextDetail) {
+        setDetail(nextDetail);
+      }
+      await refreshDocuments();
+      setFeedback({ kind: "success", message: localeMessages.uiCaseOcrSuccess });
+    } catch (error) {
+      setFeedback({ kind: "error", message: error instanceof Error ? error.message : localeMessages.uiCaseOcrError });
+    } finally {
+      setRunningOcr(false);
+    }
+  }
 
   async function handleToggle(eventId: string, nextConfirmed: boolean) {
     const previousDetail = detail;
@@ -148,9 +215,9 @@ export function CaseDetailClient({ caseId, initialDetail, canEdit, canViewHistor
     }
   }
 
-  if (detail.events.length === 0) {
-    return <EmptyState message={localeMessages.uiCaseDetailEmpty} />;
-  }
+  React.useEffect(() => {
+    void refreshDocuments();
+  }, [caseId]);
 
   return (
     <div style={{ display: "grid", gap: "16px" }}>
@@ -175,173 +242,218 @@ export function CaseDetailClient({ caseId, initialDetail, canEdit, canViewHistor
         </div>
       ) : null}
 
+      <section style={{ display: "grid", gap: "12px", border: "1px solid var(--border)", borderRadius: "18px", padding: "16px" }}>
+        <h2 style={{ margin: 0, fontSize: "20px" }}>{localeMessages.uiCaseDocumentsHeading}</h2>
+
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+          <input type="file" onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)} />
+          <button type="button" onClick={handleUpload} disabled={uploading} style={actionButtonStyle}>
+            {uploading ? localeMessages.uiConfirmationSaving : localeMessages.uiCaseUploadAction}
+          </button>
+          <button type="button" onClick={handleMockOcr} disabled={runningOcr || documents.length === 0} style={actionButtonStyle}>
+            {runningOcr ? localeMessages.uiConfirmationSaving : localeMessages.uiCaseOcrAction}
+          </button>
+        </div>
+
+        {documents.length === 0 ? (
+          <EmptyState message={localeMessages.uiCaseDocumentsEmpty} />
+        ) : (
+          <div style={{ display: "grid", gap: "10px" }}>
+            {documents.map((document) => (
+              <div
+                key={document.documentId}
+                style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "12px", border: "1px solid var(--border)", borderRadius: "14px" }}
+              >
+                <div style={{ display: "grid", gap: "4px" }}>
+                  <strong>{document.originalFileName}</strong>
+                  <span style={{ color: "var(--muted)" }}>
+                    {document.mimeType} | #{document.fileOrder}
+                  </span>
+                </div>
+                <div style={{ color: "var(--muted)" }}>{document.status ?? "uploaded"}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+          <Link href={`/cases/${caseId}/reports/investigator/narrative`}>Investigator narrative</Link>
+          <a href={`/api/cases/${caseId}/reports/investigator/narrative/pdf?lang=${locale}`}>Investigator PDF</a>
+          <Link href={`/cases/${caseId}/reports/consumer/narrative`}>Consumer narrative</Link>
+        </div>
+      </section>
+
       <h2 style={{ margin: 0, fontSize: "20px" }}>{localeMessages.uiCaseDetailTimelineHeading}</h2>
 
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th style={headerCellStyle}>{localeMessages.uiEventDateColumn}</th>
-            <th style={headerCellStyle}>{localeMessages.uiEventTypeColumn}</th>
-            <th style={headerCellStyle}>{localeMessages.uiHospitalColumn}</th>
-            <th style={headerCellStyle}>{localeMessages.uiEventDetailsColumn}</th>
-            <th style={headerCellStyle}>{localeMessages.uiEventRequiresReviewColumn}</th>
-            <th style={headerCellStyle}>{localeMessages.uiEventConfirmedColumn}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {detail.events.map((event) => {
-            const reviewLabel = event.requiresReview
-              ? localeMessages.uiEventRequiresReview
-              : localeMessages.uiEventNoReview;
-            const confirmationLabel = event.confirmed
-              ? localeMessages.uiEventConfirmed
-              : localeMessages.uiEventUnconfirmed;
-            const isEditing = editingEventId === event.eventId;
-            const currentDraft = isEditing && draft ? draft : null;
-            const draftHasChanges = currentDraft ? hasChanges(event, currentDraft) : false;
-            const invalidDate = currentDraft ? !isValidDate(currentDraft.date) : false;
+      {detail.events.length === 0 ? (
+        <EmptyState message={localeMessages.uiCaseDetailEmpty} />
+      ) : (
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th style={headerCellStyle}>{localeMessages.uiEventDateColumn}</th>
+              <th style={headerCellStyle}>{localeMessages.uiEventTypeColumn}</th>
+              <th style={headerCellStyle}>{localeMessages.uiHospitalColumn}</th>
+              <th style={headerCellStyle}>{localeMessages.uiEventDetailsColumn}</th>
+              <th style={headerCellStyle}>{localeMessages.uiEventRequiresReviewColumn}</th>
+              <th style={headerCellStyle}>{localeMessages.uiEventConfirmedColumn}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {detail.events.map((event) => {
+              const reviewLabel = event.requiresReview
+                ? localeMessages.uiEventRequiresReview
+                : localeMessages.uiEventNoReview;
+              const confirmationLabel = event.confirmed
+                ? localeMessages.uiEventConfirmed
+                : localeMessages.uiEventUnconfirmed;
+              const isEditing = editingEventId === event.eventId;
+              const currentDraft = isEditing && draft ? draft : null;
+              const draftHasChanges = currentDraft ? hasChanges(event, currentDraft) : false;
+              const invalidDate = currentDraft ? !isValidDate(currentDraft.date) : false;
 
-            return (
-              <React.Fragment key={event.eventId}>
-                <tr>
-                  <td style={bodyCellStyle}>{new Date(`${event.date}T00:00:00.000Z`).toLocaleDateString(locale)}</td>
-                  <td style={bodyCellStyle}>{event.type}</td>
-                  <td style={bodyCellStyle}>{event.hospital}</td>
-                  <td style={bodyCellStyle}>{event.details}</td>
-                  <td style={bodyCellStyle}>{reviewLabel}</td>
-                  <td style={bodyCellStyle}>
-                    <div style={{ display: "grid", gap: "8px", justifyItems: "start" }}>
-                      <span>{confirmationLabel}</span>
-                      {canEdit ? (
-                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                          <button
-                            type="button"
-                            onClick={() => handleToggle(event.eventId, !event.confirmed)}
-                            disabled={savingEventId === event.eventId}
-                            style={actionButtonStyle}
-                          >
-                            {savingEventId === event.eventId
-                              ? localeMessages.uiConfirmationSaving
-                              : event.confirmed
-                                ? localeMessages.uiUnconfirmAction
-                                : localeMessages.uiConfirmAction}
-                          </button>
-                          <button type="button" onClick={() => startEdit(event)} disabled={savingEventId === event.eventId} style={actionButtonStyle}>
-                            {localeMessages.uiEditAction}
-                          </button>
-                        </div>
-                      ) : null}
-                      {canViewHistory && (event.editHistory?.length ?? 0) > 0 ? (
-                        <button
-                          type="button"
-                          onClick={() => setHistoryEventId((current) => (current === event.eventId ? null : event.eventId))}
-                          style={linkButtonStyle}
-                        >
-                          {historyEventId === event.eventId ? localeMessages.uiHideEditHistory : localeMessages.uiViewEditHistory}
-                        </button>
-                      ) : null}
-                    </div>
-                  </td>
-                </tr>
-
-                {isEditing && currentDraft ? (
+              return (
+                <React.Fragment key={event.eventId}>
                   <tr>
-                    <td colSpan={6} style={{ ...bodyCellStyle, background: "rgba(27, 26, 23, 0.03)" }}>
-                      <div style={{ display: "grid", gap: "12px" }}>
-                        <label style={fieldStyle}>
-                          <span>{localeMessages.uiEventDateLabel}</span>
-                          <input
-                            aria-label={localeMessages.uiEventDateLabel}
-                            value={currentDraft.date}
-                            onChange={(event) => setDraft((current) => (current ? { ...current, date: event.target.value } : current))}
-                          />
-                          {invalidDate ? <span style={{ color: "#8d2b22" }}>{localeMessages.uiInvalidDate}</span> : null}
-                        </label>
-
-                        <label style={fieldStyle}>
-                          <span>{localeMessages.uiEventHospitalLabel}</span>
-                          <input
-                            aria-label={localeMessages.uiEventHospitalLabel}
-                            value={currentDraft.hospital}
-                            onChange={(event) => setDraft((current) => (current ? { ...current, hospital: event.target.value } : current))}
-                          />
-                        </label>
-
-                        <label style={fieldStyle}>
-                          <span>{localeMessages.uiEventDetailsLabel}</span>
-                          <textarea
-                            aria-label={localeMessages.uiEventDetailsLabel}
-                            value={currentDraft.details}
-                            onChange={(event) => setDraft((current) => (current ? { ...current, details: event.target.value } : current))}
-                            rows={3}
-                          />
-                        </label>
-
-                        <label style={{ display: "inline-flex", gap: "8px", alignItems: "center" }}>
-                          <input
-                            type="checkbox"
-                            aria-label={localeMessages.uiEventReviewToggleLabel}
-                            checked={currentDraft.requiresReview}
-                            onChange={(event) =>
-                              setDraft((current) => (current ? { ...current, requiresReview: event.target.checked } : current))
-                            }
-                          />
-                          <span>{localeMessages.uiEventReviewToggleLabel}</span>
-                        </label>
-
-                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                          <button
-                            type="button"
-                            onClick={() => saveEdit(event)}
-                            disabled={
-                              savingEventId === event.eventId ||
-                              invalidDate ||
-                              !draftHasChanges ||
-                              currentDraft.hospital.trim().length === 0 ||
-                              currentDraft.details.trim().length === 0
-                            }
-                            style={actionButtonStyle}
-                          >
-                            {localeMessages.uiSaveAction}
-                          </button>
-                          <button type="button" onClick={cancelEdit} disabled={savingEventId === event.eventId} style={actionButtonStyle}>
-                            {localeMessages.uiCancelAction}
-                          </button>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ) : null}
-
-                {canViewHistory && historyEventId === event.eventId && (event.editHistory?.length ?? 0) > 0 ? (
-                  <tr>
-                    <td colSpan={6} style={{ ...bodyCellStyle, background: "rgba(27, 26, 23, 0.03)" }}>
-                      <div style={{ display: "grid", gap: "12px" }}>
-                        <strong>{localeMessages.uiEditHistoryHeading}</strong>
-                        {event.editHistory?.map((entry) => (
-                          <div key={`${entry.editedBy}-${entry.editedAt}`} style={{ border: "1px solid var(--border)", borderRadius: "12px", padding: "12px" }}>
-                            <div style={{ fontWeight: 600 }}>{entry.editedBy}</div>
-                            <div style={{ color: "var(--muted)", fontSize: "14px" }}>
-                              {new Date(entry.editedAt).toLocaleString(locale)}
-                            </div>
-                            <ul style={{ margin: "8px 0 0", paddingLeft: "18px" }}>
-                              {Object.entries(entry.changes).map(([field, change]) => (
-                                <li key={field}>
-                                  {field}: {change.previousValue ?? "-"} -&gt; {change.nextValue ?? "-"}
-                                </li>
-                              ))}
-                            </ul>
+                    <td style={bodyCellStyle}>{new Date(`${event.date}T00:00:00.000Z`).toLocaleDateString(locale)}</td>
+                    <td style={bodyCellStyle}>{event.type}</td>
+                    <td style={bodyCellStyle}>{event.hospital}</td>
+                    <td style={bodyCellStyle}>{event.details}</td>
+                    <td style={bodyCellStyle}>{reviewLabel}</td>
+                    <td style={bodyCellStyle}>
+                      <div style={{ display: "grid", gap: "8px", justifyItems: "start" }}>
+                        <span>{confirmationLabel}</span>
+                        {canEdit ? (
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                            <button
+                              type="button"
+                              onClick={() => handleToggle(event.eventId, !event.confirmed)}
+                              disabled={savingEventId === event.eventId}
+                              style={actionButtonStyle}
+                            >
+                              {savingEventId === event.eventId
+                                ? localeMessages.uiConfirmationSaving
+                                : event.confirmed
+                                  ? localeMessages.uiUnconfirmAction
+                                  : localeMessages.uiConfirmAction}
+                            </button>
+                            <button type="button" onClick={() => startEdit(event)} disabled={savingEventId === event.eventId} style={actionButtonStyle}>
+                              {localeMessages.uiEditAction}
+                            </button>
                           </div>
-                        ))}
+                        ) : null}
+                        {canViewHistory && (event.editHistory?.length ?? 0) > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => setHistoryEventId((current) => (current === event.eventId ? null : event.eventId))}
+                            style={linkButtonStyle}
+                          >
+                            {historyEventId === event.eventId ? localeMessages.uiHideEditHistory : localeMessages.uiViewEditHistory}
+                          </button>
+                        ) : null}
                       </div>
                     </td>
                   </tr>
-                ) : null}
-              </React.Fragment>
-            );
-          })}
-        </tbody>
-      </table>
+
+                  {isEditing && currentDraft ? (
+                    <tr>
+                      <td colSpan={6} style={{ ...bodyCellStyle, background: "rgba(27, 26, 23, 0.03)" }}>
+                        <div style={{ display: "grid", gap: "12px" }}>
+                          <label style={fieldStyle}>
+                            <span>{localeMessages.uiEventDateLabel}</span>
+                            <input
+                              aria-label={localeMessages.uiEventDateLabel}
+                              value={currentDraft.date}
+                              onChange={(editEvent) => setDraft((current) => (current ? { ...current, date: editEvent.target.value } : current))}
+                            />
+                            {invalidDate ? <span style={{ color: "#8d2b22" }}>{localeMessages.uiInvalidDate}</span> : null}
+                          </label>
+
+                          <label style={fieldStyle}>
+                            <span>{localeMessages.uiEventHospitalLabel}</span>
+                            <input
+                              aria-label={localeMessages.uiEventHospitalLabel}
+                              value={currentDraft.hospital}
+                              onChange={(editEvent) => setDraft((current) => (current ? { ...current, hospital: editEvent.target.value } : current))}
+                            />
+                          </label>
+
+                          <label style={fieldStyle}>
+                            <span>{localeMessages.uiEventDetailsLabel}</span>
+                            <textarea
+                              aria-label={localeMessages.uiEventDetailsLabel}
+                              value={currentDraft.details}
+                              onChange={(editEvent) => setDraft((current) => (current ? { ...current, details: editEvent.target.value } : current))}
+                              rows={3}
+                            />
+                          </label>
+
+                          <label style={{ display: "inline-flex", gap: "8px", alignItems: "center" }}>
+                            <input
+                              type="checkbox"
+                              aria-label={localeMessages.uiEventReviewToggleLabel}
+                              checked={currentDraft.requiresReview}
+                              onChange={(editEvent) =>
+                                setDraft((current) => (current ? { ...current, requiresReview: editEvent.target.checked } : current))
+                              }
+                            />
+                            <span>{localeMessages.uiEventReviewToggleLabel}</span>
+                          </label>
+
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                            <button
+                              type="button"
+                              onClick={() => saveEdit(event)}
+                              disabled={
+                                savingEventId === event.eventId ||
+                                invalidDate ||
+                                !draftHasChanges ||
+                                currentDraft.hospital.trim().length === 0 ||
+                                currentDraft.details.trim().length === 0
+                              }
+                              style={actionButtonStyle}
+                            >
+                              {localeMessages.uiSaveAction}
+                            </button>
+                            <button type="button" onClick={cancelEdit} disabled={savingEventId === event.eventId} style={actionButtonStyle}>
+                              {localeMessages.uiCancelAction}
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : null}
+
+                  {canViewHistory && historyEventId === event.eventId && (event.editHistory?.length ?? 0) > 0 ? (
+                    <tr>
+                      <td colSpan={6} style={{ ...bodyCellStyle, background: "rgba(27, 26, 23, 0.03)" }}>
+                        <div style={{ display: "grid", gap: "12px" }}>
+                          <strong>{localeMessages.uiEditHistoryHeading}</strong>
+                          {event.editHistory?.map((entry) => (
+                            <div key={`${entry.editedBy}-${entry.editedAt}`} style={{ border: "1px solid var(--border)", borderRadius: "12px", padding: "12px" }}>
+                              <div style={{ fontWeight: 600 }}>{entry.editedBy}</div>
+                              <div style={{ color: "var(--muted)", fontSize: "14px" }}>
+                                {new Date(entry.editedAt).toLocaleString(locale)}
+                              </div>
+                              <ul style={{ margin: "8px 0 0", paddingLeft: "18px" }}>
+                                {Object.entries(entry.changes).map(([field, change]) => (
+                                  <li key={field}>
+                                    {field}: {change.previousValue ?? "-"} -&gt; {change.nextValue ?? "-"}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ) : null}
+                </React.Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

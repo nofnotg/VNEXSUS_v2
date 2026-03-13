@@ -7,6 +7,170 @@
 - Push completed work with `git push origin main`.
 - Keep `codex/v2` as a backup/reference branch only; do not treat it as an active development target.
 
+## Local Runnable Recovery
+
+Public `main` now supports two explicit local run modes.
+
+### Mode A: Local Demo Mode
+
+- Purpose: quick localhost verification for sign-in, case pages, upload, mock OCR, narratives, PDF export, and analytics.
+- Infrastructure: no Postgres, no Redis, no worker, no external OCR key required.
+- Backing state: local JSON under `apps/web/.demo/state.json` and uploaded files under `apps/web/.storage/`.
+- Default behavior from `.env.example`:
+  - `LOCAL_DEMO_MODE=true`
+  - `OCR_MODE=mock`
+
+### Mode B: Full Integration Mode
+
+- Purpose: real database/auth/pipeline validation.
+- Requires:
+  - reachable Postgres via `DATABASE_URL`
+  - reachable Redis via `REDIS_URL`
+  - generated Prisma client via `pnpm db:generate`
+  - applied migrations
+  - real auth secret and auth callbacks
+  - real OCR provider configuration
+- Current status on public `main`: partially wired, but not fully runnable on a blank machine without external infrastructure. The worker boundary exists, but the end-to-end production pipeline still depends on missing services and provider setup.
+
+## Quick Start
+
+### Install
+
+```bash
+git checkout main
+git pull
+pnpm install
+```
+
+### Prepare env
+
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Local Demo Mode uses the defaults already present in `.env.example`. Full Integration Mode should override those values in `.env.local`.
+
+### Generate Prisma client
+
+```bash
+pnpm db:generate
+```
+
+### Run web app
+
+```bash
+pnpm --filter @vnexus/web dev
+```
+
+Open:
+
+- `/`
+- `/sign-in`
+- `/cases`
+- `/cases/demo-case-1`
+- `/cases/analytics`
+- `/settings`
+
+### Run worker
+
+```bash
+pnpm --filter @vnexus/worker dev
+```
+
+Notes:
+
+- Local Demo Mode does not require the worker.
+- Full Integration Mode may require additional background execution, but public `main` should currently be treated as web-first for local recovery.
+
+### Run Playwright smoke coverage
+
+```bash
+pnpm test:e2e
+```
+
+## Environment Variables
+
+### Core app
+
+- `APP_BASE_URL`
+  - Required: yes
+  - Role: base URL for auth callbacks and Playwright/dev links
+  - Missing impact: sign-in redirects and browser tests break
+  - Example: `http://127.0.0.1:3000`
+- `AUTH_SECRET`
+  - Required: yes
+  - Role: session signing
+  - Missing impact: authentication is unavailable
+  - Example: any long random local secret
+
+### Local runnable mode switches
+
+- `LOCAL_DEMO_MODE`
+  - Required: no, defaults to `true` in the sample env
+  - Role: enables JSON-backed demo data instead of Prisma-backed services
+  - Missing impact: the app falls back to integration assumptions and will require DB-backed records
+  - Example: `true`
+- `OCR_MODE`
+  - Required: no, defaults to `mock` in the sample env
+  - Role: selects mock OCR or real provider mode
+  - Missing impact: real OCR mode may fail without provider setup
+  - Example: `mock`
+
+### Full Integration Mode infrastructure
+
+- `DATABASE_URL`
+  - Required: yes for Full Integration Mode
+  - Role: Postgres connection for Prisma models
+  - Missing impact: case list, case detail, analytics, preferences, and report flows cannot read real data
+  - Example: local Postgres connection string
+- `REDIS_URL`
+  - Required: yes for Full Integration Mode
+  - Role: queue/background infrastructure
+  - Missing impact: background-style processing and related runtime hooks cannot be validated
+  - Example: `redis://localhost:6379`
+
+### OCR provider
+
+- `GOOGLE_CLOUD_PROJECT_ID`
+  - Required: yes for real OCR only
+  - Role: Google Vision project selection
+  - Missing impact: real OCR provider calls fail
+  - Example: your GCP project id
+- `GOOGLE_APPLICATION_CREDENTIALS`
+  - Required: yes for real OCR only
+  - Role: credential file path for Google Vision
+  - Missing impact: real OCR provider calls fail
+  - Example: absolute path to service-account JSON
+
+### Optional runtime settings
+
+- `STORAGE_PUBLIC_BASE_URL`
+  - Required: no
+  - Role: public URL prefix for stored files
+  - Missing impact: local demo still works through local storage paths
+- `ANALYTICS_ALERT_WEBHOOK_URL`
+  - Required: no
+  - Role: analytics alert sink
+  - Missing impact: no alert delivery, but app boot continues
+
+## Local Demo Flow
+
+The minimum verified local flow on public `main` is:
+
+1. Open `/sign-in`
+2. Choose a demo role
+3. Open `/cases/demo-case-1`
+4. Upload a file
+5. Run mock OCR
+6. Inspect structured events on the case detail page
+7. Open investigator narrative
+8. Download investigator PDF
+9. Open consumer narrative
+
+The UI now shows explicit empty states when the case has no uploaded document, no OCR result, or no generated downstream output yet.
+
 ## Localization
 
 Narrative JSON builders, PDF export routes, and the report UI support `en` and `ko`.

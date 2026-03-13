@@ -1,5 +1,8 @@
 import { ApiError, normalizeLocaleCode, type LocaleCode } from "@vnexus/shared";
 import { userPreferencesRepository } from "../data-access/user-preferences-repository";
+import { getSessionUser } from "../../session";
+import { isLocalDemoMode } from "../demo-mode";
+import { getDemoUserPreferences, updateDemoUserPreferences } from "../demo-store";
 
 export type ThemeCode = "light" | "dark";
 export type UserPreferences = {
@@ -15,6 +18,11 @@ export async function getUserPreferences(
   userId: string,
   repository: Pick<typeof userPreferencesRepository, "findProfile"> = userPreferencesRepository
 ): Promise<UserPreferences> {
+  if (isLocalDemoMode()) {
+    const sessionUser = await getSessionUser();
+    return getDemoUserPreferences(userId, sessionUser?.email);
+  }
+
   const profile = await repository.findProfile(userId);
 
   return {
@@ -38,6 +46,15 @@ export async function updateUserPreferences(
 
   const nextLocale = prefs.locale !== undefined ? prefs.locale : undefined;
   const nextTheme = prefs.theme !== undefined ? prefs.theme : undefined;
+
+  if (isLocalDemoMode()) {
+    const sessionUser = await getSessionUser();
+    return updateDemoUserPreferences(userId, sessionUser?.email ?? `${userId}@vnexus.local`, {
+      ...(nextLocale !== undefined ? { locale: nextLocale } : {}),
+      ...(nextTheme !== undefined ? { theme: nextTheme } : {})
+    });
+  }
+
   const updated = await repository.upsertProfilePreferences(userId, nextLocale, nextTheme);
 
   return {

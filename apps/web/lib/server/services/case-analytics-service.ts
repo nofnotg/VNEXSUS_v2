@@ -20,6 +20,8 @@ import { join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { logAnalyticsEvent, measureAnalyticsOperation, recordAnalyticsMetric } from "../analytics-observability";
+import { isLocalDemoMode } from "../demo-mode";
+import { getDemoAnalytics, getDemoAnalyticsTrend } from "../demo-store";
 
 const MAX_EXPORT_ROWS = 10000;
 const MAX_EXPORT_DAYS = Number(process.env.ANALYTICS_EXPORT_MAX_DAYS ?? 366);
@@ -256,6 +258,10 @@ export async function getCaseAnalytics(
 ) {
   assertAnalyticsRole(role);
 
+  if (isLocalDemoMode()) {
+    return getDemoAnalytics(filter);
+  }
+
   const parsedFilter = normalizeFilter(filter);
   const [result, topHospitals] = await Promise.all([
     measureAnalyticsOperation(
@@ -293,6 +299,10 @@ export async function getCaseAnalyticsTrend(
   repository: AnalyticsRepository = caseAnalyticsRepository
 ) {
   assertAnalyticsRole(role);
+
+  if (isLocalDemoMode()) {
+    return getDemoAnalyticsTrend(filter, interval);
+  }
 
   const parsedFilter = normalizeFilter(filter);
   const trend = await measureAnalyticsOperation(
