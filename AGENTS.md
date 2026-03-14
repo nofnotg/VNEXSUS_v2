@@ -1,48 +1,6 @@
-# VNEXSUS Codex Global / Project Instructions
+# VNEXSUS V2
 
-## Core priority
-Always prioritize the domain core first:
-1. date-event extraction
-2. evidence linkage
-3. structured slot JSON
-4. investigator/general-user outputs
-5. auth/billing/admin
-6. UI polish
-
-## Non-negotiable rules
-- Do not send full OCR text directly to an LLM to generate the final report in one step.
-- Do not treat `insuranceJoinDate` as OCR-derived data. It is always user-provided case metadata.
-- Do not confirm a core medical event without evidence.
-- Do not put business logic in routes.
-- Do not recreate internal HTTP self-calls between app routes.
-- Do not build UI-first and retrofit the core later.
-
-## Output discipline
-Before implementation, always output:
-- document understanding summary
-- in-scope / out-of-scope
-- system boundaries
-- initial folder structure
-- initial DB schema
-- environment variables
-- epic order
-- top 5 risks
-
-## Engineering style
-- thin routes, thick services
-- domain-driven module boundaries
-- structured JSON first, rendering second
-- evidence as a first-class contract
-- deterministic validation before narrative generation
-
-## Reporting format for each phase
-- goal
-- files created/changed
-- code summary
-- tests run
-- run instructions
-- remaining risks
-- next step
+This repository uses `VNEXSUS_V2_Codex_Docs/codex_setup/AGENTS.md` as the canonical extended instruction document.
 
 ## MCP usage policy
 - Prefer local codebase inspection first when the answer can be derived from repository files.
@@ -53,7 +11,6 @@ Before implementation, always output:
 - Use `Neon` for Neon PostgreSQL project, branch, schema, and SQL operations when the task is actually Neon-related.
 - Treat `Supabase` and `Neon` as higher-risk MCPs because they can affect infrastructure or data.
 - Before any write, mutation, migration, creation, deletion, or configuration change through `Supabase` or `Neon`, explicitly confirm with the user.
-- For read-only investigation, prefer the MCP that is closest to the source of truth: docs -> `Context7`, code hosting -> `GitHub`, runtime issues -> `Sentry`, managed backend -> `Supabase`, database branch/query work -> `Neon`.
 
 ## MCP operation rules
 - Read-only MCP actions are allowed by default when they are necessary to answer the user's request or verify current state.
@@ -66,3 +23,11 @@ Before implementation, always output:
 - For `Sentry`, investigation is allowed by default, but resolving issues, changing ownership, muting, or altering project configuration requires confirmation.
 - For `Supabase` and `Neon`, all mutating operations are treated as high risk and require confirmation every time, even if a similar action was approved earlier in the session.
 - Never perform destructive MCP actions implicitly. If the operation can delete, overwrite, pause, or change production-visible state, ask first.
+
+## Core priority
+1. date-event extraction
+2. evidence linkage
+3. structured slot JSON
+4. investigator/general-user outputs
+5. auth/billing/admin
+6. UI polish

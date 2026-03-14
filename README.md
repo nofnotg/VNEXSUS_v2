@@ -90,6 +90,17 @@ Notes:
 pnpm test:e2e
 ```
 
+## Review And Handoff Docs
+
+Use these files when another person, or an external GPT web session, needs to verify the current project state without rediscovering everything from scratch:
+
+- `VNEXSUS_V2_Codex_Docs/SESSION_HANDOFF_REAL_OCR.md`
+  - current runnable/demo and real OCR readiness summary
+- `VNEXSUS_V2_Codex_Docs/16_EXECUTION_EVIDENCE_PROTOCOL.md`
+  - step-by-step evidence standard for proving whether a task is actually working
+- `VNEXSUS_V2_Codex_Docs/codex_setup/SMITHERY_MCP_SETUP.md`
+  - project MCP setup reference
+
 ## Environment Variables
 
 ### Core app

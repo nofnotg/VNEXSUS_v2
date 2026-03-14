@@ -12,10 +12,34 @@ const optionalStringFromBlank = z
   .transform((value) => (value.length === 0 ? undefined : value))
   .optional();
 
+const booleanFromEnv = z
+  .union([z.boolean(), z.string()])
+  .transform((value, ctx) => {
+    if (typeof value === "boolean") {
+      return value;
+    }
+
+    const normalized = value.trim().toLowerCase();
+    if (["true", "1", "yes", "on"].includes(normalized)) {
+      return true;
+    }
+
+    if (["false", "0", "no", "off"].includes(normalized)) {
+      return false;
+    }
+
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Expected a boolean-like environment value"
+    });
+
+    return z.NEVER;
+  });
+
 export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   APP_BASE_URL: z.string().url(),
-  LOCAL_DEMO_MODE: z.coerce.boolean().default(false),
+  LOCAL_DEMO_MODE: booleanFromEnv.default(false),
   DATABASE_URL: z.string().min(1),
   REDIS_URL: z.string().min(1),
   AUTH_SECRET: z.string().min(1),

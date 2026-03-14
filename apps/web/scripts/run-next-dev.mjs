@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const workspaceRoot = path.resolve(__dirname, "..", "..", "..");
 const envFiles = [path.join(workspaceRoot, ".env.example"), path.join(workspaceRoot, ".env.local")];
+const inheritedEnvKeys = new Set(Object.keys(process.env));
 
 for (const envFile of envFiles) {
   if (!existsSync(envFile)) {
@@ -27,9 +28,11 @@ for (const envFile of envFiles) {
 
     const key = trimmed.slice(0, separatorIndex).trim();
     const value = trimmed.slice(separatorIndex + 1).trim();
-    if (!(key in process.env)) {
-      process.env[key] = value;
+    if (inheritedEnvKeys.has(key)) {
+      continue;
     }
+
+    process.env[key] = value;
   }
 }
 
