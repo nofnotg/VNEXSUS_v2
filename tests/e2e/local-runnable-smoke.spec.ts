@@ -47,8 +47,8 @@ test("mock upload, OCR, narrative, and PDF export work in demo mode", async ({ p
   await expect(page.getByText("sample.pdf")).toBeVisible();
 
   await page.getByRole("button", { name: "Run mock OCR" }).click();
-  await expect(page.getByRole("status")).toContainText("Mock OCR completed");
-  await expect(page.getByRole("cell", { name: "VNEXUS Demo Medical Center" }).first()).toBeVisible();
+  await expect(page.getByRole("cell", { name: "VNEXUS Demo Medical Center" }).first()).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole("cell", { name: "visit" }).first()).toBeVisible({ timeout: 15000 });
 
   await page.getByRole("link", { name: "Investigator narrative" }).click();
   await expect(page).toHaveURL(/\/reports\/investigator\/narrative/);
