@@ -4,6 +4,10 @@ import { prisma } from "../../prisma";
 import { getStorageAdapter } from "../storage/factory";
 import { callOcrProvider } from "../ocr/provider";
 import { extractAndPersistDateCandidatesForDocument } from "./date-extraction-service";
+import { extractAndPersistEntityCandidates } from "./entity-extraction-service";
+import { buildAndPersistDateCenteredWindows } from "./date-centered-window-service";
+import { buildAndPersistEventAtoms } from "./event-atom-service";
+import { buildAndPersistEventBundles } from "./event-bundle-service";
 
 type OcrIngestionJobPayload = {
   caseId: string;
@@ -115,7 +119,7 @@ export async function runOcrIngestionSkeleton(jobId: string) {
 
     for (const document of documents) {
       const imageBase64 = await storage.readAsBase64(document.storagePath);
-      const blocks = await callOcrProvider(imageBase64);
+      const blocks = await callOcrProvider(imageBase64, document.mimeType);
 
       // Current provider contract is a flat block list, so Epic 1 persists page 1 only.
       // Multi-page parsing remains deferred until a later provider/parser contract.
@@ -188,6 +192,16 @@ export async function runOcrIngestionSkeleton(jobId: string) {
 
       await extractAndPersistDateCandidatesForDocument(payload.caseId, document.id);
     }
+
+    await extractAndPersistEntityCandidates(payload.caseId);
+    await buildAndPersistDateCenteredWindows(payload.caseId);
+    await buildAndPersistEventAtoms(payload.caseId);
+    await buildAndPersistEventBundles(payload.caseId);
+
+    await prisma.case.update({
+      where: { id: payload.caseId },
+      data: { status: "ready" }
+    });
 
     await prisma.analysisJob.update({
       where: { id: jobId },

@@ -10,6 +10,7 @@ import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
 import { isLocalDemoMode } from "../demo-mode";
 import { getDemoLatestOcrJob, runDemoOcrPipeline } from "../demo-store";
+import { runOcrIngestionSkeleton } from "./ocr-ingestion-service";
 
 export const OCR_JOB_STATUS_TRANSITIONS = ["queued", "processing", "completed", "failed"] as const;
 
@@ -122,10 +123,12 @@ export async function createOcrJob(caseId: string, userId: string, role: UserRol
     data: { status: "processing" }
   });
 
+  const inlineResult = await runOcrIngestionSkeleton(job.id);
+
   return {
     jobId: job.id,
     documentCount: targetDocuments.length,
-    status: job.status,
+    status: inlineResult.status,
     idempotentReused: false,
     payload
   };

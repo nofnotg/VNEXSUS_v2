@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
+    "@google-cloud/vision": "^4.3.2",
     "@prisma/client": "^6.16.2",
     "@vnexus/domain": "workspace:*",
     "@vnexus/shared": "workspace:*",

@@ -24,6 +24,7 @@ const state = vi.hoisted(() => ({
       caseId: "case-1",
       fileOrder: 1,
       pageCount: 1,
+      mimeType: "application/pdf",
       storagePath: "gcs://vnexus-v2-documents/case-1/input.pdf"
     }
   ],
@@ -49,6 +50,10 @@ const state = vi.hoisted(() => ({
   readCalls: [] as string[],
   ocrCalls: [] as string[],
   dateExtractionCalls: [] as Array<{ caseId: string; sourceFileId: string }>,
+  entityExtractionCalls: [] as string[],
+  windowBuildCalls: [] as string[],
+  atomBuildCalls: [] as string[],
+  bundleBuildCalls: [] as string[],
   shouldFailOcr: false
 }));
 
@@ -71,6 +76,9 @@ vi.mock("../../prisma", () => ({
         target.pageCount = data.pageCount;
         return target;
       })
+    },
+    case: {
+      update: vi.fn(async () => ({ id: "case-1", status: "ready" }))
     },
     sourcePage: {
       findMany: vi.fn(async ({ where }: { where: { sourceFileId: string } }) =>
@@ -152,11 +160,11 @@ vi.mock("../storage/factory", () => ({
 }));
 
 vi.mock("../ocr/provider", () => ({
-  callOcrProvider: vi.fn(async (base64: string) => {
+  callOcrProvider: vi.fn(async (base64: string, mimeType?: string) => {
     if (state.shouldFailOcr) {
       throw new Error("ocr failed");
     }
-    state.ocrCalls.push(base64);
+    state.ocrCalls.push(`${base64}|${mimeType ?? "unknown"}`);
     return [
       {
         text: " 진단서 ",
@@ -176,6 +184,34 @@ vi.mock("./date-extraction-service", () => ({
   extractAndPersistDateCandidatesForDocument: vi.fn(async (caseId: string, sourceFileId: string) => {
     state.dateExtractionCalls.push({ caseId, sourceFileId });
     return { sourceFileId, candidateCount: 1 };
+  })
+}));
+
+vi.mock("./entity-extraction-service", () => ({
+  extractAndPersistEntityCandidates: vi.fn(async (caseId: string) => {
+    state.entityExtractionCalls.push(caseId);
+    return { caseId, candidateCount: 1 };
+  })
+}));
+
+vi.mock("./date-centered-window-service", () => ({
+  buildAndPersistDateCenteredWindows: vi.fn(async (caseId: string) => {
+    state.windowBuildCalls.push(caseId);
+    return { caseId, windowCount: 1 };
+  })
+}));
+
+vi.mock("./event-atom-service", () => ({
+  buildAndPersistEventAtoms: vi.fn(async (caseId: string) => {
+    state.atomBuildCalls.push(caseId);
+    return { caseId, atomCount: 1 };
+  })
+}));
+
+vi.mock("./event-bundle-service", () => ({
+  buildAndPersistEventBundles: vi.fn(async (caseId: string) => {
+    state.bundleBuildCalls.push(caseId);
+    return { caseId, bundleCount: 1 };
   })
 }));
 
@@ -206,6 +242,7 @@ describe("ocr ingestion skeleton", () => {
         caseId: "case-1",
         fileOrder: 1,
         pageCount: 1,
+        mimeType: "application/pdf",
         storagePath: "gcs://vnexus-v2-documents/case-1/input.pdf"
       }
     ];
@@ -220,6 +257,10 @@ describe("ocr ingestion skeleton", () => {
     state.readCalls = [];
     state.ocrCalls = [];
     state.dateExtractionCalls = [];
+    state.entityExtractionCalls = [];
+    state.windowBuildCalls = [];
+    state.atomBuildCalls = [];
+    state.bundleBuildCalls = [];
     state.shouldFailOcr = false;
   });
 
@@ -227,13 +268,17 @@ describe("ocr ingestion skeleton", () => {
     const result = await runOcrIngestionSkeleton("job-1");
 
     expect(state.readCalls).toEqual(["gcs://vnexus-v2-documents/case-1/input.pdf"]);
-    expect(state.ocrCalls).toEqual(["ZmFrZS1iYXNlNjQ="]);
+    expect(state.ocrCalls).toEqual(["ZmFrZS1iYXNlNjQ=|application/pdf"]);
     expect(state.blocks).toHaveLength(2);
     expect(state.blocks.map((block) => block.blockIndex)).toEqual([0, 1]);
     expect(state.blocks.map((block) => block.pageOrder)).toEqual([1, 1]);
     expect(state.blocks[0]?.textNormalized).toBe("진단서");
     expect(state.documents[0]?.pageCount).toBe(1);
     expect(state.dateExtractionCalls).toEqual([{ caseId: "case-1", sourceFileId: "doc-1" }]);
+    expect(state.entityExtractionCalls).toEqual(["case-1"]);
+    expect(state.windowBuildCalls).toEqual(["case-1"]);
+    expect(state.atomBuildCalls).toEqual(["case-1"]);
+    expect(state.bundleBuildCalls).toEqual(["case-1"]);
     expect(result.status).toBe("completed");
     expect(state.job.completedAt).toBeInstanceOf(Date);
   });
