@@ -119,35 +119,44 @@ export async function runOcrIngestionSkeleton(jobId: string) {
 
     for (const document of documents) {
       const imageBase64 = await storage.readAsBase64(document.storagePath);
-      const blocks = await callOcrProvider(imageBase64, document.mimeType);
+      const blocks = await callOcrProvider(imageBase64, {
+        mimeType: document.mimeType,
+        storagePath: document.storagePath
+      });
 
-      // Current provider contract is a flat block list, so Epic 1 persists page 1 only.
-      // Multi-page parsing remains deferred until a later provider/parser contract.
-      const actualPageCount = 1;
+      const actualPageCount = Math.max(
+        1,
+        ...blocks.map((block) => block.pageOrder)
+      );
 
       await prisma.$transaction(async (tx) => {
         const pages = await syncSourcePages(tx, document.id, actualPageCount);
-        const firstPage = pages[0];
-
-        if (!firstPage) {
-          throw new ApiError("CONFLICT", "No source page available for OCR block persistence", {
-            sourceFileId: document.id
-          });
-        }
-
         await tx.ocrBlock.deleteMany({
           where: {
             sourceFileId: document.id
           }
         });
 
-        const persistedBlocks = blocks.map((block, blockIndex) => {
+        const blockIndexByPage = new Map<number, number>();
+        const persistedBlocks = blocks.map((block) => {
+          const page = pages.find((candidate) => candidate.pageOrder === block.pageOrder);
+
+          if (!page) {
+            throw new ApiError("CONFLICT", "No source page available for OCR block persistence", {
+              sourceFileId: document.id,
+              pageOrder: block.pageOrder
+            });
+          }
+
+          const blockIndex = blockIndexByPage.get(block.pageOrder) ?? 0;
+          blockIndexByPage.set(block.pageOrder, blockIndex + 1);
+
           const parsed = ocrBlockSchema.parse({
             caseId: payload.caseId,
             sourceFileId: document.id,
-            sourcePageId: firstPage.id,
+            sourcePageId: page.id,
             fileOrder: document.fileOrder,
-            pageOrder: firstPage.pageOrder,
+            pageOrder: block.pageOrder,
             blockIndex,
             textRaw: block.text,
             textNormalized: normalizeOcrText(block.text),

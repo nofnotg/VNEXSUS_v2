@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, StandardFonts, rgb, type PDFFont } from "pdf-lib";
@@ -17,19 +17,37 @@ type NarrativeDocument = InvestigatorNarrativeJson | ConsumerNarrativeJson;
 
 const NOTO_SANS_KR_PACKAGE = require.resolve("@fontsource/noto-sans-kr/package.json");
 const NOTO_SANS_KR_DIR = path.dirname(NOTO_SANS_KR_PACKAGE);
-const NOTO_SANS_KR_REGULAR = path.join(NOTO_SANS_KR_DIR, "files", "noto-sans-kr-0-400-normal.woff");
-const NOTO_SANS_KR_BOLD = path.join(NOTO_SANS_KR_DIR, "files", "noto-sans-kr-0-700-normal.woff");
+const NOTO_SANS_KR_REGULAR_FILE = "noto-sans-kr-0-400-normal.woff";
+const NOTO_SANS_KR_BOLD_FILE = "noto-sans-kr-0-700-normal.woff";
 
 type EmbeddedFonts = {
   regularFont: PDFFont;
   boldFont: PDFFont;
 };
 
+function resolveFontPath(fileName: string) {
+  const candidates = [
+    path.join(NOTO_SANS_KR_DIR, "files", fileName),
+    path.resolve(process.cwd(), "..", "..", "node_modules", ".pnpm", "@fontsource+noto-sans-kr@5.2.9", "node_modules", "@fontsource", "noto-sans-kr", "files", fileName),
+    path.resolve(process.cwd(), "node_modules", ".pnpm", "@fontsource+noto-sans-kr@5.2.9", "node_modules", "@fontsource", "noto-sans-kr", "files", fileName)
+  ];
+
+  const matched = candidates.find((candidate) => existsSync(candidate));
+  if (!matched) {
+    throw new Error(`Korean font file not found: ${fileName}`);
+  }
+
+  return matched;
+}
+
 async function embedFonts(pdfDoc: PDFDocument, lang: LocaleCode): Promise<EmbeddedFonts> {
   if (lang === "ko") {
     pdfDoc.registerFontkit(fontkit);
 
-    const [regularBytes, boldBytes] = [readFileSync(NOTO_SANS_KR_REGULAR), readFileSync(NOTO_SANS_KR_BOLD)];
+    const [regularBytes, boldBytes] = [
+      readFileSync(resolveFontPath(NOTO_SANS_KR_REGULAR_FILE)),
+      readFileSync(resolveFontPath(NOTO_SANS_KR_BOLD_FILE))
+    ];
 
     return {
       regularFont: await pdfDoc.embedFont(regularBytes),

@@ -23,8 +23,7 @@ export async function GET(request: NextRequest, context: Context) {
     }
 
     const exported = await exportConsumerNarrativePdf(caseId, user.id, user.role, lang);
-    const bodyBytes = new Uint8Array(exported.buffer);
-    const body = new Blob([bodyBytes], { type: exported.mimeType });
+    const body = new Blob([Buffer.from(exported.buffer)], { type: exported.mimeType });
 
     return new Response(body, {
       status: 200,
@@ -35,6 +34,7 @@ export async function GET(request: NextRequest, context: Context) {
       }
     });
   } catch (error) {
+    console.error("[consumer-narrative-pdf]", error);
     return apiFailure(error);
   }
 }

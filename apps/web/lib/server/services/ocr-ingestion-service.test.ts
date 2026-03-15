@@ -160,21 +160,23 @@ vi.mock("../storage/factory", () => ({
 }));
 
 vi.mock("../ocr/provider", () => ({
-  callOcrProvider: vi.fn(async (base64: string, mimeType?: string) => {
+  callOcrProvider: vi.fn(async (base64: string, input?: { mimeType?: string; storagePath?: string }) => {
     if (state.shouldFailOcr) {
       throw new Error("ocr failed");
     }
-    state.ocrCalls.push(`${base64}|${mimeType ?? "unknown"}`);
+    state.ocrCalls.push(`${base64}|${input?.mimeType ?? "unknown"}|${input?.storagePath ?? "unknown"}`);
     return [
       {
         text: " 진단서 ",
         bbox: { xMin: 1, yMin: 2, xMax: 3, yMax: 4 },
-        confidence: 0.97
+        confidence: 0.97,
+        pageOrder: 1
       },
       {
         text: " 검사결과",
         bbox: { xMin: 5, yMin: 6, xMax: 7, yMax: 8 },
-        confidence: 0.82
+        confidence: 0.82,
+        pageOrder: 1
       }
     ];
   })
@@ -268,7 +270,7 @@ describe("ocr ingestion skeleton", () => {
     const result = await runOcrIngestionSkeleton("job-1");
 
     expect(state.readCalls).toEqual(["gcs://vnexus-v2-documents/case-1/input.pdf"]);
-    expect(state.ocrCalls).toEqual(["ZmFrZS1iYXNlNjQ=|application/pdf"]);
+    expect(state.ocrCalls).toEqual(["ZmFrZS1iYXNlNjQ=|application/pdf|gcs://vnexus-v2-documents/case-1/input.pdf"]);
     expect(state.blocks).toHaveLength(2);
     expect(state.blocks.map((block) => block.blockIndex)).toEqual([0, 1]);
     expect(state.blocks.map((block) => block.pageOrder)).toEqual([1, 1]);
