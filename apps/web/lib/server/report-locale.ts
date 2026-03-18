@@ -27,7 +27,7 @@ export function resolveReportLocale(
     return "ko";
   }
 
-  return "en";
+  return "ko";
 }
 
 export async function getRequestLocale() {

@@ -12,7 +12,7 @@ type LocaleContextValue = {
 };
 
 const LocaleContext = createContext<LocaleContextValue>({
-  locale: "en",
+  locale: "ko",
   setLocale: () => {}
 });
 
@@ -56,7 +56,7 @@ function persistLocale(nextLocale: LocaleCode) {
   document.documentElement.lang = nextLocale;
 }
 
-export function LocaleProvider({ initialLocale = "en", children }: { initialLocale?: LocaleCode; children: ReactNode }) {
+export function LocaleProvider({ initialLocale = "ko", children }: { initialLocale?: LocaleCode; children: ReactNode }) {
   const [locale, setLocaleState] = useState<LocaleCode>(normalizeLocaleCode(initialLocale));
 
   useEffect(() => {
