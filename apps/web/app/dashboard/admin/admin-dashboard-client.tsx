@@ -133,6 +133,27 @@ export function AdminDashboardClient() {
     }
   }
 
+  async function deleteRequest(userId: string) {
+    setBusyUserId(userId);
+
+    try {
+      const response = await fetch(`/api/admin/access/requests/${userId}`, {
+        method: "DELETE"
+      });
+      const json = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error((json as { error?: { message?: string } })?.error?.message ?? "신청 요청을 삭제하지 못했습니다.");
+      }
+
+      await loadOverview();
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : "신청 요청을 삭제하지 못했습니다.");
+    } finally {
+      setBusyUserId(null);
+    }
+  }
+
   async function updateUser(userId: string) {
     setBusyUserId(userId);
 
@@ -255,6 +276,14 @@ export function AdminDashboardClient() {
                       onClick={() => void reviewRequest(request.userId, "reject")}
                     >
                       반려
+                    </button>
+                    <button
+                      type="button"
+                      style={ghostDangerButtonStyle}
+                      disabled={busyUserId === request.userId}
+                      onClick={() => void deleteRequest(request.userId)}
+                    >
+                      요청 삭제
                     </button>
                   </div>
                 </div>
@@ -486,6 +515,16 @@ const dangerButtonStyle = {
   borderRadius: "999px",
   padding: "11px 16px",
   background: "#fff1ee",
+  color: "#8d2b22",
+  cursor: "pointer",
+  fontWeight: 700
+} as const;
+
+const ghostDangerButtonStyle = {
+  border: "1px solid rgba(141, 43, 34, 0.2)",
+  borderRadius: "999px",
+  padding: "11px 16px",
+  background: "#ffffff",
   color: "#8d2b22",
   cursor: "pointer",
   fontWeight: 700

@@ -283,6 +283,33 @@ export async function reviewInvestigatorRequest(input: {
   await assignPlan(input.userId, "investigator", null);
 }
 
+export async function deletePendingInvestigatorRequest(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      role: true,
+      profile: {
+        select: {
+          investigatorVerificationStatus: true
+        }
+      }
+    }
+  });
+
+  if (!user || user.role !== "investigator") {
+    throw new ApiError("NOT_FOUND", "삭제할 조사자 신청 계정을 찾을 수 없습니다.");
+  }
+
+  if (user.profile?.investigatorVerificationStatus !== "pending") {
+    throw new ApiError("VALIDATION_ERROR", "승인 대기 상태의 조사자 신청만 삭제할 수 있습니다.");
+  }
+
+  await prisma.user.delete({
+    where: { id: userId }
+  });
+}
+
 export async function updateManagedUserAccess(input: {
   userId: string;
   status?: UserStatus;
