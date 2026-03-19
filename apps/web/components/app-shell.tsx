@@ -43,10 +43,10 @@ export function AppShell({
               <div style={{ fontSize: "20px", fontWeight: 800, letterSpacing: "0.08em" }}>VNEXSUS</div>
             </Link>
             <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <Link href="/sign-in" style={publicLinkStyle("solid")}>
+              <Link href="/sign-in" style={publicLinkStyle(pathname === "/sign-in" ? "solid" : "ghost")}>
                 로그인
               </Link>
-              <Link href="/sign-up" style={publicLinkStyle("ghost")}>
+              <Link href="/sign-up" style={publicLinkStyle(pathname === "/sign-up" ? "solid" : "ghost")}>
                 회원가입
               </Link>
             </div>
