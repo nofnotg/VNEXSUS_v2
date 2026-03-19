@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ApiError, userStatuses } from "@vnexus/shared";
 import { planCodes } from "../../../../../../lib/constants/plan-catalog";
 import { apiFailure, apiSuccess, parseJsonBody, requireAuthorizedSession } from "../../../../../../lib/server/api";
-import { updateManagedUserAccess } from "../../../../../../lib/server/services/admin-access-service";
+import { deleteManagedUser, updateManagedUserAccess } from "../../../../../../lib/server/services/admin-access-service";
 
 const updateSchema = z.object({
   status: z.enum(userStatuses).optional(),
@@ -32,6 +32,23 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       ...(input.status !== undefined ? { status: input.status } : {}),
       ...(input.planCode !== undefined ? { planCode: input.planCode } : {})
     });
+
+    return apiSuccess({ ok: true });
+  } catch (error) {
+    return apiFailure(error);
+  }
+}
+
+export async function DELETE(_request: NextRequest, context: RouteContext) {
+  try {
+    const { user } = await requireAuthorizedSession();
+
+    if (user.role !== "admin") {
+      throw new ApiError("FORBIDDEN", "愿由ъ옄留??묎렐?????덉뒿?덈떎.");
+    }
+
+    const { userId } = await context.params;
+    await deleteManagedUser(userId);
 
     return apiSuccess({ ok: true });
   } catch (error) {

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   consumerPlanCatalog,
+  getPlanMeta,
   investigatorPlanCatalog,
   type PlanCode
 } from "../../../lib/constants/plan-catalog";
@@ -29,6 +30,8 @@ type AdminAccessOverview = {
     region: string;
     currentPlanCode: string | null;
     currentPlanName: string | null;
+    currentPlanBillingType: "one_time" | "credit" | "subscription" | null;
+    currentPlanAccessModel: "packet" | "subscription" | null;
   }>;
 };
 
@@ -40,7 +43,7 @@ type AccessDraft = {
 const statusOptions = [
   { value: "active", label: "접속 허용" },
   { value: "pending", label: "대기" },
-  { value: "suspended", label: "접속 제한" }
+  { value: "suspended", label: "제외" }
 ] as const;
 
 export function AdminDashboardClient() {
@@ -103,8 +106,24 @@ export function AdminDashboardClient() {
     return {
       pendingRequests: data.pendingInvestigators.length,
       activeUsers: data.users.filter((user) => user.status === "active").length,
-      blockedUsers: data.users.filter((user) => user.status === "suspended").length
+      excludedUsers: data.users.filter((user) => user.status === "suspended").length
     };
+  }, [data]);
+
+  const managedUsers = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    return data.users.filter((user) => user.status !== "suspended");
+  }, [data]);
+
+  const excludedUsers = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    return data.users.filter((user) => user.status === "suspended");
   }, [data]);
 
   async function reviewRequest(userId: string, decision: "approve" | "reject") {
@@ -186,6 +205,27 @@ export function AdminDashboardClient() {
     }
   }
 
+  async function deleteExcludedUser(userId: string) {
+    setBusyUserId(userId);
+
+    try {
+      const response = await fetch(`/api/admin/access/users/${userId}`, {
+        method: "DELETE"
+      });
+      const json = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error((json as { error?: { message?: string } })?.error?.message ?? "제외 사용자 삭제에 실패했습니다.");
+      }
+
+      await loadOverview();
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : "제외 사용자 삭제에 실패했습니다.");
+    } finally {
+      setBusyUserId(null);
+    }
+  }
+
   if (loading) {
     return <div style={emptyStateStyle}>운영자 정보를 불러오는 중입니다.</div>;
   }
@@ -210,23 +250,23 @@ export function AdminDashboardClient() {
           <strong style={summaryValueStyle}>{summary.activeUsers}</strong>
         </article>
         <article style={summaryCardStyle}>
-          <div style={summaryLabelStyle}>접속 제한 사용자</div>
-          <strong style={summaryValueStyle}>{summary.blockedUsers}</strong>
+          <div style={summaryLabelStyle}>제외 사용자</div>
+          <strong style={summaryValueStyle}>{summary.excludedUsers}</strong>
         </article>
       </section>
 
       <section style={cardStyle}>
         <div style={sectionHeaderStyle}>
           <div>
-            <h2 style={sectionTitleStyle}>손해사정조사자 승인 요청</h2>
+            <h2 style={sectionTitleStyle}>조사자 승인 신청 목록</h2>
             <p style={sectionBodyStyle}>
-              신청된 조사자 계정을 검토하고, 승인과 동시에 플랜을 부여하거나 반려할 수 있습니다.
+              손해사정조사자 신청 계정을 검토하고 승인, 반려, 요청 삭제를 진행합니다.
             </p>
           </div>
         </div>
 
         {data.pendingInvestigators.length === 0 ? (
-          <div style={emptyStateStyle}>현재 승인 대기 중인 조사자 요청이 없습니다.</div>
+          <div style={emptyStateStyle}>현재 승인 대기 중인 조사자 신청이 없습니다.</div>
         ) : (
           <div style={{ display: "grid", gap: "14px" }}>
             {data.pendingInvestigators.map((request) => (
@@ -237,12 +277,12 @@ export function AdminDashboardClient() {
                   <div style={metaTextStyle}>연락처: {request.phone || "-"}</div>
                   <div style={metaTextStyle}>지역: {request.region || "-"}</div>
                   <div style={metaTextStyle}>회사명: {request.company || "-"}</div>
-                  <div style={metaTextStyle}>조사자 코드: {request.investigatorCode || "-"}</div>
+                  <div style={metaTextStyle}>조사자코드: {request.investigatorCode || "-"}</div>
                 </div>
 
                 <div style={{ display: "grid", gap: "12px" }}>
                   <label style={fieldStyle}>
-                    <span>승인 시 부여할 플랜</span>
+                    <span>승인 시 부여할 권한</span>
                     <select
                       value={requestPlanByUser[request.userId] ?? "investigator-starter"}
                       onChange={(event) =>
@@ -254,7 +294,7 @@ export function AdminDashboardClient() {
                     >
                       {investigatorPlanCatalog.map((plan) => (
                         <option key={plan.code} value={plan.code}>
-                          {plan.name}
+                          {plan.name} ({plan.accessModel === "subscription" ? "월구독형" : "패킷형"})
                         </option>
                       ))}
                     </select>
@@ -296,21 +336,22 @@ export function AdminDashboardClient() {
       <section style={cardStyle}>
         <div style={sectionHeaderStyle}>
           <div>
-            <h2 style={sectionTitleStyle}>사용자 접속 제한 및 패킷 권한</h2>
+            <h2 style={sectionTitleStyle}>사용자 접속 및 권한 관리</h2>
             <p style={sectionBodyStyle}>
-              일반사용자와 조사자의 접속 상태, 현재 플랜, 승인 상태를 한 번에 관리할 수 있습니다.
+              활성 사용자와 대기 사용자를 관리합니다. 제외가 필요한 경우 상태를 "제외"로 저장하면 아래 별도 목록으로 이동합니다.
             </p>
           </div>
         </div>
 
         <div style={{ display: "grid", gap: "14px" }}>
-          {data.users.map((user) => {
+          {managedUsers.map((user) => {
             const draft = accessDrafts[user.userId] ?? {
               status: user.status,
               planCode: (user.currentPlanCode as PlanCode | null) ?? ""
             };
             const planOptions = user.role === "investigator" ? investigatorPlanCatalog : consumerPlanCatalog;
             const isAdmin = user.role === "admin";
+            const planMeta = getPlanMeta(draft.planCode || user.currentPlanCode);
 
             return (
               <article key={user.userId} style={userCardStyle}>
@@ -320,7 +361,15 @@ export function AdminDashboardClient() {
                   <div style={metaTextStyle}>역할: {user.role}</div>
                   <div style={metaTextStyle}>접속 상태: {user.status}</div>
                   <div style={metaTextStyle}>조사자 승인 상태: {user.verificationStatus}</div>
-                  <div style={metaTextStyle}>현재 플랜: {user.currentPlanName ?? "미부여"}</div>
+                  <div style={metaTextStyle}>현재 권한: {user.currentPlanName ?? "미부여"}</div>
+                  <div style={metaTextStyle}>
+                    권한 구분:{" "}
+                    {user.currentPlanAccessModel === "packet"
+                      ? "패킷형"
+                      : user.currentPlanAccessModel === "subscription"
+                        ? "월구독형"
+                        : "-"}
+                  </div>
                 </div>
 
                 <div style={adminControlGridStyle}>
@@ -348,7 +397,7 @@ export function AdminDashboardClient() {
                   </label>
 
                   <label style={fieldStyle}>
-                    <span>패킷 / 플랜 권한</span>
+                    <span>패킷 / 구독 권한</span>
                     <select
                       disabled={isAdmin}
                       value={draft.planCode}
@@ -365,11 +414,15 @@ export function AdminDashboardClient() {
                       <option value="">미부여</option>
                       {planOptions.map((plan) => (
                         <option key={plan.code} value={plan.code}>
-                          {plan.name}
+                          {plan.name} ({plan.accessModel === "packet" ? "패킷형" : "월구독형"})
                         </option>
                       ))}
                     </select>
                   </label>
+
+                  <div style={metaBadgeStyle(planMeta?.accessModel === "packet" ? "packet" : "subscription")}>
+                    {planMeta ? `${planMeta.accessModel === "packet" ? "패킷형" : "월구독형"} / ${planMeta.billingType}` : "권한 미부여"}
+                  </div>
 
                   <button
                     type="button"
@@ -384,6 +437,70 @@ export function AdminDashboardClient() {
             );
           })}
         </div>
+      </section>
+
+      <section style={cardStyle}>
+        <div style={sectionHeaderStyle}>
+          <div>
+            <h2 style={sectionTitleStyle}>제외 사용자 목록</h2>
+            <p style={sectionBodyStyle}>
+              접속 제한 처리된 사용자를 별도로 보관합니다. 여기서 복구하거나 영구 삭제할 수 있습니다.
+            </p>
+          </div>
+        </div>
+
+        {excludedUsers.length === 0 ? (
+          <div style={emptyStateStyle}>현재 제외 목록에 있는 사용자가 없습니다.</div>
+        ) : (
+          <div style={{ display: "grid", gap: "14px" }}>
+            {excludedUsers.map((user) => {
+              const draft = accessDrafts[user.userId] ?? {
+                status: user.status,
+                planCode: (user.currentPlanCode as PlanCode | null) ?? ""
+              };
+
+              return (
+                <article key={user.userId} style={excludedCardStyle}>
+                  <div style={{ display: "grid", gap: "8px" }}>
+                    <strong style={{ fontSize: "18px" }}>{user.displayName}</strong>
+                    <div style={metaTextStyle}>이메일: {user.email}</div>
+                    <div style={metaTextStyle}>역할: {user.role}</div>
+                    <div style={metaTextStyle}>현재 상태: 제외</div>
+                    <div style={metaTextStyle}>현재 권한: {user.currentPlanName ?? "미부여"}</div>
+                  </div>
+
+                  <div style={{ display: "grid", gap: "12px", alignContent: "start" }}>
+                    <button
+                      type="button"
+                      style={secondaryButtonStyle}
+                      disabled={busyUserId === user.userId}
+                      onClick={() => {
+                        setAccessDrafts((current) => ({
+                          ...current,
+                          [user.userId]: {
+                            ...draft,
+                            status: "active"
+                          }
+                        }));
+                        void updateUser(user.userId);
+                      }}
+                    >
+                      복구
+                    </button>
+                    <button
+                      type="button"
+                      style={ghostDangerButtonStyle}
+                      disabled={busyUserId === user.userId}
+                      onClick={() => void deleteExcludedUser(user.userId)}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
     </div>
   );
@@ -440,6 +557,16 @@ const userCardStyle = {
   border: "1px solid var(--border)",
   background: "#ffffff",
   gridTemplateColumns: "minmax(0, 1.2fr) minmax(260px, 1fr)"
+} as const;
+
+const excludedCardStyle = {
+  display: "grid",
+  gap: "18px",
+  padding: "18px",
+  borderRadius: "18px",
+  border: "1px solid rgba(141, 43, 34, 0.18)",
+  background: "#fff5f3",
+  gridTemplateColumns: "minmax(0, 1.2fr) minmax(180px, 0.7fr)"
 } as const;
 
 const adminControlGridStyle = {
@@ -529,3 +656,16 @@ const ghostDangerButtonStyle = {
   cursor: "pointer",
   fontWeight: 700
 } as const;
+
+function metaBadgeStyle(mode: "packet" | "subscription") {
+  return {
+    width: "fit-content",
+    borderRadius: "999px",
+    padding: "7px 12px",
+    background: mode === "packet" ? "rgba(22, 93, 86, 0.08)" : "rgba(196, 146, 74, 0.14)",
+    border: mode === "packet" ? "1px solid rgba(22, 93, 86, 0.18)" : "1px solid rgba(196, 146, 74, 0.22)",
+    color: mode === "packet" ? "#165d56" : "#7f5822",
+    fontSize: "13px",
+    fontWeight: 700
+  } as const;
+}

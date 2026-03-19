@@ -31,6 +31,8 @@ export type ManagedUser = {
   region: string;
   currentPlanCode: string | null;
   currentPlanName: string | null;
+  currentPlanBillingType: "one_time" | "credit" | "subscription" | null;
+  currentPlanAccessModel: "packet" | "subscription" | null;
 };
 
 function parseRoleDetail(raw: string | null | undefined) {
@@ -54,14 +56,14 @@ async function ensurePlanCatalog() {
         update: {
           name: plan.name,
           audience: plan.audience,
-          billingType: "subscription",
+          billingType: plan.billingType,
           isActive: true
         },
         create: {
           code: plan.code,
           name: plan.name,
           audience: plan.audience,
-          billingType: "subscription",
+          billingType: plan.billingType,
           isActive: true
         }
       })
@@ -118,7 +120,13 @@ function normalizeManagedUser(record: {
     phone: record.profile?.phone?.trim() ?? "",
     region: typeof roleDetail.region === "string" ? roleDetail.region : "",
     currentPlanCode: currentSubscription?.plan.code ?? null,
-    currentPlanName: currentSubscription?.plan.name ?? null
+    currentPlanName: currentSubscription?.plan.name ?? null,
+    currentPlanBillingType: currentSubscription?.plan.code
+      ? fullPlanCatalog.find((plan) => plan.code === currentSubscription.plan.code)?.billingType ?? null
+      : null,
+    currentPlanAccessModel: currentSubscription?.plan.code
+      ? fullPlanCatalog.find((plan) => plan.code === currentSubscription.plan.code)?.accessModel ?? null
+      : null
   };
 }
 
@@ -341,4 +349,31 @@ export async function updateManagedUserAccess(input: {
   if (input.planCode !== undefined) {
     await assignPlan(input.userId, user.role, input.planCode);
   }
+}
+
+export async function deleteManagedUser(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      role: true,
+      status: true
+    }
+  });
+
+  if (!user) {
+    throw new ApiError("NOT_FOUND", "?ъ슜???뺣낫瑜?李얠쓣 ???놁뒿?덈떎.");
+  }
+
+  if (user.role === "admin") {
+    throw new ApiError("FORBIDDEN", "愿由ъ옄 怨꾩젙???쒓굅??紐삵빀?덈떎.");
+  }
+
+  if (user.status !== "suspended") {
+    throw new ApiError("VALIDATION_ERROR", "?쒖쇅 紐⑸줉?쇱뿉 ?덈뒗 ?ъ슜?먯뿉寃뚮쭔 ??젣瑜??덉슜?⑸땲??");
+  }
+
+  await prisma.user.delete({
+    where: { id: userId }
+  });
 }
