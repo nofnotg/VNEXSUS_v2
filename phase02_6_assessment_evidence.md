@@ -3,10 +3,12 @@
 - targetBranch: `main`
 - assessmentCommit: `534af76`
 - assessmentEvidenceCommit: `0d23b89`
-- remoteVerifiedAtCommit: `0d23b89`
+- assessmentEvidenceSyncCommit: `3310bfc`
+- remoteVerifiedAtCommit: `3310bfc`
 - pushedCommitShas:
   - `534af76`
   - `0d23b89`
+  - `3310bfc`
 
 ## Files created
 - `phase02_6_assessment_manifest.json`
