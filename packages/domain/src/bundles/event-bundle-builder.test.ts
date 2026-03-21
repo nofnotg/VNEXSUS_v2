@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildProvisionalEventBundles } from "./event-bundle-builder";
 
 describe("event bundle builder", () => {
-  it("groups same-date same-hospital outpatient atoms conservatively", () => {
+  it("groups same-day soft clinical atoms with alias-resolved hospitals", () => {
     const bundles = buildProvisionalEventBundles([
       {
         id: "atom-1",
@@ -14,9 +14,9 @@ describe("event bundle builder", () => {
         fileOrder: 1,
         pageOrder: 1,
         anchorBlockIndex: 2,
-        primaryHospital: "서울병원",
-        primaryDepartment: "내과",
-        primaryDiagnosis: "폐렴",
+        primaryHospital: "SM \uC601\uC0C1\uC758\uD559\uACFC \uC758\uC6D0",
+        primaryDepartment: "\uC601\uC0C1\uC758\uD559\uACFC",
+        primaryDiagnosis: "\uB450\uD1B5",
         primaryTest: null,
         primaryTreatment: null,
         primaryProcedure: null,
@@ -38,9 +38,9 @@ describe("event bundle builder", () => {
           notes: []
         },
         candidateSnapshotJson: {
-          hospitals: ["서울병원"],
-          departments: ["내과"],
-          diagnoses: ["폐렴"],
+          hospitals: ["SM \uC601\uC0C1\uC758\uD559\uACFC \uC758\uC6D0"],
+          departments: ["\uC601\uC0C1\uC758\uD559\uACFC"],
+          diagnoses: ["\uB450\uD1B5"],
           tests: [],
           treatments: [],
           procedures: [],
@@ -61,11 +61,11 @@ describe("event bundle builder", () => {
         sourcePageId: "page-2",
         canonicalDate: "2024-03-07",
         fileOrder: 1,
-        pageOrder: 2,
-        anchorBlockIndex: 1,
-        primaryHospital: "서울병원",
-        primaryDepartment: "내과",
-        primaryDiagnosis: "폐렴",
+        pageOrder: 1,
+        anchorBlockIndex: 6,
+        primaryHospital: "\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0",
+        primaryDepartment: "\uC601\uC0C1\uC758\uD559\uACFC",
+        primaryDiagnosis: "\uB450\uD1B5",
         primaryTest: "CT",
         primaryTreatment: null,
         primaryProcedure: null,
@@ -74,7 +74,7 @@ describe("event bundle builder", () => {
         pathologySummary: null,
         medicationSummary: null,
         symptomSummary: null,
-        eventTypeCandidate: "outpatient",
+        eventTypeCandidate: "exam",
         ambiguityScore: 0.22,
         requiresReview: false,
         unresolvedSlotsJson: {
@@ -87,9 +87,9 @@ describe("event bundle builder", () => {
           notes: []
         },
         candidateSnapshotJson: {
-          hospitals: ["서울병원"],
-          departments: ["내과"],
-          diagnoses: ["폐렴"],
+          hospitals: ["\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0"],
+          departments: ["\uC601\uC0C1\uC758\uD559\uACFC"],
+          diagnoses: ["\uB450\uD1B5"],
           tests: ["CT"],
           treatments: [],
           procedures: [],
@@ -105,13 +105,15 @@ describe("event bundle builder", () => {
     ]);
 
     expect(bundles).toHaveLength(1);
-    expect(bundles[0]?.bundleTypeCandidate).toBe("outpatient");
-    expect(bundles[0]?.primaryHospital).toBe("서울병원");
-    expect(bundles[0]?.representativeDiagnosis).toBe("폐렴");
+    expect(bundles[0]?.bundleTypeCandidate).toBe("mixed");
+    expect(bundles[0]?.candidateSnapshotJson.hospitals).toEqual([
+      "SM \uC601\uC0C1\uC758\uD559\uACFC \uC758\uC6D0",
+      "\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0"
+    ]);
     expect(bundles[0]?.atomIdsJson).toEqual(["atom-1", "atom-2"]);
   });
 
-  it("separates surgery atoms and marks conflicts for review", () => {
+  it("keeps surgery atoms separate from soft grouped outpatient atoms", () => {
     const bundles = buildProvisionalEventBundles([
       {
         id: "atom-1",
@@ -123,13 +125,13 @@ describe("event bundle builder", () => {
         fileOrder: 1,
         pageOrder: 1,
         anchorBlockIndex: 2,
-        primaryHospital: "서울병원",
+        primaryHospital: "\uC11C\uC6B8\uBCD1\uC6D0",
         primaryDepartment: null,
-        primaryDiagnosis: "담낭염",
+        primaryDiagnosis: "\uB514\uC2A4\uD06C",
         primaryTest: null,
         primaryTreatment: null,
         primaryProcedure: null,
-        primarySurgery: "절제술",
+        primarySurgery: "\uB514\uC2A4\uD06C \uC218\uC220",
         admissionStatus: null,
         pathologySummary: null,
         medicationSummary: null,
@@ -147,13 +149,13 @@ describe("event bundle builder", () => {
           notes: []
         },
         candidateSnapshotJson: {
-          hospitals: ["서울병원"],
+          hospitals: ["\uC11C\uC6B8\uBCD1\uC6D0"],
           departments: [],
-          diagnoses: ["담낭염"],
+          diagnoses: ["\uB514\uC2A4\uD06C"],
           tests: [],
           treatments: [],
           procedures: [],
-          surgeries: ["절제술"],
+          surgeries: ["\uB514\uC2A4\uD06C \uC218\uC220"],
           admissions: [],
           discharges: [],
           pathologies: [],
@@ -171,21 +173,21 @@ describe("event bundle builder", () => {
         canonicalDate: "2024-03-07",
         fileOrder: 1,
         pageOrder: 1,
-        anchorBlockIndex: 5,
-        primaryHospital: "중앙병원",
+        anchorBlockIndex: 4,
+        primaryHospital: "\uC11C\uC6B8\uBCD1\uC6D0",
         primaryDepartment: null,
-        primaryDiagnosis: "담낭염 의증",
+        primaryDiagnosis: "\uB514\uC2A4\uD06C",
         primaryTest: null,
-        primaryTreatment: null,
+        primaryTreatment: "약물 치료",
         primaryProcedure: null,
-        primarySurgery: "절제술",
+        primarySurgery: null,
         admissionStatus: null,
         pathologySummary: null,
         medicationSummary: null,
         symptomSummary: null,
-        eventTypeCandidate: "surgery",
+        eventTypeCandidate: "treatment",
         ambiguityScore: 0.3,
-        requiresReview: true,
+        requiresReview: false,
         unresolvedSlotsJson: {
           hospitalMissing: false,
           diagnosisMissing: false,
@@ -196,13 +198,13 @@ describe("event bundle builder", () => {
           notes: []
         },
         candidateSnapshotJson: {
-          hospitals: ["중앙병원"],
+          hospitals: ["\uC11C\uC6B8\uBCD1\uC6D0"],
           departments: [],
-          diagnoses: ["담낭염 의증"],
+          diagnoses: ["\uB514\uC2A4\uD06C"],
           tests: [],
-          treatments: [],
+          treatments: ["약물 치료"],
           procedures: [],
-          surgeries: ["절제술"],
+          surgeries: [],
           admissions: [],
           discharges: [],
           pathologies: [],
@@ -210,63 +212,11 @@ describe("event bundle builder", () => {
           symptoms: []
         },
         createdAt: "2026-03-08T00:00:01.000Z"
-      },
-      {
-        id: "atom-3",
-        caseId: "case-1",
-        sourceWindowId: "window-3",
-        sourceFileId: "doc-1",
-        sourcePageId: "page-1",
-        canonicalDate: "2024-03-07",
-        fileOrder: 1,
-        pageOrder: 1,
-        anchorBlockIndex: 7,
-        primaryHospital: "서울병원",
-        primaryDepartment: null,
-        primaryDiagnosis: "담낭염",
-        primaryTest: null,
-        primaryTreatment: null,
-        primaryProcedure: null,
-        primarySurgery: null,
-        admissionStatus: "both",
-        pathologySummary: null,
-        medicationSummary: null,
-        symptomSummary: null,
-        eventTypeCandidate: "mixed",
-        ambiguityScore: 0.7,
-        requiresReview: true,
-        unresolvedSlotsJson: {
-          hospitalMissing: false,
-          diagnosisMissing: false,
-          conflictingDiagnosis: false,
-          conflictingHospital: false,
-          weakEvidence: false,
-          needsManualReview: true,
-          notes: []
-        },
-        candidateSnapshotJson: {
-          hospitals: ["서울병원"],
-          departments: [],
-          diagnoses: ["담낭염"],
-          tests: [],
-          treatments: [],
-          procedures: [],
-          surgeries: [],
-          admissions: ["입원"],
-          discharges: ["퇴원"],
-          pathologies: [],
-          medications: [],
-          symptoms: []
-        },
-        createdAt: "2026-03-08T00:00:02.000Z"
       }
     ]);
 
-    expect(bundles).toHaveLength(3);
+    expect(bundles).toHaveLength(2);
     expect(bundles[0]?.bundleTypeCandidate).toBe("surgery");
-    expect(bundles[1]?.bundleTypeCandidate).toBe("surgery");
-    expect(bundles[2]?.bundleTypeCandidate).toBe("mixed");
-    expect(bundles[2]?.requiresReview).toBe(true);
-    expect(bundles[2]?.unresolvedBundleSlotsJson.mixedAtomTypes).toBe(false);
+    expect(bundles[1]?.bundleTypeCandidate).toBe("treatment");
   });
 });

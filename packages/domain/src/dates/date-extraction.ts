@@ -10,20 +10,42 @@ export type DateExtractionBlockInput = {
   textRaw: string;
 };
 
+type DateTypeCandidate = DateCandidateInput["dateTypeCandidate"] | "irrelevant";
+
 const DATE_PATTERNS = [
   /(?<!\d)(\d{4})[./-](\d{1,2})[./-](\d{1,2})(?!\d)/g,
   /(?<!\d)(\d{2})[./-](\d{1,2})[./-](\d{1,2})(?!\d)/g,
-  /(?<!\d)(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일(?!\d)/g
+  /(?<!\d)(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일(?!\d)/g,
+  /(?<!\d)(\d{2})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일(?!\d)/g
 ];
 
-const ADMIN_KEYWORDS = ["발급", "행정", "보험", "접수", "원무", "민원", "서류", "출력", "페이지", "page"];
-const PLAN_KEYWORDS = ["예약", "예정"];
-const EXAM_KEYWORDS = ["검사", "검진", "촬영", "내시경", "초음파", "ct", "mri"];
+const ADMIN_KEYWORDS = ["발급", "작성일", "보험", "접수", "서류", "페이지", "page"];
+const PLAN_KEYWORDS = ["예약", "예정", "추후 방문", "next visit", "follow up"];
+const BIRTH_KEYWORDS = ["생년월일", "출생", "주민등록", "년생", "dob", "birth"];
+const EXAM_KEYWORDS = ["검사", "검진", "촬영", "내시경", "초음파", "ct", "mri", "x-ray"];
 const REPORT_KEYWORDS = ["결과", "보고", "판독", "소견"];
 const PATHOLOGY_KEYWORDS = ["병리", "조직"];
 const SURGERY_KEYWORDS = ["수술", "시술"];
-const ADMISSION_KEYWORDS = ["입원"];
+const ADMISSION_KEYWORDS = ["입원", "재원"];
 const DISCHARGE_KEYWORDS = ["퇴원"];
+const CLINICAL_ANCHOR_KEYWORDS = [
+  ...EXAM_KEYWORDS,
+  ...PATHOLOGY_KEYWORDS,
+  ...SURGERY_KEYWORDS,
+  ...ADMISSION_KEYWORDS,
+  ...DISCHARGE_KEYWORDS,
+  ...REPORT_KEYWORDS,
+  "진료",
+  "외래",
+  "병원",
+  "의원",
+  "센터",
+  "진단",
+  "치료",
+  "약"
+] as const;
+
+const MIN_YEAR = 1900;
 
 function normalizeWhitespace(text: string) {
   return text.replace(/\s+/g, " ").trim();
@@ -51,60 +73,91 @@ function isValidDate(year: number, month: number, day: number) {
   );
 }
 
+function isPlausibleYear(year: number) {
+  const currentYear = new Date().getUTCFullYear();
+  return year >= MIN_YEAR && year <= currentYear + 1;
+}
+
 function toIsoDate(year: number, month: number, day: number) {
   return `${year.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}-${day
     .toString()
     .padStart(2, "0")}`;
 }
 
-function inferDateTypeCandidate(textRaw: string): DateCandidateInput["dateTypeCandidate"] {
+function hasAnyKeyword(haystack: string, keywords: readonly string[]) {
+  return keywords.some((keyword) => haystack.includes(keyword.toLowerCase()));
+}
+
+function inferDateTypeCandidate(textRaw: string): DateTypeCandidate {
   const lower = textRaw.toLowerCase();
 
-  if (ADMIN_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, BIRTH_KEYWORDS)) {
+    return "irrelevant";
+  }
+
+  if (hasAnyKeyword(lower, ADMIN_KEYWORDS)) {
     return "admin";
   }
 
-  if (PLAN_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, PLAN_KEYWORDS)) {
     return "plan";
   }
 
-  if (PATHOLOGY_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, PATHOLOGY_KEYWORDS)) {
     return "pathology";
   }
 
-  if (SURGERY_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, SURGERY_KEYWORDS)) {
     return "surgery";
   }
 
-  if (ADMISSION_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, ADMISSION_KEYWORDS)) {
     return "admission";
   }
 
-  if (DISCHARGE_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, DISCHARGE_KEYWORDS)) {
     return "discharge";
   }
 
-  if (REPORT_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, REPORT_KEYWORDS)) {
     return "report";
   }
 
-  if (EXAM_KEYWORDS.some((keyword) => lower.includes(keyword.toLowerCase()))) {
+  if (hasAnyKeyword(lower, EXAM_KEYWORDS)) {
     return "exam";
   }
 
   return "visit";
 }
 
-function inferConfidence(rawDateText: string, dateTypeCandidate: DateCandidateInput["dateTypeCandidate"]) {
+function inferConfidence(rawDateText: string, dateTypeCandidate: DateTypeCandidate) {
   let confidence = rawDateText.length >= 8 ? 0.92 : 0.84;
 
   if (dateTypeCandidate === "admin") {
     confidence = 0.55;
   } else if (dateTypeCandidate === "plan") {
-    confidence = 0.8;
+    confidence = 0.68;
+  } else if (dateTypeCandidate === "irrelevant") {
+    confidence = 0.4;
   }
 
   return confidence;
+}
+
+function hasClinicalAnchors(textRaw: string) {
+  return hasAnyKeyword(textRaw.toLowerCase(), CLINICAL_ANCHOR_KEYWORDS);
+}
+
+function shouldKeepDateCandidate(textRaw: string, dateTypeCandidate: DateTypeCandidate) {
+  if (dateTypeCandidate === "irrelevant") {
+    return false;
+  }
+
+  if (dateTypeCandidate === "visit" && !hasClinicalAnchors(textRaw)) {
+    return false;
+  }
+
+  return true;
 }
 
 export function extractDateCandidatesFromBlock(input: DateExtractionBlockInput): DateCandidateInput[] {
@@ -124,7 +177,7 @@ export function extractDateCandidatesFromBlock(input: DateExtractionBlockInput):
       const month = Number(monthText);
       const day = Number(dayText);
 
-      if (!isValidDate(year, month, day)) {
+      if (!isValidDate(year, month, day) || !isPlausibleYear(year)) {
         continue;
       }
 
@@ -136,22 +189,33 @@ export function extractDateCandidatesFromBlock(input: DateExtractionBlockInput):
     }
   }
 
-  const uniqueMatches = [...new Map(matches.sort((a, b) => a.index - b.index).map((item) => [`${item.index}:${item.rawDateText}`, item])).values()];
+  const uniqueMatches = [
+    ...new Map(
+      matches
+        .sort((a, b) => a.index - b.index)
+        .map((item) => [`${item.index}:${item.rawDateText}:${item.normalizedDate}`, item])
+    ).values()
+  ];
 
-  return uniqueMatches.map((match) => {
-    const dateTypeCandidate = inferDateTypeCandidate(normalizedText);
+  return uniqueMatches
+    .map((match) => {
+      const dateTypeCandidate = inferDateTypeCandidate(normalizedText);
+      if (!shouldKeepDateCandidate(normalizedText, dateTypeCandidate)) {
+        return null;
+      }
 
-    return dateCandidateSchema.parse({
-      caseId: input.caseId,
-      sourceFileId: input.sourceFileId,
-      sourcePageId: input.sourcePageId,
-      fileOrder: input.fileOrder,
-      pageOrder: input.pageOrder,
-      blockIndex: input.blockIndex,
-      rawDateText: match.rawDateText,
-      normalizedDate: match.normalizedDate,
-      dateTypeCandidate,
-      confidence: inferConfidence(match.rawDateText, dateTypeCandidate)
-    });
-  });
+      return dateCandidateSchema.parse({
+        caseId: input.caseId,
+        sourceFileId: input.sourceFileId,
+        sourcePageId: input.sourcePageId,
+        fileOrder: input.fileOrder,
+        pageOrder: input.pageOrder,
+        blockIndex: input.blockIndex,
+        rawDateText: match.rawDateText,
+        normalizedDate: match.normalizedDate,
+        dateTypeCandidate,
+        confidence: inferConfidence(match.rawDateText, dateTypeCandidate)
+      });
+    })
+    .filter((candidate): candidate is DateCandidateInput => candidate !== null);
 }

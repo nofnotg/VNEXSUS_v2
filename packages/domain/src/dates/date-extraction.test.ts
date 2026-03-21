@@ -11,38 +11,38 @@ describe("DateCandidate extraction", () => {
     blockIndex: 0
   };
 
-  it("extracts normalized ISO dates from OCR text", () => {
+  it("extracts normalized ISO dates from clinical OCR text", () => {
     const result = extractDateCandidatesFromBlock({
       ...baseInput,
-      textRaw: "진료일: 2024.3.7 / 재진일 2024년 3월 8일"
+      textRaw: "\uC9C4\uB8CC\uC77C 2024.3.7 / \uCD08\uC74C\uD30C 2024\uB144 3\uC6D4 8\uC77C"
     });
 
     expect(result.map((item) => item.normalizedDate)).toEqual(["2024-03-07", "2024-03-08"]);
   });
 
-  it("filters invalid dates by dropping them", () => {
+  it("filters invalid or implausible dates", () => {
     const result = extractDateCandidatesFromBlock({
       ...baseInput,
-      textRaw: "오인식 2024-13-40 / 실제 2024/03/09"
+      textRaw: "\uCC28\uD2B8 2925-05-19 / \uC2E4\uC81C \uC9C4\uB8CC\uC77C 2024/03/09"
     });
 
     expect(result).toHaveLength(1);
     expect(result[0]?.normalizedDate).toBe("2024-03-09");
   });
 
-  it("marks issuance or admin-like dates as admin", () => {
+  it("drops birth-like dates from candidate output", () => {
     const result = extractDateCandidatesFromBlock({
       ...baseInput,
-      textRaw: "서류 발급일 2024.03.10"
+      textRaw: "\uC0DD\uB144\uC6D4\uC77C 1982.04.03 / \uCC28\uD2B8 \uBC88\uD638"
     });
 
-    expect(result[0]?.dateTypeCandidate).toBe("admin");
+    expect(result).toHaveLength(0);
   });
 
   it("marks reservation dates as plan", () => {
     const result = extractDateCandidatesFromBlock({
       ...baseInput,
-      textRaw: "예약일자 24-03-11"
+      textRaw: "\uC608\uC57D \uC77C\uC790 24-03-11"
     });
 
     expect(result[0]?.normalizedDate).toBe("2024-03-11");

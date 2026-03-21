@@ -6,6 +6,7 @@ import {
   type DateCenteredWindowInput,
   type EntityCandidateResponseContract
 } from "@vnexus/shared";
+import { canonicalizeHospitalName } from "../entities/hospital-normalization";
 
 export type DateCenteredWindowInputSource = {
   dateCandidates: DateCandidateResponseContract[];
@@ -78,7 +79,7 @@ function appendCandidate(summary: CandidateSummary, candidate: EntityCandidateRe
 
 function finalizeSummary(summary: CandidateSummary): CandidateSummary {
   return candidateSummarySchema.parse({
-    hospitals: dedupe(summary.hospitals),
+    hospitals: dedupe(summary.hospitals.map((hospital) => canonicalizeHospitalName(hospital) ?? hospital)),
     departments: dedupe(summary.departments),
     diagnoses: dedupe(summary.diagnoses),
     tests: dedupe(summary.tests),
@@ -93,6 +94,21 @@ function finalizeSummary(summary: CandidateSummary): CandidateSummary {
   });
 }
 
+function hasClinicalAnchors(summary: CandidateSummary) {
+  return (
+    summary.hospitals.length > 0 ||
+    summary.departments.length > 0 ||
+    summary.diagnoses.length > 0 ||
+    summary.tests.length > 0 ||
+    summary.treatments.length > 0 ||
+    summary.procedures.length > 0 ||
+    summary.surgeries.length > 0 ||
+    summary.admissions.length > 0 ||
+    summary.discharges.length > 0 ||
+    summary.pathologies.length > 0
+  );
+}
+
 export function aggregateDateCenteredWindows(input: DateCenteredWindowInputSource): DateCenteredWindowInput[] {
   const sortedDates = [...input.dateCandidates].sort((a, b) => {
     if (a.fileOrder !== b.fileOrder) return a.fileOrder - b.fileOrder;
@@ -103,7 +119,7 @@ export function aggregateDateCenteredWindows(input: DateCenteredWindowInputSourc
   const windows: DateCenteredWindowInput[] = [];
 
   for (const dateCandidate of sortedDates) {
-    if (dateCandidate.dateTypeCandidate === "admin") {
+    if (["admin", "plan"].includes(dateCandidate.dateTypeCandidate)) {
       continue;
     }
 
@@ -124,6 +140,11 @@ export function aggregateDateCenteredWindows(input: DateCenteredWindowInputSourc
       appendCandidate(summary, candidate);
     }
 
+    const finalizedSummary = finalizeSummary(summary);
+    if (!hasClinicalAnchors(finalizedSummary)) {
+      continue;
+    }
+
     windows.push(
       dateCenteredWindowSchema.parse({
         caseId: dateCandidate.caseId,
@@ -136,7 +157,7 @@ export function aggregateDateCenteredWindows(input: DateCenteredWindowInputSourc
         anchorBlockIndex: dateCandidate.blockIndex,
         windowStartBlockIndex,
         windowEndBlockIndex,
-        candidateSummaryJson: finalizeSummary(summary)
+        candidateSummaryJson: finalizedSummary
       })
     );
   }

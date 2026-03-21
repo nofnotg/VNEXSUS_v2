@@ -6,6 +6,7 @@ import {
   type EventBundleInput,
   type UnresolvedBundleSlots
 } from "@vnexus/shared";
+import { buildHospitalAliasKey } from "../entities/hospital-normalization";
 
 function uniqueNonNull(values: Array<string | null | undefined>) {
   return [...new Set(values.filter((value): value is string => Boolean(value)).map((value) => value.trim()).filter(Boolean))];
@@ -37,12 +38,12 @@ function mergeSummary(atoms: EventAtomResponseContract[]): CandidateSummary {
     admissions: uniqueNonNull(
       atoms
         .filter((atom) => atom.admissionStatus === "admitted" || atom.admissionStatus === "both")
-        .map((atom) => atom.admissionStatus === "both" ? "admitted" : atom.admissionStatus)
+        .map((atom) => (atom.admissionStatus === "both" ? "admitted" : atom.admissionStatus))
     ),
     discharges: uniqueNonNull(
       atoms
         .filter((atom) => atom.admissionStatus === "discharged" || atom.admissionStatus === "both")
-        .map((atom) => atom.admissionStatus === "both" ? "discharged" : atom.admissionStatus)
+        .map((atom) => (atom.admissionStatus === "both" ? "discharged" : atom.admissionStatus))
     ),
     pathologies: uniqueNonNull(atoms.map((atom) => atom.pathologySummary)),
     medications: uniqueNonNull(atoms.map((atom) => atom.medicationSummary)),
@@ -66,35 +67,38 @@ function areCompatibleTypes(
     return false;
   }
 
-  return false;
+  const softTypes = ["outpatient", "exam", "treatment", "pathology", "followup"];
+  return softTypes.includes(left) && softTypes.includes(right);
 }
 
-function canJoinBundle(bundle: EventAtomResponseContract[], candidate: EventAtomResponseContract[]) {
-  const bundleHead = bundle[0];
-  const atom = candidate[0];
+function hospitalsCompatible(bundle: EventAtomResponseContract[], atom: EventAtomResponseContract) {
+  const bundleHospitalKeys = uniqueNonNull(bundle.map((item) => buildHospitalAliasKey(item.primaryHospital ?? "")));
+  const atomHospitalKey = buildHospitalAliasKey(atom.primaryHospital ?? "");
 
-  if (!bundleHead || !atom) {
+  if (bundleHospitalKeys.length === 0 || !atomHospitalKey) {
+    return bundleHospitalKeys.length <= 1;
+  }
+
+  return bundleHospitalKeys.includes(atomHospitalKey);
+}
+
+function canJoinBundle(bundle: EventAtomResponseContract[], atom: EventAtomResponseContract) {
+  const bundleTail = bundle.at(-1);
+  if (!bundleTail) {
     return false;
   }
 
-  const sameDate = bundleHead.canonicalDate === atom.canonicalDate;
-  const sameFile = bundleHead.fileOrder === atom.fileOrder;
-  const nearbyPage = Math.abs(bundleHead.pageOrder - atom.pageOrder) <= 1;
-  const hospitals = uniqueNonNull([bundleHead.primaryHospital, atom.primaryHospital]);
-  const hospitalCompatible =
-    (bundleHead.primaryHospital === null && atom.primaryHospital === null) ||
-    (bundleHead.primaryHospital !== null && atom.primaryHospital !== null && bundleHead.primaryHospital === atom.primaryHospital);
-  const typeCompatible = areCompatibleTypes(bundleHead.eventTypeCandidate, atom.eventTypeCandidate);
+  const sameDate = bundleTail.canonicalDate === atom.canonicalDate;
+  const sameFile = bundleTail.fileOrder === atom.fileOrder;
+  const nearbyPage = Math.abs(bundleTail.pageOrder - atom.pageOrder) <= 1;
+  const nearbyBlock = Math.abs(bundleTail.anchorBlockIndex - atom.anchorBlockIndex) <= 8;
+  const typeCompatible = areCompatibleTypes(bundleTail.eventTypeCandidate, atom.eventTypeCandidate);
 
-  if (!sameDate || !sameFile || !nearbyPage || !typeCompatible) {
+  if (!sameDate || !sameFile || !nearbyPage || !nearbyBlock || !typeCompatible) {
     return false;
   }
 
-  if (hospitals.length > 1 && !hospitalCompatible) {
-    return false;
-  }
-
-  return true;
+  return hospitalsCompatible(bundle, atom);
 }
 
 function inferAdmissionStatus(atoms: EventAtomResponseContract[]): EventBundleInput["admissionStatus"] {
@@ -135,6 +139,7 @@ function inferBundleType(atoms: EventAtomResponseContract[]): EventBundleInput["
   if (types.includes("exam")) return types.length === 1 ? "exam" : "mixed";
   if (types.includes("treatment")) return types.length === 1 ? "treatment" : "mixed";
   if (types.includes("outpatient")) return types.length === 1 ? "outpatient" : "mixed";
+  if (types.includes("followup")) return types.length === 1 ? "outpatient" : "mixed";
 
   return "unknown";
 }
@@ -214,7 +219,7 @@ export function buildProvisionalEventBundles(
   const groups: EventAtomResponseContract[][] = [];
 
   for (const atom of sortedAtoms) {
-    const targetGroup = groups.find((group) => canJoinBundle(group, [atom]));
+    const targetGroup = groups.find((group) => canJoinBundle(group, atom));
 
     if (targetGroup) {
       targetGroup.push(atom);
@@ -237,8 +242,7 @@ export function buildProvisionalEventBundles(
     const representativeSurgery = chooseRepresentative(group.map((atom) => atom.primarySurgery));
     const typeSet = [...new Set(group.map((atom) => atom.eventTypeCandidate))];
     const mixedAtomTypes = typeSet.length > 1;
-    const weakGrouping =
-      group.length > 1 && (!primaryHospital.value || new Set(group.map((atom) => atom.pageOrder)).size > 1);
+    const weakGrouping = group.length > 1 && (!primaryHospital.value || new Set(group.map((atom) => atom.pageOrder)).size > 1);
     const bundleTypeCandidate = inferBundleType(group);
     const ambiguityScore = computeAmbiguityScore({
       hospitalConflict: primaryHospital.conflicting,
