@@ -3,9 +3,10 @@
 - targetBranch: `main`
 - broaderPostfixRuntimeCommit: `742a184`
 - broaderPostfixCompareCommit: `742a184`
-- validationEvidenceCommit: `pending_sync`
+- validationEvidenceCommit: `4aa6018`
 - pushedCommitShas:
   - `742a184`
+  - `4aa6018`
 - attemptedCases:
   - `Case16`
   - `Case3`
@@ -41,5 +42,5 @@
   - `origin/main:phase07_compare/Case12_compare_broader_postfix.json`
   - `origin/main:phase07_compare/Case36_compare_broader_postfix.json`
   - `origin/main:phase07_validation_evidence.md`
-- remoteVerifiedAtCommit: `pending_sync`
-- answerVsRepoMatch: `pending_sync`
+- remoteVerifiedAtCommit: `4aa6018`
+- answerVsRepoMatch: `matched`
