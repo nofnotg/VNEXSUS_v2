@@ -1,0 +1,114 @@
+{
+  "caseName": "Case16",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case16_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case16_runtime_rerun.json",
+  "comparisonStatus": "runtime_recovered_partial_match",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-08-21",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-19",
+      "2025-09-25",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-11-25"
+    ],
+    "runtimeDates": [
+      "1967-12-18",
+      "2025-08-21",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-15",
+      "2025-09-19",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-25",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01",
+      "2025-10-14",
+      "2025-10-19",
+      "2025-10-21"
+    ],
+    "missingDates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-11-25"
+    ],
+    "extraDates": [
+      "1967-12-18",
+      "2025-09-15",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-26",
+      "2025-10-01",
+      "2025-10-14",
+      "2025-10-19",
+      "2025-10-21"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "일산백병원",
+      "일산차병원"
+    ],
+    "runtimeInstitutions": [
+      "경기도 고양시 일산 동구 장항동 889 일산 차병원"
+    ],
+    "missingInstitutionsNormalized": [
+      "일산백병원",
+      "일산차병원"
+    ],
+    "extraInstitutionsNormalized": [
+      "경기도고양시일산동구장항동889일산차병원"
+    ]
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-11-25"
+    ],
+    "institutions": [
+      "일산백병원",
+      "일산차병원"
+    ],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "1967-12-18",
+      "2025-09-15",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-26",
+      "2025-10-01",
+      "2025-10-14",
+      "2025-10-19",
+      "2025-10-21"
+    ],
+    "institutions": [
+      "경기도고양시일산동구장항동889일산차병원"
+    ]
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}
