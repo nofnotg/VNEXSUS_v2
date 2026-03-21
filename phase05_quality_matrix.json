@@ -1,0 +1,110 @@
+[
+  {
+    "caseName": "Case16",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "institution_normalization_gap",
+    "secondaryQualityBlocker": "date_false_positive_noise",
+    "scope": "global",
+    "layer": "normalization",
+    "evidenceSummary": "Operational stages all succeeded, but the runtime output still emitted semantically noisy dates and failed to align to the expected hospital representation, leaving 3 missing report dates and 9 extra timeline dates despite a structurally complete run.",
+    "nextBestAction": "Canonicalize hospital strings before comparison/report assembly and filter non-clinical dates before bundle generation.",
+    "priority": "P0",
+    "notes": "Medium-confidence baseline case; use as a normalization smoke check after date filtering changes."
+  },
+  {
+    "caseName": "Case3",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "date_false_negative_missing",
+    "secondaryQualityBlocker": "institution_alias_resolution_gap",
+    "scope": "global",
+    "layer": "date",
+    "evidenceSummary": "The rerun completed end-to-end, but comparison still missed 7 golden dates while introducing 12 extra dates. This indicates recall loss in the date pipeline rather than another runtime failure.",
+    "nextBestAction": "Improve clinical-date retention and anchor-date ranking before any presentation-layer tuning.",
+    "priority": "P0",
+    "notes": "High-confidence baseline case; best representative for date recall regression."
+  },
+  {
+    "caseName": "Case17",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "date_false_positive_noise",
+    "secondaryQualityBlocker": "date_false_negative_missing",
+    "scope": "global",
+    "layer": "date",
+    "evidenceSummary": "Runtime date summary still contains implausible values such as 2925-05-19 and a birth-like 2005-08-20, while also missing 3 golden dates. The timeout fix worked, but date plausibility filtering is still weak.",
+    "nextBestAction": "Add impossible-year guards and separate patient-demographic dates from clinical event dates before bundle assembly.",
+    "priority": "P0",
+    "notes": "Medium-confidence baseline case, but the implausible-year symptom is evidence-backed and should be treated as a global date-normalization defect."
+  },
+  {
+    "caseName": "Case2",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "institution_alias_resolution_gap",
+    "secondaryQualityBlocker": "date_false_positive_noise",
+    "scope": "global",
+    "layer": "institution",
+    "evidenceSummary": "Runtime institutions split the same provider family into multiple aliases, including mixed spacing and Korean/English variants for the imaging clinic, while date output also carries 21 extra dates.",
+    "nextBestAction": "Introduce alias collapsing for spacing, Hangul/English transliteration, and clinic suffix variants before grouping and report rendering.",
+    "priority": "P0",
+    "notes": "High-confidence case and strong canonical-hospital reference for alias resolution tests."
+  },
+  {
+    "caseName": "Case20",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "bundle_over-segmentation",
+    "secondaryQualityBlocker": "institution_normalization_gap",
+    "scope": "global",
+    "layer": "bundle",
+    "evidenceSummary": "A single 47-page document generated 174 event bundles and 46 extra dates, while runtime institution summary remained empty. This points to over-splitting plus weak institution carry-forward rather than timeout failure.",
+    "nextBestAction": "Merge adjacent same-day bundles with shared evidence context and require stronger institution propagation before bundle splitting.",
+    "priority": "P1",
+    "notes": "Medium-confidence case; use after date/institution fixes to confirm that bundle count drops materially."
+  },
+  {
+    "caseName": "Case34",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "institution_alias_resolution_gap",
+    "secondaryQualityBlocker": "date_false_positive_noise",
+    "scope": "global",
+    "layer": "institution",
+    "evidenceSummary": "Golden expects one hospital, while runtime expands it into address-heavy and department-heavy aliases and adds 55 extra dates. Missing dates remain low, so the dominant gap is canonical hospital identity drift.",
+    "nextBestAction": "Strip department/address fragments from hospital labels and normalize insurer-hospital naming variants before final bundle naming.",
+    "priority": "P1",
+    "notes": "Medium-confidence and no coordinate reference support, so hospital-name drift must be judged conservatively but still points to a real global aliasing issue."
+  },
+  {
+    "caseName": "Case12",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "date_false_positive_noise",
+    "secondaryQualityBlocker": "institution_normalization_gap",
+    "scope": "global",
+    "layer": "date",
+    "evidenceSummary": "The rerun stayed operationally stable, yet 33 extra dates remained against only 2 missing dates. This is a classic noisy date-selection pattern rather than a report assembly problem.",
+    "nextBestAction": "Tighten date-candidate filtering for historical/reference dates and review canonical institution post-processing after date noise is reduced.",
+    "priority": "P1",
+    "notes": "Medium-confidence case; use as a representative of 'too many plausible-looking dates' after the first date filter pass."
+  },
+  {
+    "caseName": "Case10",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "date_false_positive_noise",
+    "secondaryQualityBlocker": "date_false_negative_missing",
+    "scope": "global",
+    "layer": "date",
+    "evidenceSummary": "The pipeline completed cleanly but still produced 32 extra dates and missed 4 golden dates, showing that date candidate ranking remains too permissive and not sufficiently focused on clinically salient dates.",
+    "nextBestAction": "Prioritize clinical encounter dates over administrative or historical dates and add stronger dedupe rules at the candidate-to-window stage.",
+    "priority": "P0",
+    "notes": "High-confidence case; useful for regression checks because date noise is high without hospital-alias confounders."
+  },
+  {
+    "caseName": "Case36",
+    "phase04Status": "broad_partial_match",
+    "dominantQualityBlocker": "date_false_positive_noise",
+    "secondaryQualityBlocker": "institution_normalization_gap",
+    "scope": "global",
+    "layer": "date",
+    "evidenceSummary": "This is the strongest outlier: 122 extra dates, 4 missing dates, and heavy institution drift while all runtime stages completed. The issue is semantic noise at scale, not runtime execution.",
+    "nextBestAction": "Use this as the highest-pressure regression case after implementing date filtering and hospital canonicalization; only then judge bundle logic again.",
+    "priority": "P0",
+    "notes": "Medium-confidence baseline case, but the excessive extra-date volume makes it the clearest high-leverage quality stress case."
+  }
+]
