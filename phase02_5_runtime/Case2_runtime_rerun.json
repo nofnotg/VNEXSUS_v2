@@ -1,0 +1,170 @@
+{
+  "caseName": "Case2",
+  "runtimeSource": {
+    "method": "phase02_5_service_runner",
+    "generatedAt": "2026-03-21T06:09:15.520Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmmzxgxz5052imepopg32rj10",
+    "jobId": "cmmzxh002052tmepoyshuojkr",
+    "smokeTestCase": false
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case2_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\sm영상의학과.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\삼성서울병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\에스엠영상의학과.pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case2",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": false,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": false,
+    "structuredOutputAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2017-12-22",
+      "2019-03-23",
+      "2020-06-20",
+      "2020-08-11",
+      "2021-07-09",
+      "2022-07-19",
+      "2023-08-07",
+      "2024-04-09",
+      "2024-04-23",
+      "2024-04-25",
+      "2024-11-14",
+      "2024-11-19",
+      "2024-11-21",
+      "2025-01-01",
+      "2025-01-07",
+      "2025-02-04",
+      "2025-02-05",
+      "2025-02-06",
+      "2025-02-07",
+      "2025-02-10",
+      "2025-02-11",
+      "2025-02-12",
+      "2025-02-26",
+      "2025-02-27",
+      "2025-03-19",
+      "2025-03-21",
+      "2025-04-07"
+    ],
+    "windowDates": [
+      "2017-12-22",
+      "2019-03-23",
+      "2020-06-20",
+      "2020-08-11",
+      "2021-07-09",
+      "2022-07-19",
+      "2023-08-07",
+      "2024-04-09",
+      "2024-04-25",
+      "2024-11-21",
+      "2025-01-01",
+      "2025-01-07",
+      "2025-02-04",
+      "2025-02-05",
+      "2025-02-07",
+      "2025-02-10",
+      "2025-02-11",
+      "2025-02-12",
+      "2025-02-26",
+      "2025-02-27",
+      "2025-03-19",
+      "2025-03-21",
+      "2025-04-07"
+    ],
+    "atomDates": [
+      "2017-12-22",
+      "2019-03-23",
+      "2020-06-20",
+      "2020-08-11",
+      "2021-07-09",
+      "2022-07-19",
+      "2023-08-07",
+      "2024-04-09",
+      "2024-04-25",
+      "2024-11-21",
+      "2025-01-01",
+      "2025-01-07",
+      "2025-02-04",
+      "2025-02-05",
+      "2025-02-07",
+      "2025-02-10",
+      "2025-02-11",
+      "2025-02-12",
+      "2025-02-26",
+      "2025-02-27",
+      "2025-03-19",
+      "2025-03-21",
+      "2025-04-07"
+    ],
+    "bundleDates": [],
+    "earliestDate": "2017-12-22",
+    "latestDate": "2025-04-07"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "삼성 서울 병원",
+      "에스엠 영상 의학과 의원",
+      "SM 영상 의학과 의원"
+    ],
+    "bundleHospitals": [],
+    "combinedInstitutions": [
+      "삼성 서울 병원",
+      "에스엠 영상 의학과 의원",
+      "SM 영상 의학과 의원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 3,
+    "uploadedDocumentPageCount": 47,
+    "ocrBlockCount": 1854,
+    "dateCandidateCount": 222,
+    "windowCount": 213,
+    "eventAtomCount": 213,
+    "eventBundleCount": 0,
+    "eventTypes": [
+      "admission",
+      "exam",
+      "outpatient",
+      "surgery",
+      "treatment",
+      "unknown"
+    ],
+    "bundleTypes": [],
+    "reportSectionTitles": [],
+    "narrativeSectionCount": 0,
+    "pdfByteSize": 53482
+  },
+  "extractionWarnings": [
+    "ocr_job_failed:\nInvalid `tx.eventAtom.update()` invocation in\nC:\\VNEXSUS\\VNEXSUS_v2\\apps\\web\\lib\\server\\services\\event-bundle-service.ts:90:28\n\n  87 });\n  88 \n  89 for (const [atomId, bundleId] of bundleIdsByAtomId) {\n→ 90   await tx.eventAtom.update(\nTransaction API error: Transaction not found. Transaction ID is invalid, refers to an old closed transaction Prisma doesn't have information about anymore, or was obtained before disconnecting.",
+    "runtime_error:\nInvalid `tx.eventAtom.update()` invocation in\nC:\\VNEXSUS\\VNEXSUS_v2\\apps\\web\\lib\\server\\services\\event-bundle-service.ts:90:28\n\n  87 });\n  88 \n  89 for (const [atomId, bundleId] of bundleIdsByAtomId) {\n→ 90   await tx.eventAtom.update(\nTransaction API error: Transaction not found. Transaction ID is invalid, refers to an old closed transaction Prisma doesn't have information about anymore, or was obtained before disconnecting."
+  ],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": "Semantic",
+  "actualOcrCost": 0.141,
+  "actualLlmCost": 0,
+  "budgetStopTriggered": false,
+  "rerunStatus": "rerun_failed",
+  "notes": [
+    "budgetEstimatedCostUsd=0.141"
+  ]
+}
