@@ -5,11 +5,13 @@
   - `42e7a41`
 - documentationPlanCommit: `25af5ae`
 - evidenceCommit: `d9341b8`
-- remoteVerifiedAtCommit: `d9341b8`
+- evidenceSyncCommit: `7490a77`
+- remoteVerifiedAtCommit: `7490a77`
 - pushedCommitShas:
   - `42e7a41`
   - `25af5ae`
   - `d9341b8`
+  - `7490a77`
 - filesChanged:
   - `apps/web/lib/server/services/event-bundle-service.ts`
   - `phase03_fix_plan.md`
