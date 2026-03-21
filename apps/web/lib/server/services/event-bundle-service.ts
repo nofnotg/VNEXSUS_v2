@@ -45,55 +45,54 @@ export async function buildAndPersistEventBundles(caseId: string) {
     }))
   );
 
+  // Keep the reset transaction tiny, then persist each bundle in a bounded write step.
   await prisma.$transaction(async (tx) => {
+    await tx.eventAtom.updateMany({
+      where: { caseId },
+      data: { eventBundleId: null }
+    });
+
     await tx.eventBundle.deleteMany({
       where: { caseId }
     });
-
-    if (bundles.length > 0) {
-      const createdBundles = await Promise.all(
-        bundles.map((bundle) =>
-          tx.eventBundle.create({
-            data: {
-              caseId: bundle.caseId,
-              canonicalDate: bundle.canonicalDate,
-              fileOrder: bundle.fileOrder,
-              pageOrder: bundle.pageOrder,
-              primaryHospital: bundle.primaryHospital ?? null,
-              bundleTypeCandidate: bundle.bundleTypeCandidate,
-              representativeDiagnosis: bundle.representativeDiagnosis ?? null,
-              representativeTest: bundle.representativeTest ?? null,
-              representativeTreatment: bundle.representativeTreatment ?? null,
-              representativeProcedure: bundle.representativeProcedure ?? null,
-              representativeSurgery: bundle.representativeSurgery ?? null,
-              admissionStatus: bundle.admissionStatus ?? null,
-              ambiguityScore: bundle.ambiguityScore,
-              requiresReview: bundle.requiresReview,
-              unresolvedBundleSlotsJson: bundle.unresolvedBundleSlotsJson as Prisma.InputJsonValue,
-              atomIdsJson: bundle.atomIdsJson as Prisma.InputJsonValue,
-              candidateSnapshotJson: bundle.candidateSnapshotJson as Prisma.InputJsonValue
-            }
-          })
-        )
-      );
-
-      const bundleIdsByAtomId = new Map<string, string>();
-      bundles.forEach((bundle, index) => {
-        const bundleId = createdBundles[index]?.id;
-        if (!bundleId) return;
-        bundle.atomIdsJson.forEach((atomId) => {
-          bundleIdsByAtomId.set(atomId, bundleId);
-        });
-      });
-
-      for (const [atomId, bundleId] of bundleIdsByAtomId) {
-        await tx.eventAtom.update({
-          where: { id: atomId },
-          data: { eventBundleId: bundleId }
-        });
-      }
-    }
   });
+
+  for (const bundle of bundles) {
+    await prisma.$transaction(
+      async (tx) => {
+        const createdBundle = await tx.eventBundle.create({
+          data: {
+            caseId: bundle.caseId,
+            canonicalDate: bundle.canonicalDate,
+            fileOrder: bundle.fileOrder,
+            pageOrder: bundle.pageOrder,
+            primaryHospital: bundle.primaryHospital ?? null,
+            bundleTypeCandidate: bundle.bundleTypeCandidate,
+            representativeDiagnosis: bundle.representativeDiagnosis ?? null,
+            representativeTest: bundle.representativeTest ?? null,
+            representativeTreatment: bundle.representativeTreatment ?? null,
+            representativeProcedure: bundle.representativeProcedure ?? null,
+            representativeSurgery: bundle.representativeSurgery ?? null,
+            admissionStatus: bundle.admissionStatus ?? null,
+            ambiguityScore: bundle.ambiguityScore,
+            requiresReview: bundle.requiresReview,
+            unresolvedBundleSlotsJson: bundle.unresolvedBundleSlotsJson as Prisma.InputJsonValue,
+            atomIdsJson: bundle.atomIdsJson as Prisma.InputJsonValue,
+            candidateSnapshotJson: bundle.candidateSnapshotJson as Prisma.InputJsonValue
+          }
+        });
+
+        await tx.eventAtom.updateMany({
+          where: {
+            caseId,
+            id: { in: bundle.atomIdsJson }
+          },
+          data: { eventBundleId: createdBundle.id }
+        });
+      },
+      { timeout: 15_000 }
+    );
+  }
 
   return {
     caseId,
