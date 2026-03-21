@@ -2,9 +2,11 @@
 
 - targetBranch: `main`
 - goldenArtifactsCommit: `11e4c4d`
-- remoteVerifiedAtCommit: `11e4c4d`
+- goldenEvidenceCommit: `6d21d98`
+- remoteVerifiedAtCommit: `6d21d98`
 - pushedCommitShas:
   - `11e4c4d`
+  - `6d21d98`
 
 ## Generated files
 - `phase01_golden/Case2_golden.json`
