@@ -4,10 +4,12 @@
 - runtimeBroadRerunCommit: `5ee9c6e`
 - compareBroadRerunCommit: `5ee9c6e`
 - broadRerunEvidenceCommit: `2a7d7a6`
-- remoteVerifiedCommit: `2a7d7a6`
+- evidenceSyncCommit: `fc651f8`
+- remoteVerifiedCommit: `fc651f8`
 - pushedCommitShas:
   - `5ee9c6e`
   - `2a7d7a6`
+  - `fc651f8`
 - attemptedCases:
   - `Case16`
   - `Case3`
