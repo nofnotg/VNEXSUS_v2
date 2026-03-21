@@ -1,0 +1,84 @@
+{
+  "caseName": "Case3",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_runtime\\Case3_runtime_broader_postfix.json",
+  "comparisonStatus": "broader_postfix_improved_partial_match",
+  "dominantPhase5Blocker": "date_false_negative_missing",
+  "timeoutFixStillHealthy": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "phase4MissingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "postfixMissingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "phase4ExtraDates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-21",
+      "2025-03-28"
+    ],
+    "postfixExtraDates": [
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "phase4MissingInstitutions": [
+      "이대목동병원"
+    ],
+    "postfixMissingInstitutions": [
+      "이대목동병원"
+    ],
+    "phase4ExtraInstitutions": [
+      "eumc이대목동병원"
+    ],
+    "postfixExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "phase4BundleCount": 43,
+    "postfixBundleCount": 15
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_phase4=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPhase4": "better",
+  "mediumConfidenceFromFrozenBaseline": false
+}

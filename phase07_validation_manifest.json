@@ -1,0 +1,79 @@
+{
+  "phase": "Phase 7",
+  "attemptedCases": [
+    "Case16",
+    "Case3",
+    "Case12",
+    "Case36"
+  ],
+  "successfulValidationCases": [
+    "Case16",
+    "Case3",
+    "Case12",
+    "Case36"
+  ],
+  "failedValidationCases": [],
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_runtime\\Case16_runtime_broader_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_runtime\\Case3_runtime_broader_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_runtime\\Case12_runtime_broader_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_runtime\\Case36_runtime_broader_postfix.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_compare\\Case16_compare_broader_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_compare\\Case3_compare_broader_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_compare\\Case12_compare_broader_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_compare\\Case36_compare_broader_postfix.json"
+  ],
+  "perCaseStatus": [
+    {
+      "caseName": "Case16",
+      "status": "broader_postfix_improved_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "status": "broader_postfix_improved_partial_match"
+    },
+    {
+      "caseName": "Case12",
+      "status": "broader_postfix_improved_partial_match"
+    },
+    {
+      "caseName": "Case36",
+      "status": "broader_postfix_improved_partial_match"
+    }
+  ],
+  "perCaseImprovementVsPhase4": [
+    {
+      "caseName": "Case16",
+      "status": "broader_postfix_improved_partial_match",
+      "relativeToPhase4": "better"
+    },
+    {
+      "caseName": "Case3",
+      "status": "broader_postfix_improved_partial_match",
+      "relativeToPhase4": "better"
+    },
+    {
+      "caseName": "Case12",
+      "status": "broader_postfix_improved_partial_match",
+      "relativeToPhase4": "better"
+    },
+    {
+      "caseName": "Case36",
+      "status": "broader_postfix_improved_partial_match",
+      "relativeToPhase4": "better"
+    }
+  ],
+  "perTrackImprovementJudgment": {
+    "dateNormalization": "improved",
+    "institutionNormalization": "improved",
+    "bundleGrouping": "improved"
+  },
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "phase6FixesHoldAtBroaderScale": true,
+  "allBroaderPostFixValidationArtifactsExist": true,
+  "finalFullRecoverableSetRerunStillNeeded": false,
+  "anyRegression": false,
+  "generatedAt": "2026-03-21T16:05:58.764Z"
+}

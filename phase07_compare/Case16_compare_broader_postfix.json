@@ -1,0 +1,74 @@
+{
+  "caseName": "Case16",
+  "track": "institution",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case16_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_runtime\\Case16_runtime_broader_postfix.json",
+  "comparisonStatus": "broader_postfix_improved_partial_match",
+  "dominantPhase5Blocker": "institution_normalization_gap",
+  "timeoutFixStillHealthy": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "phase4MissingDates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-11-25"
+    ],
+    "postfixMissingDates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-08-21",
+      "2025-09-11",
+      "2025-09-19",
+      "2025-11-25"
+    ],
+    "phase4ExtraDates": [
+      "1967-12-18",
+      "2025-09-15",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-26",
+      "2025-10-01",
+      "2025-10-14",
+      "2025-10-19",
+      "2025-10-21"
+    ],
+    "postfixExtraDates": [
+      "2025-09-15",
+      "2025-09-24",
+      "2025-09-26",
+      "2025-10-01"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "phase4MissingInstitutions": [
+      "일산백병원",
+      "일산차병원"
+    ],
+    "postfixMissingInstitutions": [
+      "일산백병원",
+      "일산차병원"
+    ],
+    "phase4ExtraInstitutions": [
+      "경기도고양시일산동구장항동889일산차병원"
+    ],
+    "postfixExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "phase4BundleCount": 24,
+    "postfixBundleCount": 7
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_phase4=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPhase4": "better",
+  "mediumConfidenceFromFrozenBaseline": true
+}

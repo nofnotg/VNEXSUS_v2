@@ -1,0 +1,102 @@
+{
+  "caseName": "Case12",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case12_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase07_runtime\\Case12_runtime_broader_postfix.json",
+  "comparisonStatus": "broader_postfix_improved_partial_match",
+  "dominantPhase5Blocker": "date_false_positive_noise",
+  "timeoutFixStillHealthy": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "phase4MissingDates": [
+      "2024-03-27",
+      "2025-02-18"
+    ],
+    "postfixMissingDates": [
+      "2024-03-27",
+      "2025-02-18"
+    ],
+    "phase4ExtraDates": [
+      "1971-10-24",
+      "2019-04-09",
+      "2019-06-02",
+      "2019-06-03",
+      "2019-06-04",
+      "2019-06-05",
+      "2019-07-10",
+      "2020-02-21",
+      "2020-03-04",
+      "2020-03-16",
+      "2020-03-17",
+      "2020-03-25",
+      "2020-04-03",
+      "2020-04-10",
+      "2020-06-11",
+      "2020-07-23",
+      "2020-08-11",
+      "2020-09-17",
+      "2021-04-13",
+      "2021-06-10",
+      "2021-08-19",
+      "2022-10-12",
+      "2024-05-11",
+      "2024-05-13",
+      "2024-05-22",
+      "2025-01-30",
+      "2025-02-05",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07",
+      "2025-03-10",
+      "2025-03-11"
+    ],
+    "postfixExtraDates": [
+      "2024-05-11",
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07",
+      "2025-03-10"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "phase4MissingInstitutions": [
+      "요양급여내역서-김선삼",
+      "이대목동병원"
+    ],
+    "postfixMissingInstitutions": [
+      "요양급여내역서-김선삼",
+      "이대목동병원",
+      "홍익병원"
+    ],
+    "phase4ExtraInstitutions": [
+      "응급센터",
+      "종합병원",
+      "eumc이대목동병원"
+    ],
+    "postfixExtraInstitutions": [
+      "영광종합병원"
+    ]
+  },
+  "bundleSummary": {
+    "phase4BundleCount": 90,
+    "postfixBundleCount": 20
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_phase4=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPhase4": "better",
+  "mediumConfidenceFromFrozenBaseline": true
+}

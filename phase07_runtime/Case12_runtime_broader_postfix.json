@@ -1,0 +1,152 @@
+{
+  "caseName": "Case12",
+  "track": "date",
+  "runtimeSource": {
+    "method": "phase07_service_runner",
+    "generatedAt": "2026-03-21T16:01:54.279Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn0in3ag01zpmexkpgiebyrn",
+    "jobId": "cmn0in4vq0200mexkf6dqtm5g"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case12_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\요양급여내역서-김선삼.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\이대목동병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\홍익병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case12",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2019-03-01",
+      "2024-03-31",
+      "2024-05-11",
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07",
+      "2025-03-10"
+    ],
+    "windowDates": [
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-03-07"
+    ],
+    "atomDates": [
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-03-07"
+    ],
+    "bundleDates": [
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-03-07"
+    ],
+    "earliestDate": "2019-03-01",
+    "latestDate": "2025-03-10"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "영광 종합병원"
+    ],
+    "bundleHospitals": [
+      "영광 종합병원"
+    ],
+    "combinedInstitutions": [
+      "영광 종합병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 3,
+    "uploadedDocumentPageCount": 54,
+    "ocrBlockCount": 5668,
+    "dateCandidateCount": 83,
+    "windowCount": 71,
+    "eventAtomCount": 71,
+    "eventBundleCount": 20,
+    "eventTypes": [
+      "admission",
+      "exam",
+      "mixed",
+      "treatment"
+    ],
+    "bundleTypes": [
+      "admission",
+      "exam",
+      "mixed",
+      "treatment"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 20,
+    "pdfByteSize": 58939
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.162,
+  "actualLlmCost": 0,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "dominantBlocker": null,
+  "dominantPhase5Blocker": "date_false_positive_noise",
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "relativeToPhase4": "better",
+  "notes": [
+    "budgetEstimatedCostUsd=0.162"
+  ]
+}
