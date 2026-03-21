@@ -1,0 +1,91 @@
+{
+  "caseName": "Case3",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case3_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2019-11-22",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2024-12-13",
+      "2025-03-04",
+      "2025-01-15",
+      "2020-03-20",
+      "2025-03-19"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2019-11-22",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2024-12-13",
+      "2025-03-04",
+      "2025-01-15",
+      "2020-03-20",
+      "2025-03-19"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "이대목동병원"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "이대목동병원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2019-11-22",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2024-12-13",
+      "2025-03-04",
+      "2025-01-15",
+      "2020-03-20",
+      "2025-03-19"
+    ],
+    "institutions": [
+      "이대목동병원"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates",
+    "clear_runtime_ocr_failure"
+  ],
+  "reviewerCautionNotes": [
+    "direct keep"
+  ],
+  "mediumConfidenceFromFrozenBaseline": false
+}

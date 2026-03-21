@@ -1,0 +1,94 @@
+{
+  "caseName": "Case2",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case2_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case2_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2019-03-23",
+      "2023-08-07",
+      "2019-04-09",
+      "2024-01-09",
+      "2024-04-03",
+      "2024-04-09",
+      "2025-02-04",
+      "2025-02-12",
+      "2024-04-23"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2019-03-23",
+      "2023-08-07",
+      "2019-04-09",
+      "2024-01-09",
+      "2024-04-03",
+      "2024-04-09",
+      "2025-02-04",
+      "2025-02-12",
+      "2024-04-23"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "sm영상의학과",
+      "삼성서울병원",
+      "에스엠영상의학과"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "sm영상의학과",
+      "삼성서울병원",
+      "에스엠영상의학과"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2019-03-23",
+      "2023-08-07",
+      "2019-04-09",
+      "2024-01-09",
+      "2024-04-03",
+      "2024-04-09",
+      "2025-02-04",
+      "2025-02-12",
+      "2024-04-23"
+    ],
+    "institutions": [
+      "sm영상의학과",
+      "삼성서울병원",
+      "에스엠영상의학과"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates",
+    "clear_runtime_ocr_failure"
+  ],
+  "reviewerCautionNotes": [
+    "replacement for Case13"
+  ],
+  "mediumConfidenceFromFrozenBaseline": false
+}

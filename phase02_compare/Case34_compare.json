@@ -1,0 +1,101 @@
+{
+  "caseName": "Case34",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case34_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case34_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2017-06-13",
+      "2018-02-27",
+      "2018-03-29",
+      "2018-04-17",
+      "2024-01-19",
+      "2025-06-07",
+      "2025-06-24",
+      "2025-08-10",
+      "2025-08-14",
+      "2025-08-11",
+      "2025-06-12",
+      "2025-07-02"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2017-06-13",
+      "2018-02-27",
+      "2018-03-29",
+      "2018-04-17",
+      "2024-01-19",
+      "2025-06-07",
+      "2025-06-24",
+      "2025-08-10",
+      "2025-08-14",
+      "2025-08-11",
+      "2025-06-12",
+      "2025-07-02"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "일산병원"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "일산병원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2017-06-13",
+      "2018-02-27",
+      "2018-03-29",
+      "2018-04-17",
+      "2024-01-19",
+      "2025-06-07",
+      "2025-06-24",
+      "2025-08-10",
+      "2025-08-14",
+      "2025-08-11",
+      "2025-06-12",
+      "2025-07-02"
+    ],
+    "institutions": [
+      "일산병원"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates",
+    "clear_runtime_ocr_failure",
+    "no_coordinate_reference_support"
+  ],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "no coordinate reference support in frozen baseline",
+    "kept without coordinate reference",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

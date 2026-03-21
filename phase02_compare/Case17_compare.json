@@ -1,0 +1,78 @@
+{
+  "caseName": "Case17",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case17_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case17_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2025-08-14",
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12",
+      "2025-08-19"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2025-08-14",
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12",
+      "2025-08-19"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "해븐리병원"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "해븐리병원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2025-08-14",
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12",
+      "2025-08-19"
+    ],
+    "institutions": [
+      "해븐리병원"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates",
+    "clear_runtime_ocr_failure"
+  ],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

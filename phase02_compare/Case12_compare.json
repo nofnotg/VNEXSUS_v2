@@ -1,0 +1,87 @@
+{
+  "caseName": "Case12",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case12_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case12_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2024-03-27",
+      "2025-02-18",
+      "2025-02-19",
+      "2025-02-20",
+      "2019-03-01",
+      "2024-03-31"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2024-03-27",
+      "2025-02-18",
+      "2025-02-19",
+      "2025-02-20",
+      "2019-03-01",
+      "2024-03-31"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "요양급여내역서-김선삼",
+      "이대목동병원",
+      "홍익병원"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "요양급여내역서-김선삼",
+      "이대목동병원",
+      "홍익병원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2024-03-27",
+      "2025-02-18",
+      "2025-02-19",
+      "2025-02-20",
+      "2019-03-01",
+      "2024-03-31"
+    ],
+    "institutions": [
+      "요양급여내역서-김선삼",
+      "이대목동병원",
+      "홍익병원"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates",
+    "clear_runtime_ocr_failure"
+  ],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

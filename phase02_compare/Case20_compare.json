@@ -1,0 +1,69 @@
+{
+  "caseName": "Case20",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case20_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case20_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "반듯한정형외과의원"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "반듯한정형외과의원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "institutions": [
+      "반듯한정형외과의원"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates",
+    "clear_runtime_ocr_failure"
+  ],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

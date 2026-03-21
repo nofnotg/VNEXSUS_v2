@@ -1,0 +1,101 @@
+{
+  "caseName": "Case7",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case7_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case7_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2023-02-17",
+      "2023-02-18",
+      "2024-02-01",
+      "2024-02-17",
+      "2024-08-28",
+      "2024-11-04",
+      "2024-12-02",
+      "2024-12-04",
+      "2024-12-09",
+      "2024-12-17",
+      "2025-02-11",
+      "2024-12-26"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2023-02-17",
+      "2023-02-18",
+      "2024-02-01",
+      "2024-02-17",
+      "2024-08-28",
+      "2024-11-04",
+      "2024-12-02",
+      "2024-12-04",
+      "2024-12-09",
+      "2024-12-17",
+      "2025-02-11",
+      "2024-12-26"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "건이비인후과",
+      "사당연세365의원",
+      "서울성모병원"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "건이비인후과",
+      "사당연세365의원",
+      "서울성모병원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2023-02-17",
+      "2023-02-18",
+      "2024-02-01",
+      "2024-02-17",
+      "2024-08-28",
+      "2024-11-04",
+      "2024-12-02",
+      "2024-12-04",
+      "2024-12-09",
+      "2024-12-17",
+      "2025-02-11",
+      "2024-12-26"
+    ],
+    "institutions": [
+      "건이비인후과",
+      "사당연세365의원",
+      "서울성모병원"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:File too large",
+    "no_date_candidates",
+    "clear_runtime_intake_failure"
+  ],
+  "reviewerCautionNotes": [
+    "direct keep"
+  ],
+  "mediumConfidenceFromFrozenBaseline": false
+}

@@ -1,0 +1,87 @@
+{
+  "caseName": "Case36",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case36_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case36_runtime.json",
+  "comparisonStatus": "mismatch",
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2021-06-02",
+      "2023-01-15",
+      "2023-01-16",
+      "2023-01-17",
+      "2025-06-24"
+    ],
+    "runtimeDates": [],
+    "missingDates": [
+      "2021-06-02",
+      "2023-01-15",
+      "2023-01-16",
+      "2023-01-17",
+      "2025-06-24"
+    ],
+    "extraDates": []
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "동국대 기타",
+      "동국대 청구건",
+      "연세바른가정의학과",
+      "운정와이즈병원"
+    ],
+    "runtimeInstitutions": [],
+    "missingInstitutionsNormalized": [
+      "동국대기타",
+      "동국대청구건",
+      "연세바른가정의학과",
+      "운정와이즈병원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "eventBundlesAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2021-06-02",
+      "2023-01-15",
+      "2023-01-16",
+      "2023-01-17",
+      "2025-06-24"
+    ],
+    "institutions": [
+      "동국대기타",
+      "동국대청구건",
+      "연세바른가정의학과",
+      "운정와이즈병원"
+    ],
+    "pipelineStages": [
+      "ocrCompleted",
+      "blocksAvailable",
+      "dateCandidatesAvailable",
+      "eventBundlesAvailable"
+    ]
+  },
+  "extraItems": {
+    "dates": [],
+    "institutions": []
+  },
+  "suspiciousValues": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates",
+    "clear_runtime_ocr_failure"
+  ],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}
