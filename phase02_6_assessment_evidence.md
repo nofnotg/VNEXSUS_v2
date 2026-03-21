@@ -2,9 +2,11 @@
 
 - targetBranch: `main`
 - assessmentCommit: `534af76`
-- remoteVerifiedAtCommit: `PENDING_AFTER_COMMIT`
+- assessmentEvidenceCommit: `0d23b89`
+- remoteVerifiedAtCommit: `0d23b89`
 - pushedCommitShas:
   - `534af76`
+  - `0d23b89`
 
 ## Files created
 - `phase02_6_assessment_manifest.json`
@@ -27,4 +29,4 @@
 - `Phase 3 implementation is recommended next`
 
 ## Answer/repo alignment
-- answerVsRepoMatched: `pending final remote verification`
+- answerVsRepoMatched: `true`
