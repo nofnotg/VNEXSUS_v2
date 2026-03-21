@@ -5,12 +5,14 @@
 - rerunArtifactsCommit: `155827c`
 - compareArtifactsCommit: `71ff42d`
 - executionEvidenceCommit: `00092bb`
-- remoteVerifiedAtCommit: `00092bb`
+- evidenceSyncCommit: `4bfb637`
+- remoteVerifiedAtCommit: `4bfb637`
 - pushedCommitShas:
   - `0f653d3`
   - `155827c`
   - `71ff42d`
   - `00092bb`
+  - `4bfb637`
 
 ## Smoke test
 - smokeTestCase: `Case16`
