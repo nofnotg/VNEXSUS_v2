@@ -1,0 +1,141 @@
+{
+  "phase": "Phase 2.6",
+  "blockers": [
+    {
+      "caseName": "Case2",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "blockerScope": "global",
+      "layer": "database",
+      "evidenceSummary": "OCR blocks/date candidates/windows/atoms were created, but eventBundle update failed inside Prisma transaction with 'Transaction not found' in event-bundle-service.ts.",
+      "nextBestAction": "Refactor event bundle write path to avoid long interactive transaction and rerun after code fix.",
+      "priority": "P0",
+      "notes": [
+        "runtime compare not meaningful yet",
+        "global downstream failure signature"
+      ]
+    },
+    {
+      "caseName": "Case3",
+      "phase25Status": "runtime_recovered_partial_match",
+      "blockerClass": "environment_fixed",
+      "blockerScope": "global",
+      "layer": "config",
+      "evidenceSummary": "Case rerun completed OCR, bundles, narrative, and PDF after .env.local override removed stale credential-path failure; comparison still shows missing historical dates and institution normalization drift.",
+      "nextBestAction": "Keep as proof of environment recovery; use as semantic-quality sample after transaction fix.",
+      "priority": "P1",
+      "notes": [
+        "pipeline recovery proven",
+        "semantic coverage still incomplete"
+      ]
+    },
+    {
+      "caseName": "Case7",
+      "phase25Status": "deferred",
+      "blockerClass": "intake_limit",
+      "blockerScope": "case_specific",
+      "layer": "intake",
+      "evidenceSummary": "서울성모병원.pdf exceeds current 20 MB upload limit (25432858 bytes), so rerun never reached OCR/semantic stages.",
+      "nextBestAction": "Add oversized-PDF intake handling (preprocess, split, or separate upload path) before rerun.",
+      "priority": "P1",
+      "notes": [
+        "separate from semantic timeout group",
+        "blind rerun will not help"
+      ]
+    },
+    {
+      "caseName": "Case10",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "blockerScope": "global",
+      "layer": "database",
+      "evidenceSummary": "EventAtom update timed out inside event-bundle-service transaction after OCR/date candidate generation had already succeeded.",
+      "nextBestAction": "Shorten bundle transaction or batch writes outside interactive transaction, then rerun.",
+      "priority": "P0",
+      "notes": [
+        "not an OCR credential failure anymore"
+      ]
+    },
+    {
+      "caseName": "Case12",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "blockerScope": "global",
+      "layer": "database",
+      "evidenceSummary": "EventAtom update failed with 'Transaction not found' after runtime produced OCR blocks and semantic precursors.",
+      "nextBestAction": "Fix transaction handling in event bundle stage and rerun.",
+      "priority": "P0",
+      "notes": [
+        "medium-confidence baseline case"
+      ]
+    },
+    {
+      "caseName": "Case16",
+      "phase25Status": "runtime_recovered_partial_match",
+      "blockerClass": "environment_fixed",
+      "blockerScope": "global",
+      "layer": "config",
+      "evidenceSummary": "Smoke test case completed end-to-end without credential-path failure, proving runtime recovery; partial match still misses several golden dates and institution normalization.",
+      "nextBestAction": "Treat as recovery proof and quality benchmark; proceed to targeted downstream fixes before more reruns.",
+      "priority": "P1",
+      "notes": [
+        "medium-confidence baseline case",
+        "proof-of-recovery anchor"
+      ]
+    },
+    {
+      "caseName": "Case17",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "blockerScope": "global",
+      "layer": "database",
+      "evidenceSummary": "Runtime reached OCR blocks/date candidates/windows/atoms, then failed with closed transaction error before bundles.",
+      "nextBestAction": "Fix bundle transaction handling; rerun only after code change.",
+      "priority": "P0",
+      "notes": [
+        "medium-confidence baseline case"
+      ]
+    },
+    {
+      "caseName": "Case20",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "blockerScope": "global",
+      "layer": "database",
+      "evidenceSummary": "EventBundle create exceeded interactive transaction timeout after semantic precursor generation succeeded.",
+      "nextBestAction": "Reduce transaction duration in event-bundle-service; rerun after fix.",
+      "priority": "P0",
+      "notes": [
+        "medium-confidence baseline case"
+      ]
+    },
+    {
+      "caseName": "Case34",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "blockerScope": "global",
+      "layer": "database",
+      "evidenceSummary": "Single-doc case still hit eventBundle create timeout after OCR/date/window/atom stages, indicating a global downstream bottleneck rather than coordinate-reference absence.",
+      "nextBestAction": "Fix bundle transaction path first; do not rerun unchanged.",
+      "priority": "P0",
+      "notes": [
+        "medium-confidence baseline case",
+        "no coordinate reference support"
+      ]
+    },
+    {
+      "caseName": "Case36",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "blockerScope": "global",
+      "layer": "database",
+      "evidenceSummary": "Large multi-doc case failed at eventBundle create timeout after successful OCR and semantic precursor generation.",
+      "nextBestAction": "Use as stress case after transaction fix; avoid blind rerun before code change.",
+      "priority": "P0",
+      "notes": [
+        "medium-confidence baseline case",
+        "high-page stress case"
+      ]
+    }
+  ]
+}
