@@ -3,10 +3,12 @@
 - targetBranch: `main`
 - runtimeArtifactsCommit: `9d44a6b`
 - comparisonArtifactsCommit: `524f4cf`
-- remoteVerifiedAtCommit: `524f4cf`
+- comparisonEvidenceCommit: `2b808ef`
+- remoteVerifiedAtCommit: `2b808ef`
 - pushedCommitShas:
   - `9d44a6b`
   - `524f4cf`
+  - `2b808ef`
 - limitedRuntimeExecutionPerformed: `true`
 - all10CasesCompared: `true`
 - frozenPhase05ArtifactsModified: `false`
