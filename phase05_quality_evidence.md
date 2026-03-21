@@ -4,11 +4,12 @@
 - diagnosisCommit: `381be59`
 - actionPlanCommit: `381be59`
 - qualityEvidenceCommit: `f4b4145`
-- evidenceSyncCommit: `TBD`
-- remoteVerifiedCommit: `TBD`
+- evidenceSyncCommit: `30f37a0`
+- remoteVerifiedCommit: `30f37a0`
 - pushedCommitShas:
   - `381be59`
   - `f4b4145`
+  - `30f37a0`
 - filesCreated:
   - `phase05_quality_manifest.json`
   - `phase05_quality_matrix.json`
@@ -23,7 +24,7 @@
   - `institution_alias_resolution_gap: 2`
   - `bundle_over-segmentation: 1`
 - phase6ImplementationRecommendedNext: `true`
-- answerVsRepoMatched: `TBD`
+- answerVsRepoMatched: `true`
 
 ## Remote Verification Checklist
 - [x] `phase05_quality_manifest.json` fetched directly from `origin/main`
