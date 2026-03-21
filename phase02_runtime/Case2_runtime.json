@@ -1,0 +1,77 @@
+{
+  "caseName": "Case2",
+  "runtimeSource": {
+    "method": "phase02_service_runner",
+    "generatedAt": "2026-03-21T05:36:32.073Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmmzwauyz000pme5wpvjp69vh",
+    "jobId": "cmmzwawq30010me5w0wby9f6y"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case2_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\sm영상의학과.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\삼성서울병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\에스엠영상의학과.pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case2",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "windowsAvailable": false,
+    "eventAtomsAvailable": false,
+    "eventBundlesAvailable": false,
+    "structuredOutputAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [],
+    "windowDates": [],
+    "atomDates": [],
+    "bundleDates": [],
+    "earliestDate": null,
+    "latestDate": null
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [],
+    "bundleHospitals": [],
+    "combinedInstitutions": []
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 3,
+    "uploadedDocumentPageCount": 3,
+    "ocrBlockCount": 0,
+    "dateCandidateCount": 0,
+    "windowCount": 0,
+    "eventAtomCount": 0,
+    "eventBundleCount": 0,
+    "eventTypes": [],
+    "bundleTypes": [],
+    "reportSectionTitles": [],
+    "narrativeSectionCount": 0,
+    "pdfByteSize": 53482
+  },
+  "extractionWarnings": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates"
+  ],
+  "parsingAmbiguityNotes": [],
+  "failureTaxonomy": "OCR",
+  "actualOcrCost": 0.141,
+  "actualLlmCost": 0,
+  "budgetStopTriggered": false,
+  "notes": [
+    "budgetEstimatedCostUsd=0.141"
+  ]
+}

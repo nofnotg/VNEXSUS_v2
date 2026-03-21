@@ -1,0 +1,75 @@
+{
+  "caseName": "Case7",
+  "runtimeSource": {
+    "method": "phase02_service_runner",
+    "generatedAt": "2026-03-21T05:36:53.692Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmmzwbbnh0023me5wduor89u3",
+    "jobId": null
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case7_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 양재진(편도암)\\건이비인후과.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 양재진(편도암)\\사당연세365의원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 양재진(편도암)\\서울성모병원.pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case7",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": false,
+    "ocrJobCreated": false,
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "windowsAvailable": false,
+    "eventAtomsAvailable": false,
+    "eventBundlesAvailable": false,
+    "structuredOutputAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [],
+    "windowDates": [],
+    "atomDates": [],
+    "bundleDates": [],
+    "earliestDate": null,
+    "latestDate": null
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [],
+    "bundleHospitals": [],
+    "combinedInstitutions": []
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 2,
+    "uploadedDocumentPageCount": 2,
+    "ocrBlockCount": 0,
+    "dateCandidateCount": 0,
+    "windowCount": 0,
+    "eventAtomCount": 0,
+    "eventBundleCount": 0,
+    "eventTypes": [],
+    "bundleTypes": [],
+    "reportSectionTitles": [],
+    "narrativeSectionCount": 0,
+    "pdfByteSize": 53482
+  },
+  "extractionWarnings": [
+    "runtime_error:File too large",
+    "no_date_candidates"
+  ],
+  "parsingAmbiguityNotes": [],
+  "failureTaxonomy": "Intake",
+  "actualOcrCost": 0.351,
+  "actualLlmCost": 0,
+  "budgetStopTriggered": false,
+  "notes": [
+    "budgetEstimatedCostUsd=0.351"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "caseName": "Case20",
+  "runtimeSource": {
+    "method": "phase02_service_runner",
+    "generatedAt": "2026-03-21T05:36:39.818Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmmzwb0y30012me5w5ie1usbo",
+    "jobId": "cmmzwb1vu0017me5wd6dn6bqs"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case20_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김소원\\반듯한정형외과의원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case20",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": false,
+    "blocksAvailable": false,
+    "dateCandidatesAvailable": false,
+    "windowsAvailable": false,
+    "eventAtomsAvailable": false,
+    "eventBundlesAvailable": false,
+    "structuredOutputAvailable": false,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [],
+    "windowDates": [],
+    "atomDates": [],
+    "bundleDates": [],
+    "earliestDate": null,
+    "latestDate": null
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [],
+    "bundleHospitals": [],
+    "combinedInstitutions": []
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 1,
+    "uploadedDocumentPageCount": 1,
+    "ocrBlockCount": 0,
+    "dateCandidateCount": 0,
+    "windowCount": 0,
+    "eventAtomCount": 0,
+    "eventBundleCount": 0,
+    "eventTypes": [],
+    "bundleTypes": [],
+    "reportSectionTitles": [],
+    "narrativeSectionCount": 0,
+    "pdfByteSize": 53482
+  },
+  "extractionWarnings": [
+    "runtime_error:Google Vision OCR request failed",
+    "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+    "ocr_job_failed:Google Vision OCR request failed",
+    "no_date_candidates"
+  ],
+  "parsingAmbiguityNotes": [],
+  "failureTaxonomy": "OCR",
+  "actualOcrCost": 0.141,
+  "actualLlmCost": 0,
+  "budgetStopTriggered": false,
+  "notes": [
+    "budgetEstimatedCostUsd=0.141"
+  ]
+}
