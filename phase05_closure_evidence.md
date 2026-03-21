@@ -4,11 +4,13 @@
 - phaseLockCommit: `241c1a2`
 - evidenceCreateCommit: `302e9c8`
 - evidenceSyncCommit: `d94a8f9`
-- remoteVerifiedAtCommit: `d94a8f9`
+- cleanupCommit: `4b33e05`
+- remoteVerifiedAtCommit: `4b33e05`
 - pushedCommitShas:
   - `241c1a2`
   - `302e9c8`
   - `d94a8f9`
+  - `4b33e05`
 - changedFiles:
   - `pilot10_manifest.json`
   - `pilot10_budget_plan.json`
