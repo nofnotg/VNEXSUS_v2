@@ -1,0 +1,26 @@
+{
+  "phase": "Phase 3.5",
+  "attemptedCases": [
+    "Case16",
+    "Case3",
+    "Case17"
+  ],
+  "successfulValidationCases": [
+    "Case16",
+    "Case3",
+    "Case17"
+  ],
+  "failedValidationCases": [],
+  "runtimeGenerationMethodSummary": "Limited Phase 3.5 service-runner execution using real local env with .env.local override, real DB, and real storage/OCR path via createCaseForUser + upsertPatientInput + uploadDocumentFile + createOcrJob; frozen earlier artifacts preserved; Case7 intentionally excluded.",
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_runtime\\Case16_runtime_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_runtime\\Case3_runtime_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_runtime\\Case17_runtime_validation.json"
+  ],
+  "allRuntimeArtifactsExist": true,
+  "timeoutFixEffectivenessProven": true,
+  "smokeTestCase": "Case16",
+  "broadRerunJustified": true,
+  "priorSemanticTimeoutSymptomRecurred": false,
+  "generatedAt": "2026-03-21T10:24:15.738Z"
+}

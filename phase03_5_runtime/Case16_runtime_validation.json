@@ -1,0 +1,183 @@
+{
+  "caseName": "Case16",
+  "runtimeSource": {
+    "method": "phase03_5_service_runner",
+    "generatedAt": "2026-03-21T10:21:47.560Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn06hpd80001me2ou7npgs7j",
+    "jobId": "cmn06hqkd0009me2ozy94edtq",
+    "smokeTestCase": true
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case16_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산백병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산차병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case16",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "1967-12-18",
+      "2025-08-21",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-15",
+      "2025-09-19",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-25",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01",
+      "2025-10-14",
+      "2025-10-19",
+      "2025-10-21"
+    ],
+    "windowDates": [
+      "1967-12-18",
+      "2025-08-21",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-15",
+      "2025-09-19",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-25",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01",
+      "2025-10-19",
+      "2025-10-21"
+    ],
+    "atomDates": [
+      "1967-12-18",
+      "2025-08-21",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-15",
+      "2025-09-19",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-25",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01",
+      "2025-10-19",
+      "2025-10-21"
+    ],
+    "bundleDates": [
+      "1967-12-18",
+      "2025-08-21",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-15",
+      "2025-09-19",
+      "2025-09-20",
+      "2025-09-24",
+      "2025-09-25",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01",
+      "2025-10-19",
+      "2025-10-21"
+    ],
+    "earliestDate": "1967-12-18",
+    "latestDate": "2025-10-21"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "경기도 고양시 일산 동구 장항동 889 일산 차병원"
+    ],
+    "bundleHospitals": [
+      "경기도 고양시 일산 동구 장항동 889 일산 차병원"
+    ],
+    "combinedInstitutions": [
+      "경기도 고양시 일산 동구 장항동 889 일산 차병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 2,
+    "uploadedDocumentPageCount": 20,
+    "ocrBlockCount": 741,
+    "dateCandidateCount": 63,
+    "windowCount": 35,
+    "eventAtomCount": 35,
+    "eventBundleCount": 24,
+    "eventTypes": [
+      "exam",
+      "outpatient",
+      "pathology",
+      "unknown"
+    ],
+    "bundleTypes": [
+      "exam",
+      "outpatient",
+      "pathology",
+      "unknown"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 24,
+    "pdfByteSize": 61517
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.06,
+  "actualLlmCost": 0,
+  "budgetStopTriggered": false,
+  "validationStatus": "validation_completed",
+  "priorSemanticTimeoutSymptomRecurred": false,
+  "dominantBlocker": null,
+  "notes": [
+    "budgetEstimatedCostUsd=0.06"
+  ]
+}

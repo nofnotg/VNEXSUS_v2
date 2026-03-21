@@ -1,0 +1,200 @@
+{
+  "caseName": "Case3",
+  "runtimeSource": {
+    "method": "phase03_5_service_runner",
+    "generatedAt": "2026-03-21T10:22:43.344Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn06iweq00wcme2ofbr8np61",
+    "jobId": "cmn06ix9000whme2o484boc3t",
+    "smokeTestCase": false
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case3_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 김민아(뇌 양성종양)\\이대목동병원.pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case3",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04",
+      "2025-03-21",
+      "2025-03-28"
+    ],
+    "windowDates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04",
+      "2025-03-21",
+      "2025-03-28"
+    ],
+    "atomDates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04",
+      "2025-03-21",
+      "2025-03-28"
+    ],
+    "bundleDates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04",
+      "2025-03-21",
+      "2025-03-28"
+    ],
+    "earliestDate": "1991-06-24",
+    "latestDate": "2025-03-28"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "EUMC 이대 목동 병원"
+    ],
+    "bundleHospitals": [
+      "EUMC 이대 목동 병원"
+    ],
+    "combinedInstitutions": [
+      "EUMC 이대 목동 병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 1,
+    "uploadedDocumentPageCount": 24,
+    "ocrBlockCount": 1244,
+    "dateCandidateCount": 86,
+    "windowCount": 64,
+    "eventAtomCount": 64,
+    "eventBundleCount": 43,
+    "eventTypes": [
+      "exam",
+      "outpatient",
+      "pathology",
+      "unknown"
+    ],
+    "bundleTypes": [
+      "exam",
+      "outpatient",
+      "pathology",
+      "unknown"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 43,
+    "pdfByteSize": 66457
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.072,
+  "actualLlmCost": 0,
+  "budgetStopTriggered": false,
+  "validationStatus": "validation_completed",
+  "priorSemanticTimeoutSymptomRecurred": false,
+  "dominantBlocker": null,
+  "notes": [
+    "budgetEstimatedCostUsd=0.072"
+  ]
+}

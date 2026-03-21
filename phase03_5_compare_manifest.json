@@ -1,0 +1,41 @@
+{
+  "phase": "Phase 3.5",
+  "comparisonFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_compare\\Case16_compare_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_compare\\Case3_compare_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_compare\\Case17_compare_validation.json"
+  ],
+  "caseStatuses": [
+    {
+      "caseName": "Case16",
+      "comparisonStatus": "validation_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "comparisonStatus": "validation_partial_match"
+    },
+    {
+      "caseName": "Case17",
+      "comparisonStatus": "validation_partial_match"
+    }
+  ],
+  "statusCounts": {
+    "validation_match": 0,
+    "validation_partial_match": 3,
+    "validation_mismatch": 0,
+    "validation_failed": 0
+  },
+  "mediumConfidenceCases": [
+    "Case12",
+    "Case16",
+    "Case17",
+    "Case20",
+    "Case34",
+    "Case36"
+  ],
+  "highestRiskRemainingCases": [],
+  "comparisonQuality": "semantic-grade",
+  "timeoutFixEffectivenessProven": true,
+  "broadRerunJustified": true,
+  "generatedAt": "2026-03-21T10:24:15.742Z"
+}
