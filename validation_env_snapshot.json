@@ -1,0 +1,15 @@
+{
+  "gitSha": "c9d874133e1ef6e0560e0081122d3a663c3a1365",
+  "branch": "main",
+  "runDate": "2026-03-21T11:19:37+09:00",
+  "appMode": "full-integration-local",
+  "ocrProvider": "google-vision",
+  "dbMode": "real-database",
+  "gcsEnabled": true,
+  "budgetCapUsd": 10,
+  "notes": [
+    "Snapshot generated before pilot execution.",
+    "Mode/provider inferred from current .env.local without exposing secret values.",
+    "Estimated LLM cost is 0.0 because static inspection found no active OpenAI invocation in the current case pipeline."
+  ]
+}

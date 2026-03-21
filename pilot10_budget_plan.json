@@ -1,0 +1,94 @@
+{
+  "totalBudgetCap": 10.0,
+  "softStopThreshold": 8.0,
+  "hardStopThreshold": 10.0,
+  "perCaseEstimatedCost": [
+    {
+      "caseName": "Case16",
+      "estimatedPages": 20,
+      "estimatedOcrCost": 0.06,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.06
+    },
+    {
+      "caseName": "Case3",
+      "estimatedPages": 24,
+      "estimatedOcrCost": 0.072,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.072
+    },
+    {
+      "caseName": "Case17",
+      "estimatedPages": 28,
+      "estimatedOcrCost": 0.084,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.084
+    },
+    {
+      "caseName": "Case13",
+      "estimatedPages": 47,
+      "estimatedOcrCost": 0.141,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.141
+    },
+    {
+      "caseName": "Case20",
+      "estimatedPages": 47,
+      "estimatedOcrCost": 0.141,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.141
+    },
+    {
+      "caseName": "Case34",
+      "estimatedPages": 52,
+      "estimatedOcrCost": 0.156,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.156
+    },
+    {
+      "caseName": "Case12",
+      "estimatedPages": 54,
+      "estimatedOcrCost": 0.162,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.162
+    },
+    {
+      "caseName": "Case10",
+      "estimatedPages": 89,
+      "estimatedOcrCost": 0.267,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.267
+    },
+    {
+      "caseName": "Case7",
+      "estimatedPages": 117,
+      "estimatedOcrCost": 0.351,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.351
+    },
+    {
+      "caseName": "Case36",
+      "estimatedPages": 129,
+      "estimatedOcrCost": 0.387,
+      "estimatedLlmCost": 0.0,
+      "estimatedTotalCost": 0.387
+    }
+  ],
+  "orderedExecutionPlan": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case13",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case7",
+    "Case36"
+  ],
+  "stopRule": {
+    "softAlertAtUsd": 8.0,
+    "hardStopAtUsd": 10.0,
+    "policy": "Run selected cases in ascending estimatedPages order; stop immediately if projected cumulative spend exceeds hard stop."
+  }
+}
