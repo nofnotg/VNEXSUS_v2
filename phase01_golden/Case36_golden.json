@@ -1,0 +1,57 @@
+{
+  "caseName": "Case36",
+  "sourceCaseIndex": 36,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case36_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\동국대 기타.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\동국대 청구건.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\연세바른가정의학과.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\운정와이즈병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case36",
+  "finalDecision": "kept",
+  "baselineSummary": {
+    "sourceCaseName": "이금홍",
+    "expectedRepresentation": "Use Case36 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2021.06.02",
+      "2023.01.15",
+      "2023.01.16",
+      "2023.01.17",
+      "2025.06.24"
+    ],
+    "rawDateSamples": [
+      "2025-09-16",
+      "2021-03-11",
+      "2021-03-30",
+      "2021-11-12",
+      "2021-12-06",
+      "2021-12-20",
+      "2021-12-10",
+      "2021-12-21",
+      "2021-12-28",
+      "2021-12-24",
+      "2022-01-12",
+      "2021.12.24"
+    ],
+    "sourceInstitutionNames": [
+      "동국대 기타",
+      "동국대 청구건",
+      "연세바른가정의학과",
+      "운정와이즈병원"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=multiDocument"
+  },
+  "reviewNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case36",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw patient token and multi-doc bundle align"
+  }
+}

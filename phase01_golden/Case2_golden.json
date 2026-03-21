@@ -1,0 +1,58 @@
+{
+  "caseName": "Case2",
+  "sourceCaseIndex": 2,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case2_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\sm영상의학과.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\삼성서울병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\에스엠영상의학과.pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case2",
+  "finalDecision": "selected_replacement",
+  "baselineSummary": {
+    "sourceCaseName": "농협손해보험 김미화 (수술비 고지의무 위반)",
+    "expectedRepresentation": "Use Case2 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2019.03.23",
+      "2023.08.07",
+      "2019.04.09",
+      "2024.01.09",
+      "2024.04.03",
+      "2024.04.09",
+      "2025.02.04",
+      "2025.02.12",
+      "2024.04.23"
+    ],
+    "rawDateSamples": [
+      "2025-04-07",
+      "2024.04.09",
+      "2025-03-21",
+      "2024.04.25",
+      "2024.11.21",
+      "2025-02-04",
+      "2025-02-05",
+      "2025.02.27",
+      "2025-02-26",
+      "2025.02.12",
+      "2025-02-10",
+      "2025.02.05"
+    ],
+    "sourceInstitutionNames": [
+      "sm영상의학과",
+      "삼성서울병원",
+      "에스엠영상의학과"
+    ],
+    "frozenSelectionRationale": "lock=selected;replacementFor=Case13;coordRef=yes;rawPatientToken=yes;sourceDocsMatch=yes;reportMedicalContext=yes"
+  },
+  "reviewNotes": [
+    "replacement for Case13"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case2",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "coords+raw patient token+source docs aligned to Kim Mihwa NH bundle"
+  }
+}

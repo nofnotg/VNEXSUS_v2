@@ -1,0 +1,54 @@
+{
+  "caseName": "Case10",
+  "sourceCaseIndex": 10,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case10_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 조윤아(태아보험, 엄마(이주희)\\은평성모(이주희).pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 조윤아(태아보험, 엄마(이주희)\\은평성모(조윤아).pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case10",
+  "finalDecision": "kept",
+  "baselineSummary": {
+    "sourceCaseName": "현대해상 조윤아(태아보험, 엄마(이주희)",
+    "expectedRepresentation": "Use Case10 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2024.05.01",
+      "2054.11.10",
+      "2025.11.10",
+      "2024.04.18",
+      "2024.10.22",
+      "2024.12.20",
+      "2024.10.23"
+    ],
+    "rawDateSamples": [
+      "2025-1-20",
+      "2024-04-18",
+      "2024-04-06",
+      "2024-04-05",
+      "2024-03-23",
+      "2024-03-11",
+      "2023-12-06",
+      "2023-09-15",
+      "2023-09-11",
+      "2023-06-19",
+      "2023-05-24",
+      "2023-05-19"
+    ],
+    "sourceInstitutionNames": [
+      "은평성모(이주희)",
+      "은평성모(조윤아)"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=yes;rawPatientToken=yes;guardianToken=yes;pairedSourceDocs=yes"
+  },
+  "reviewNotes": [
+    "direct keep"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case10",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw mother/child tokens and paired source docs align"
+  }
+}

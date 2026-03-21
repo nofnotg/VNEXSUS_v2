@@ -1,0 +1,51 @@
+{
+  "caseName": "Case17",
+  "sourceCaseIndex": 17,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case17_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김동아\\해븐리병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case17",
+  "finalDecision": "kept",
+  "baselineSummary": {
+    "sourceCaseName": "김동아",
+    "expectedRepresentation": "Use Case17 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2025.08.14",
+      "2025.08.12",
+      "2030.08.12",
+      "2045.08.12",
+      "2025.08.19"
+    ],
+    "rawDateSamples": [
+      "2025/09/09",
+      "2025.08.14",
+      "2025.08.18",
+      "2025.08.19",
+      "2025.08.21",
+      "2025.08.28",
+      "2025-08-19",
+      "2025-08-22",
+      "2025-08-20",
+      "2025-08-28",
+      "2025-05-20",
+      "2005-08-20"
+    ],
+    "sourceInstitutionNames": [
+      "해븐리병원"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=singleHospital"
+  },
+  "reviewNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case17",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw patient token and single-hospital bundle align"
+  }
+}

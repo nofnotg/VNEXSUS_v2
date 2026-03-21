@@ -1,0 +1,56 @@
+{
+  "caseName": "Case12",
+  "sourceCaseIndex": 12,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case12_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\요양급여내역서-김선삼.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\이대목동병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\홍익병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case12",
+  "finalDecision": "kept",
+  "baselineSummary": {
+    "sourceCaseName": "KB손해보험 김선삼(질병사망)",
+    "expectedRepresentation": "Use Case12 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2024.03.27",
+      "2025.02.18",
+      "2025.02.19",
+      "2025.02.20",
+      "2019.03.01",
+      "2024.03.31"
+    ],
+    "rawDateSamples": [
+      "2025-03-11",
+      "2025-02-28",
+      "2025.3.02",
+      "2019.03.01",
+      "2024.03.31",
+      "2019.04.09",
+      "2019.06.02",
+      "2019.06.03",
+      "2019.06.04",
+      "2019.06.05",
+      "2019.07.10",
+      "2020.02.21"
+    ],
+    "sourceInstitutionNames": [
+      "요양급여내역서-김선삼",
+      "이대목동병원",
+      "홍익병원"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=yes;rawPatientToken=yes;reportMedicalContext=compatible"
+  },
+  "reviewNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case12",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw patient token and disease-death context compatible"
+  }
+}

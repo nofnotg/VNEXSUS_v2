@@ -1,0 +1,55 @@
+{
+  "caseName": "Case3",
+  "sourceCaseIndex": 3,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case3_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 김민아(뇌 양성종양)\\이대목동병원.pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case3",
+  "finalDecision": "kept",
+  "baselineSummary": {
+    "sourceCaseName": "현대해상 김민아(뇌 양성종양)",
+    "expectedRepresentation": "Use Case3 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2019.11.22",
+      "2021.09.02",
+      "2023.11.22",
+      "2024.08.22",
+      "2024.11.22",
+      "2024.12.13",
+      "2025.03.04",
+      "2025.01.15",
+      "2020.03.20",
+      "2025.03.19"
+    ],
+    "rawDateSamples": [
+      "2025-03-28",
+      "2025-03-18",
+      "2025.3.19",
+      "2024.11.22",
+      "2091.11.22",
+      "2024.12.13",
+      "2025.03.17",
+      "2025.01.15",
+      "2020-03-20",
+      "2025-03-19",
+      "2024-12-13",
+      "2024-12-11"
+    ],
+    "sourceInstitutionNames": [
+      "이대목동병원"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=yes;rawPatientToken=yes;rawInsurerToken=yes;sourceDocMatch=yes"
+  },
+  "reviewNotes": [
+    "direct keep"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case3",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw patient+insurer tokens and coords align"
+  }
+}

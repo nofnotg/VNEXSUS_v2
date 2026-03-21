@@ -1,0 +1,48 @@
+{
+  "caseName": "Case20",
+  "sourceCaseIndex": 20,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case20_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김소원\\반듯한정형외과의원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case20",
+  "finalDecision": "kept",
+  "baselineSummary": {
+    "sourceCaseName": "김소원",
+    "expectedRepresentation": "Use Case20 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2025.01.02",
+      "2025.09.11"
+    ],
+    "rawDateSamples": [
+      "2025-09-23",
+      "2025/02/28",
+      "2025-09-18",
+      "2025-02-14",
+      "2025-02-19",
+      "2025-02-21",
+      "2025-02-26",
+      "2025-03-03",
+      "2025-03-05",
+      "2025-03-21",
+      "2025-03-27",
+      "2025-03-31"
+    ],
+    "sourceInstitutionNames": [
+      "반듯한정형외과의원"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=singleDocument"
+  },
+  "reviewNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case20",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw patient token and single-doc bundle align"
+  }
+}

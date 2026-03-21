@@ -1,0 +1,59 @@
+{
+  "caseName": "Case34",
+  "sourceCaseIndex": 34,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case34_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\윤희정\\일산병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "hasCoordinateReference": false,
+  "coordinateReferencePath": null,
+  "finalDecision": "kept_no_coordinate_reference",
+  "baselineSummary": {
+    "sourceCaseName": "윤희정",
+    "expectedRepresentation": "Use Case34 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2017.06.13",
+      "2018.02.27",
+      "2018.03.29",
+      "2018.04.17",
+      "2024.01.19",
+      "2025.06.07",
+      "2025.06.24",
+      "2025.08.10",
+      "2025.08.14",
+      "2025.08.11",
+      "2025.06.12",
+      "2025.07.02"
+    ],
+    "rawDateSamples": [
+      "2025-09-04",
+      "2017-06-13",
+      "2012.12.5",
+      "2017-06-08",
+      "2017-11-08",
+      "2017-11-01",
+      "2018-02-27",
+      "2018-02-24",
+      "2018-04-17",
+      "2018-04-14",
+      "2018-10-24",
+      "2018-10-20"
+    ],
+    "sourceInstitutionNames": [
+      "일산병원"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=no;rawPatientToken=yes;sourceDocMatch=yes;reportDateAlign=yes"
+  },
+  "reviewNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "no coordinate reference support in frozen baseline",
+    "kept without coordinate reference"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case34",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw patient token + ilsan hospital doc + report dates align"
+  }
+}

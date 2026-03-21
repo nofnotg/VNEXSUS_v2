@@ -1,0 +1,59 @@
+{
+  "caseName": "Case16",
+  "sourceCaseIndex": 16,
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case16_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산백병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산차병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "hasCoordinateReference": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case16",
+  "finalDecision": "kept",
+  "baselineSummary": {
+    "sourceCaseName": "곽동인",
+    "expectedRepresentation": "Use Case16 as a locked partial-subset medical reference derived from report text and source docs; later pipeline output should preserve date coverage and institution linkage.",
+    "reportDateSamples": [
+      "2025-09-25",
+      "2025.09.10",
+      "2024.11.25",
+      "2025.02.23",
+      "2025.08.21",
+      "2025.09.25",
+      "2025.09.11",
+      "2025.09.19",
+      "2025.09.30",
+      "2025.09.29",
+      "2025.11.25"
+    ],
+    "rawDateSamples": [
+      "2025-10-21",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01",
+      "2025/10/21",
+      "2025-09-26",
+      "2025-10-19",
+      "2025.08.21",
+      "2025.09.24",
+      "2025-08-21",
+      "2025-10-14",
+      "2025-09-10"
+    ],
+    "sourceInstitutionNames": [
+      "일산백병원",
+      "일산차병원"
+    ],
+    "frozenSelectionRationale": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=twoHospitals"
+  },
+  "reviewNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence"
+  ],
+  "traceability": {
+    "manifestCaseName": "Case16",
+    "mappingReviewStatus": "selected",
+    "mappingReviewEvidence": "raw patient token and two-hospital bundle align"
+  }
+}
