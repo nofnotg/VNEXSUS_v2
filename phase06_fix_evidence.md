@@ -3,6 +3,8 @@
 - targetBranch: `main`
 - implementationCommitShas:
   - `fba67d6`
+- documentationCommitShas:
+  - `e3b0100`
 - filesChanged:
   - `packages/domain/src/dates/date-extraction.ts`
   - `packages/domain/src/dates/date-extraction.test.ts`
@@ -28,4 +30,5 @@
   - `pnpm typecheck`
 - broadRerunStarted: `no`
 - case7InsideFixTrack: `no`
-- answerVsRepoMatch: `pending until post-push verification`
+- remoteVerifiedAtCommit: `e3b0100`
+- answerVsRepoMatch: `matched`
