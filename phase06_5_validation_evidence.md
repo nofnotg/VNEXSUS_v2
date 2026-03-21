@@ -3,8 +3,10 @@
 - targetBranch: `main`
 - validationRuntimeCommit: `9d1f374`
 - validationCompareCommit: `9d1f374`
+- validationEvidenceCommit: `2e78175`
 - pushedCommitShas:
   - `9d1f374`
+  - `2e78175`
 - attemptedCases:
   - `Case17`
   - `Case10`
@@ -39,4 +41,5 @@
   - `origin/main:phase06_5_compare/Case34_compare_postfix.json`
   - `origin/main:phase06_5_compare/Case20_compare_postfix.json`
   - `origin/main:phase06_5_validation_evidence.md`
-- answerVsRepoMatch: `pending until post-push verification`
+- remoteVerifiedAtCommit: `2e78175`
+- answerVsRepoMatch: `matched`
