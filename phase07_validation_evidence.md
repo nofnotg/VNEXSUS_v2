@@ -1,0 +1,45 @@
+# Phase 7 Broader Post-Fix Validation Evidence
+
+- targetBranch: `main`
+- broaderPostfixRuntimeCommit: `742a184`
+- broaderPostfixCompareCommit: `742a184`
+- validationEvidenceCommit: `pending_sync`
+- pushedCommitShas:
+  - `742a184`
+- attemptedCases:
+  - `Case16`
+  - `Case3`
+  - `Case12`
+  - `Case36`
+- validationOrder:
+  - `Case16`
+  - `Case3`
+  - `Case12`
+  - `Case36`
+- excludedCases:
+  - `Case17` (`already_validated_in_phase06_5`)
+  - `Case10` (`already_validated_in_phase06_5`)
+  - `Case2` (`already_validated_in_phase06_5`)
+  - `Case34` (`already_validated_in_phase06_5`)
+  - `Case20` (`already_validated_in_phase06_5`)
+  - `Case7` (`intake_limit_track_excluded`)
+- timeoutLikeRuntimeFailureRecurred: `no`
+- broaderScaleTrackEffectiveness:
+  - `dateNormalization: improved`
+  - `institutionNormalization: improved`
+  - `bundleGrouping: improved`
+- broaderPostFixRerunCompleted: `yes`
+- allEarlierFrozenArtifactsModified: `no`
+- directRemoteVerificationChecklist:
+  - `origin/main:phase07_validation_manifest.json`
+  - `origin/main:phase07_runtime/Case16_runtime_broader_postfix.json`
+  - `origin/main:phase07_runtime/Case3_runtime_broader_postfix.json`
+  - `origin/main:phase07_runtime/Case12_runtime_broader_postfix.json`
+  - `origin/main:phase07_runtime/Case36_runtime_broader_postfix.json`
+  - `origin/main:phase07_compare/Case16_compare_broader_postfix.json`
+  - `origin/main:phase07_compare/Case3_compare_broader_postfix.json`
+  - `origin/main:phase07_compare/Case12_compare_broader_postfix.json`
+  - `origin/main:phase07_compare/Case36_compare_broader_postfix.json`
+  - `origin/main:phase07_validation_evidence.md`
+- remoteVerifiedAtCommit: `pending_sync`
+- answerVsRepoMatch: `pending_sync`
