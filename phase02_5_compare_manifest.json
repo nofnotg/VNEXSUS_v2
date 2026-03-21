@@ -43,7 +43,8 @@
     },
     {
       "caseName": "Case7",
-      "comparisonStatus": "rerun_failed"
+      "comparisonStatus": "deferred",
+      "reason": "upload_limit_conflict:서울성모병원.pdf=25432858>UPLOAD_MAX_FILE_SIZE_MB(20)"
     }
   ],
   "statusCounts": {
@@ -51,7 +52,8 @@
     "runtime_recovered_partial_match": 2,
     "runtime_recovered_mismatch": 0,
     "needs_human_review": 0,
-    "rerun_failed": 8
+    "rerun_failed": 7,
+    "deferred": 1
   },
   "mediumConfidenceCases": [
     "Case12",
