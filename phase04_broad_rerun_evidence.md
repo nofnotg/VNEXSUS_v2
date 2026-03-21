@@ -3,9 +3,11 @@
 - targetBranch: `main`
 - runtimeBroadRerunCommit: `5ee9c6e`
 - compareBroadRerunCommit: `5ee9c6e`
-- remoteVerifiedCommit: `5ee9c6e`
+- broadRerunEvidenceCommit: `2a7d7a6`
+- remoteVerifiedCommit: `2a7d7a6`
 - pushedCommitShas:
   - `5ee9c6e`
+  - `2a7d7a6`
 - attemptedCases:
   - `Case16`
   - `Case3`
