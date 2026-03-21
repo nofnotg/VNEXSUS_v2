@@ -1,0 +1,93 @@
+{
+  "caseName": "Case2",
+  "track": "institution",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case2_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case2_runtime_postfix.json",
+  "comparisonStatus": "postfix_improved_partial_match",
+  "dominantPhase5Blocker": "institution_alias_resolution_gap",
+  "timeoutFixStillHealthy": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "phase4MissingDates": [
+      "2019-04-09",
+      "2024-01-09",
+      "2024-04-03"
+    ],
+    "postfixMissingDates": [
+      "2019-04-09",
+      "2024-01-09",
+      "2024-04-03"
+    ],
+    "phase4ExtraDates": [
+      "2017-12-22",
+      "2020-06-20",
+      "2020-08-11",
+      "2021-07-09",
+      "2022-07-19",
+      "2024-04-25",
+      "2024-11-14",
+      "2024-11-19",
+      "2024-11-21",
+      "2025-01-01",
+      "2025-01-07",
+      "2025-02-05",
+      "2025-02-06",
+      "2025-02-07",
+      "2025-02-10",
+      "2025-02-11",
+      "2025-02-26",
+      "2025-02-27",
+      "2025-03-19",
+      "2025-03-21",
+      "2025-04-07"
+    ],
+    "postfixExtraDates": [
+      "2017-12-22",
+      "2020-06-20",
+      "2020-08-11",
+      "2021-07-09",
+      "2022-07-19",
+      "2024-04-25",
+      "2024-11-14",
+      "2024-11-19",
+      "2025-02-05",
+      "2025-02-06",
+      "2025-02-10",
+      "2025-02-26"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "phase4MissingInstitutions": [
+      "에스엠영상의학과",
+      "sm영상의학과"
+    ],
+    "postfixMissingInstitutions": [
+      "삼성서울병원",
+      "에스엠영상의학과",
+      "sm영상의학과"
+    ],
+    "phase4ExtraInstitutions": [
+      "에스엠영상의학과의원",
+      "sm영상의학과의원"
+    ],
+    "postfixExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "phase4BundleCount": 91,
+    "postfixBundleCount": 35
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_phase4=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPhase4": "better",
+  "mediumConfidenceFromFrozenBaseline": false
+}

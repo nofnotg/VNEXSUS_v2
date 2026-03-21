@@ -1,0 +1,110 @@
+{
+  "caseName": "Case20",
+  "track": "bundle",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case20_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case20_runtime_postfix.json",
+  "comparisonStatus": "postfix_improved_partial_match",
+  "dominantPhase5Blocker": "bundle_over-segmentation",
+  "timeoutFixStillHealthy": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "phase4MissingDates": [],
+    "postfixMissingDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "phase4ExtraDates": [
+      "2025-02-14",
+      "2025-02-19",
+      "2025-02-21",
+      "2025-02-26",
+      "2025-02-28",
+      "2025-03-03",
+      "2025-03-05",
+      "2025-03-06",
+      "2025-03-13",
+      "2025-03-20",
+      "2025-03-21",
+      "2025-03-27",
+      "2025-03-31",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-25",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-08",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-19",
+      "2025-05-24",
+      "2025-06-03",
+      "2025-06-05",
+      "2025-06-07",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28",
+      "2025-06-30",
+      "2025-07-09",
+      "2025-07-12",
+      "2025-07-18",
+      "2025-07-23",
+      "2025-07-28",
+      "2025-08-04",
+      "2025-08-11",
+      "2025-08-13",
+      "2025-08-18",
+      "2025-08-28",
+      "2025-09-15",
+      "2025-09-18",
+      "2025-09-23"
+    ],
+    "postfixExtraDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "phase4MissingInstitutions": [
+      "반듯한정형외과의원"
+    ],
+    "postfixMissingInstitutions": [
+      "반듯한정형외과의원"
+    ],
+    "phase4ExtraInstitutions": [],
+    "postfixExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "phase4BundleCount": 174,
+    "postfixBundleCount": 15
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_phase4=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPhase4": "better",
+  "mediumConfidenceFromFrozenBaseline": true
+}

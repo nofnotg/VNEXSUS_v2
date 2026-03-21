@@ -1,0 +1,63 @@
+{
+  "phase": "Phase 6.5",
+  "attemptedCases": [
+    "Case17",
+    "Case10",
+    "Case2",
+    "Case34",
+    "Case20"
+  ],
+  "successfulValidationCases": [
+    "Case17",
+    "Case10",
+    "Case2",
+    "Case34",
+    "Case20"
+  ],
+  "failedValidationCases": [],
+  "perCaseStatus": [
+    {
+      "caseName": "Case17",
+      "status": "postfix_improved_partial_match"
+    },
+    {
+      "caseName": "Case10",
+      "status": "postfix_improved_partial_match"
+    },
+    {
+      "caseName": "Case2",
+      "status": "postfix_improved_partial_match"
+    },
+    {
+      "caseName": "Case34",
+      "status": "postfix_improved_partial_match"
+    },
+    {
+      "caseName": "Case20",
+      "status": "postfix_improved_partial_match"
+    }
+  ],
+  "perTrackImprovementJudgment": {
+    "dateNormalization": "improved",
+    "institutionNormalization": "improved",
+    "bundleGrouping": "improved"
+  },
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "broaderPostFixRerunRecommended": true,
+  "anyRegression": false,
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case17_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case10_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case2_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case34_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case20_runtime_postfix.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_compare\\Case17_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_compare\\Case10_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_compare\\Case2_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_compare\\Case34_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_compare\\Case20_compare_postfix.json"
+  ],
+  "generatedAt": "2026-03-21T13:56:38.856Z"
+}

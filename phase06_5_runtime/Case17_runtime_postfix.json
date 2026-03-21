@@ -1,0 +1,146 @@
+{
+  "caseName": "Case17",
+  "track": "date",
+  "runtimeSource": {
+    "method": "phase06_5_service_runner",
+    "generatedAt": "2026-03-21T13:51:26.050Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn0dzazq0001melghjm3i7ge",
+    "jobId": "cmn0dzbu00006melgfrjdmtfo"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case17_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김동아\\해븐리병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case17",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-09-09"
+    ],
+    "windowDates": [
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28"
+    ],
+    "atomDates": [
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28"
+    ],
+    "bundleDates": [
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28"
+    ],
+    "earliestDate": "2025-08-14",
+    "latestDate": "2025-09-09"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "해븐리병원"
+    ],
+    "bundleHospitals": [
+      "해븐리병원"
+    ],
+    "combinedInstitutions": [
+      "해븐리병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 1,
+    "uploadedDocumentPageCount": 28,
+    "ocrBlockCount": 2915,
+    "dateCandidateCount": 25,
+    "windowCount": 24,
+    "eventAtomCount": 24,
+    "eventBundleCount": 21,
+    "eventTypes": [
+      "exam",
+      "outpatient"
+    ],
+    "bundleTypes": [
+      "exam",
+      "outpatient"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 21,
+    "pdfByteSize": 56963
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.084,
+  "actualLlmCost": 0,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "dominantBlocker": null,
+  "dominantPhase5Blocker": "date_false_positive_noise",
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "relativeToPhase4": "better",
+  "notes": [
+    "budgetEstimatedCostUsd=0.084"
+  ]
+}

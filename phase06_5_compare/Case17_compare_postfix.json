@@ -1,0 +1,64 @@
+{
+  "caseName": "Case17",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case17_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase06_5_runtime\\Case17_runtime_postfix.json",
+  "comparisonStatus": "postfix_improved_partial_match",
+  "dominantPhase5Blocker": "date_false_positive_noise",
+  "timeoutFixStillHealthy": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "phase4MissingDates": [
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12"
+    ],
+    "postfixMissingDates": [
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12"
+    ],
+    "phase4ExtraDates": [
+      "2005-08-20",
+      "2025-08-18",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-08-29",
+      "2025-09-09",
+      "2925-05-19"
+    ],
+    "postfixExtraDates": [
+      "2025-08-18",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-09-09"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "phase4MissingInstitutions": [],
+    "postfixMissingInstitutions": [],
+    "phase4ExtraInstitutions": [],
+    "postfixExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "phase4BundleCount": 54,
+    "postfixBundleCount": 21
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_phase4=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPhase4": "better",
+  "mediumConfidenceFromFrozenBaseline": true
+}

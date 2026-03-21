@@ -1,0 +1,163 @@
+{
+  "caseName": "Case20",
+  "track": "bundle",
+  "runtimeSource": {
+    "method": "phase06_5_service_runner",
+    "generatedAt": "2026-03-21T13:56:02.836Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn0e58k50d5fmelgrq6x4x5u",
+    "jobId": "cmn0e59gh0d5kmelg3xs9ncia"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case20_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김소원\\반듯한정형외과의원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case20",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "windowDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "atomDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "bundleDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "earliestDate": "2025-02-21",
+    "latestDate": "2025-06-28"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [],
+    "bundleHospitals": [],
+    "combinedInstitutions": []
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 1,
+    "uploadedDocumentPageCount": 47,
+    "ocrBlockCount": 4279,
+    "dateCandidateCount": 15,
+    "windowCount": 15,
+    "eventAtomCount": 15,
+    "eventBundleCount": 15,
+    "eventTypes": [
+      "procedure"
+    ],
+    "bundleTypes": [
+      "procedure"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 15,
+    "pdfByteSize": 55495
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.141,
+  "actualLlmCost": 0,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "dominantBlocker": null,
+  "dominantPhase5Blocker": "bundle_over-segmentation",
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "relativeToPhase4": "better",
+  "notes": [
+    "budgetEstimatedCostUsd=0.141"
+  ]
+}
