@@ -4,12 +4,13 @@
 - configFixCommit: `0f653d3`
 - rerunArtifactsCommit: `155827c`
 - compareArtifactsCommit: `71ff42d`
-- executionEvidenceCommit: `PENDING_AFTER_COMMIT`
-- remoteVerifiedAtCommit: `PENDING_AFTER_COMMIT`
+- executionEvidenceCommit: `00092bb`
+- remoteVerifiedAtCommit: `00092bb`
 - pushedCommitShas:
   - `0f653d3`
   - `155827c`
   - `71ff42d`
+  - `00092bb`
 
 ## Smoke test
 - smokeTestCase: `Case16`
@@ -49,14 +50,14 @@
 - comparisonQuality: `execution-limited`
 
 ## Direct remote verification checklist
-- [ ] `phase02_5_runtime_manifest.json` exists on `main`
-- [ ] `phase02_5_compare_manifest.json` exists on `main`
-- [ ] `phase02_5_execution_evidence.md` exists on `main`
-- [ ] rerun runtime files for successful cases exist on `main`
-- [ ] rerun compare files for successful cases exist on `main`
-- [ ] no frozen Phase 0.5 or Phase 1 artifact changed
-- [ ] original Phase 2 artifacts still exist
-- [ ] no Phase 3 artifact created
+- [x] `phase02_5_runtime_manifest.json` exists on `main`
+- [x] `phase02_5_compare_manifest.json` exists on `main`
+- [x] `phase02_5_execution_evidence.md` exists on `main`
+- [x] rerun runtime files for successful cases exist on `main`
+- [x] rerun compare files for successful cases exist on `main`
+- [x] no frozen Phase 0.5 or Phase 1 artifact changed
+- [x] original Phase 2 artifacts still exist
+- [x] no Phase 3 artifact created
 
 ## Answer/repo alignment
-- answerVsRepoMatched: `pending final remote verification`
+- answerVsRepoMatched: `true`
