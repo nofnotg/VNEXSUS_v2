@@ -30,5 +30,5 @@
   - `pnpm typecheck`
 - broadRerunStarted: `no`
 - case7InsideFixTrack: `no`
-- remoteVerifiedAtCommit: `e3b0100`
+- remoteVerifiedAtCommit: `0bfc4e1`
 - answerVsRepoMatch: `matched`
