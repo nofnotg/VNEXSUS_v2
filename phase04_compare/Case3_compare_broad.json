@@ -1,0 +1,123 @@
+{
+  "caseName": "Case3",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_runtime\\Case3_runtime_broad.json",
+  "comparisonStatus": "broad_partial_match",
+  "timeoutFixAppearsEffective": true,
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2024-12-13",
+      "2025-01-15",
+      "2025-03-04",
+      "2025-03-19"
+    ],
+    "runtimeDates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04",
+      "2025-03-21",
+      "2025-03-28"
+    ],
+    "missingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "extraDates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-21",
+      "2025-03-28"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "이대목동병원"
+    ],
+    "runtimeInstitutions": [
+      "EUMC 이대 목동 병원"
+    ],
+    "missingInstitutionsNormalized": [
+      "이대목동병원"
+    ],
+    "extraInstitutionsNormalized": [
+      "eumc이대목동병원"
+    ]
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "institutions": [
+      "이대목동병원"
+    ],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "1991-06-24",
+      "2024-12-12",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-21",
+      "2025-03-28"
+    ],
+    "institutions": [
+      "eumc이대목동병원"
+    ]
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "direct keep"
+  ],
+  "mediumConfidenceFromFrozenBaseline": false
+}

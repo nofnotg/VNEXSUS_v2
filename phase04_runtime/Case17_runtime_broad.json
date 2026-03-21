@@ -1,0 +1,190 @@
+{
+  "caseName": "Case17",
+  "runtimeSource": {
+    "method": "phase04_broad_service_runner",
+    "generatedAt": "2026-03-21T10:55:26.234Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn07oyzg028wmerskzp6sqpc",
+    "jobId": "cmn07ozt20291mersdv97gepc",
+    "smokeTestCase": false
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case17_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김동아\\해븐리병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case17",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2005-08-20",
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-08-29",
+      "2025-09-09",
+      "2925-05-19"
+    ],
+    "windowDates": [
+      "2005-08-20",
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-08-29",
+      "2925-05-19"
+    ],
+    "atomDates": [
+      "2005-08-20",
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-08-29",
+      "2925-05-19"
+    ],
+    "bundleDates": [
+      "2005-08-20",
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-08-29",
+      "2925-05-19"
+    ],
+    "earliestDate": "2005-08-20",
+    "latestDate": "2925-05-19"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "해 븐리 병원"
+    ],
+    "bundleHospitals": [
+      "해 븐리 병원"
+    ],
+    "combinedInstitutions": [
+      "해 븐리 병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 1,
+    "uploadedDocumentPageCount": 28,
+    "ocrBlockCount": 2916,
+    "dateCandidateCount": 121,
+    "windowCount": 102,
+    "eventAtomCount": 102,
+    "eventBundleCount": 54,
+    "eventTypes": [
+      "exam",
+      "outpatient",
+      "unknown"
+    ],
+    "bundleTypes": [
+      "exam",
+      "outpatient",
+      "unknown"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 54,
+    "pdfByteSize": 74576
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.084,
+  "actualLlmCost": 0,
+  "budgetStopTriggered": false,
+  "broadStatus": "broad_completed",
+  "priorSemanticTimeoutSymptomRecurred": false,
+  "dominantBlocker": null,
+  "notes": [
+    "budgetEstimatedCostUsd=0.084"
+  ]
+}

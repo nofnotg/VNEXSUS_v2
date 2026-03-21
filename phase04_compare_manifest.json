@@ -1,0 +1,72 @@
+{
+  "phase": "Phase 4",
+  "comparisonFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case16_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case3_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case17_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case2_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case20_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case34_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case12_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case10_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase04_compare\\Case36_compare_broad.json"
+  ],
+  "caseStatuses": [
+    {
+      "caseName": "Case16",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case17",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case2",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case20",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case34",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case12",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case10",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case36",
+      "comparisonStatus": "broad_partial_match"
+    }
+  ],
+  "statusCounts": {
+    "broad_match": 0,
+    "broad_partial_match": 9,
+    "broad_mismatch": 0,
+    "broad_failed": 0,
+    "needs_human_review": 0
+  },
+  "mediumConfidenceCases": [
+    "Case12",
+    "Case16",
+    "Case17",
+    "Case20",
+    "Case34",
+    "Case36"
+  ],
+  "highestRiskRemainingCases": [],
+  "comparisonQuality": "semantic-grade",
+  "timeoutFixEffectivenessSupportedAtBroadScale": true,
+  "proceedToPostRerunQualityDiagnosis": true,
+  "generatedAt": "2026-03-21T11:06:08.528Z"
+}
