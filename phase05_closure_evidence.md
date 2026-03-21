@@ -3,10 +3,12 @@
 - targetBranch: `main`
 - pushedCommitShas:
   - `241c1a2`
+  - `302e9c8`
 - changedFiles:
   - `pilot10_manifest.json`
   - `pilot10_budget_plan.json`
   - `pilot10_mapping_review.json`
+  - `phase05_closure_evidence.md`
 
 ## Direct remote verification checklist
 - [x] Fetched `pilot10_manifest.json` from `main` via GitHub raw URL
