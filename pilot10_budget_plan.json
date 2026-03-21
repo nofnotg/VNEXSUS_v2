@@ -25,7 +25,7 @@
       "estimatedTotalCost": 0.084
     },
     {
-      "caseName": "Case13",
+      "caseName": "Case2",
       "estimatedPages": 47,
       "estimatedOcrCost": 0.141,
       "estimatedLlmCost": 0.0,
@@ -78,7 +78,7 @@
     "Case16",
     "Case3",
     "Case17",
-    "Case13",
+    "Case2",
     "Case20",
     "Case34",
     "Case12",

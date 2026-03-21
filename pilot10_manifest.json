@@ -1,12 +1,46 @@
 [
   {
+    "caseName": "Case2",
+    "sourceCaseIndex": 2,
+    "sourceCaseName": "농협손해보험 김미화 (수술비 고지의무 위반)",
+    "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case2.txt",
+    "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case2_report.txt",
+    "sourceDocs": [
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\sm영상의학과.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\삼성서울병원.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\에스엠영상의학과.pdf"
+    ],
+    "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case2",
+    "mappingConfidence": "high",
+    "manualConfirmed": true,
+    "hasCoordinateReference": true,
+    "estimatedPages": 47,
+    "estimatedCost": 0.141,
+    "difficultyTags": [
+      "midPages",
+      "coordinateReference",
+      "dateDenseCandidate",
+      "replacementFromCase13"
+    ],
+    "mappingEvidenceTokens": [
+      "???",
+      "??????",
+      "??????????",
+      "??????"
+    ],
+    "selectedFinal": true,
+    "finalDecision": "selected_replacement",
+    "replacesCase": "Case13",
+    "notes": "lock=selected;replacementFor=Case13;coordRef=yes;rawPatientToken=yes;sourceDocsMatch=yes;reportMedicalContext=yes"
+  },
+  {
     "caseName": "Case3",
     "sourceCaseIndex": 3,
-    "sourceCaseName": "\ud604\ub300\ud574\uc0c1 \uae40\ubbfc\uc544(\ub1cc \uc591\uc131\uc885\uc591)",
+    "sourceCaseName": "현대해상 김민아(뇌 양성종양)",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case3.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case3_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ud604\ub300\ud574\uc0c1 \uae40\ubbfc\uc544(\ub1cc \uc591\uc131\uc885\uc591)\\\uc774\ub300\ubaa9\ub3d9\ubcd1\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 김민아(뇌 양성종양)\\이대목동병원.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case3",
     "mappingConfidence": "high",
@@ -21,21 +55,23 @@
       "failureCandidate"
     ],
     "mappingEvidenceTokens": [
-      "\uae40\ubbfc\uc544",
-      "\ud604\ub300\ud574\uc0c1"
+      "김민아",
+      "현대해상"
     ],
-    "notes": "Patient and insurer tokens appear in raw text, and folder plus coordinate reference align."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;rawInsurerToken=yes;sourceDocMatch=yes",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   },
   {
     "caseName": "Case7",
     "sourceCaseIndex": 7,
-    "sourceCaseName": "\ud604\ub300\ud574\uc0c1 \uc591\uc7ac\uc9c4(\ud3b8\ub3c4\uc554)",
+    "sourceCaseName": "현대해상 양재진(편도암)",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case7.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case7_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ud604\ub300\ud574\uc0c1 \uc591\uc7ac\uc9c4(\ud3b8\ub3c4\uc554)\\\uac74\uc774\ube44\uc778\ud6c4\uacfc.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ud604\ub300\ud574\uc0c1 \uc591\uc7ac\uc9c4(\ud3b8\ub3c4\uc554)\\\uc0ac\ub2f9\uc5f0\uc138365\uc758\uc6d0.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ud604\ub300\ud574\uc0c1 \uc591\uc7ac\uc9c4(\ud3b8\ub3c4\uc554)\\\uc11c\uc6b8\uc131\ubaa8\ubcd1\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 양재진(편도암)\\건이비인후과.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 양재진(편도암)\\사당연세365의원.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 양재진(편도암)\\서울성모병원.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case7",
     "mappingConfidence": "high",
@@ -49,20 +85,22 @@
       "surgeryCandidate"
     ],
     "mappingEvidenceTokens": [
-      "\ud3b8\ub3c4\uc554",
-      "\uc591\uc7ac\uc9c4"
+      "편도암",
+      "양재진"
     ],
-    "notes": "Patient and diagnosis tokens align with source docs, report context, and coordinate reference."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;rawDiagnosisToken=yes;reportMedicalContext=yes",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   },
   {
     "caseName": "Case10",
     "sourceCaseIndex": 10,
-    "sourceCaseName": "\ud604\ub300\ud574\uc0c1 \uc870\uc724\uc544(\ud0dc\uc544\ubcf4\ud5d8, \uc5c4\ub9c8(\uc774\uc8fc\ud76c)",
+    "sourceCaseName": "현대해상 조윤아(태아보험, 엄마(이주희)",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case10.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case10_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ud604\ub300\ud574\uc0c1 \uc870\uc724\uc544(\ud0dc\uc544\ubcf4\ud5d8, \uc5c4\ub9c8(\uc774\uc8fc\ud76c)\\\uc740\ud3c9\uc131\ubaa8(\uc774\uc8fc\ud76c).pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ud604\ub300\ud574\uc0c1 \uc870\uc724\uc544(\ud0dc\uc544\ubcf4\ud5d8, \uc5c4\ub9c8(\uc774\uc8fc\ud76c)\\\uc740\ud3c9\uc131\ubaa8(\uc870\uc724\uc544).pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 조윤아(태아보험, 엄마(이주희)\\은평성모(이주희).pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 조윤아(태아보험, 엄마(이주희)\\은평성모(조윤아).pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case10",
     "mappingConfidence": "high",
@@ -77,22 +115,24 @@
       "dateDenseCandidate"
     ],
     "mappingEvidenceTokens": [
-      "\uc774\uc8fc\ud76c",
-      "\uc870\uc724\uc544",
-      "\uc5c4\ub9c8"
+      "이주희",
+      "조윤아",
+      "엄마"
     ],
-    "notes": "Mother and child tokens are present in raw text and the paired source PDFs clearly match."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;guardianToken=yes;pairedSourceDocs=yes",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   },
   {
     "caseName": "Case12",
     "sourceCaseIndex": 12,
-    "sourceCaseName": "KB\uc190\ud574\ubcf4\ud5d8 \uae40\uc120\uc0bc(\uc9c8\ubcd1\uc0ac\ub9dd)",
+    "sourceCaseName": "KB손해보험 김선삼(질병사망)",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case12.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case12_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB\uc190\ud574\ubcf4\ud5d8 \uae40\uc120\uc0bc(\uc9c8\ubcd1\uc0ac\ub9dd)\\\uc694\uc591\uae09\uc5ec\ub0b4\uc5ed\uc11c-\uae40\uc120\uc0bc.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB\uc190\ud574\ubcf4\ud5d8 \uae40\uc120\uc0bc(\uc9c8\ubcd1\uc0ac\ub9dd)\\\uc774\ub300\ubaa9\ub3d9\ubcd1\uc6d0.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB\uc190\ud574\ubcf4\ud5d8 \uae40\uc120\uc0bc(\uc9c8\ubcd1\uc0ac\ub9dd)\\\ud64d\uc775\ubcd1\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\요양급여내역서-김선삼.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\이대목동병원.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\홍익병원.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case12",
     "mappingConfidence": "medium",
@@ -106,20 +146,22 @@
       "dateDenseCandidate"
     ],
     "mappingEvidenceTokens": [
-      "\uae40\uc120\uc0bc"
+      "김선삼"
     ],
-    "notes": "Patient token is present in raw text and the disease-death report context does not conflict with source docs."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;reportMedicalContext=compatible",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   },
   {
     "caseName": "Case13",
     "sourceCaseIndex": 13,
-    "sourceCaseName": "\ub18d\ud611\uc190\ud574\ubcf4\ud5d8 \uae40\ubbf8\ud654 (\uc218\uc220\ube44 \uace0\uc9c0\uc758\ubb34 \uc704\ubc18)",
+    "sourceCaseName": "농협손해보험 김미화 (수술비 고지의무 위반)",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case13.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case13_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ub18d\ud611\uc190\ud574\ubcf4\ud5d8 \uae40\ubbf8\ud654 (\uc218\uc220\ube44 \uace0\uc9c0\uc758\ubb34 \uc704\ubc18)\\sm\uc601\uc0c1\uc758\ud559\uacfc.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ub18d\ud611\uc190\ud574\ubcf4\ud5d8 \uae40\ubbf8\ud654 (\uc218\uc220\ube44 \uace0\uc9c0\uc758\ubb34 \uc704\ubc18)\\\uc0bc\uc131\uc11c\uc6b8\ubcd1\uc6d0.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\ub18d\ud611\uc190\ud574\ubcf4\ud5d8 \uae40\ubbf8\ud654 (\uc218\uc220\ube44 \uace0\uc9c0\uc758\ubb34 \uc704\ubc18)\\\uc5d0\uc2a4\uc5e0\uc601\uc0c1\uc758\ud559\uacfc.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\sm영상의학과.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\삼성서울병원.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\농협손해보험 김미화 (수술비 고지의무 위반)\\에스엠영상의학과.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case13",
     "mappingConfidence": "low",
@@ -134,21 +176,24 @@
       "hospitalSwitchCandidate"
     ],
     "mappingEvidenceTokens": [
-      "\uc218\uc220\ube44",
-      "\ub18d\ud611\uc190\ud574\ubcf4\ud5d8",
-      "\uc704\ubc18"
+      "수술비",
+      "농협손해보험",
+      "위반"
     ],
-    "notes": "Insurer and issue tokens match, but direct patient-name evidence is weak, so this remains a replacement candidate."
+    "notes": "lock=replaced;coordRef=yes;rawPatientToken=no;issueTokens=yes;replacementRequired=yes",
+    "selectedFinal": false,
+    "finalDecision": "replaced",
+    "replacedBy": "Case2"
   },
   {
     "caseName": "Case16",
     "sourceCaseIndex": 16,
-    "sourceCaseName": "\uacfd\ub3d9\uc778",
+    "sourceCaseName": "곽동인",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case16.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case16_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uacfd\ub3d9\uc778\\\uc77c\uc0b0\ubc31\ubcd1\uc6d0.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uacfd\ub3d9\uc778\\\uc77c\uc0b0\ucc28\ubcd1\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산백병원.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산차병원.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case16",
     "mappingConfidence": "medium",
@@ -162,18 +207,20 @@
       "namedSource"
     ],
     "mappingEvidenceTokens": [
-      "\uacfd\ub3d9\uc778"
+      "곽동인"
     ],
-    "notes": "Patient token is present in raw text and the two source hospital PDFs align with the coordinate reference."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=twoHospitals",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   },
   {
     "caseName": "Case17",
     "sourceCaseIndex": 17,
-    "sourceCaseName": "\uae40\ub3d9\uc544",
+    "sourceCaseName": "김동아",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case17.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case17_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uae40\ub3d9\uc544\\\ud574\ube10\ub9ac\ubcd1\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김동아\\해븐리병원.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case17",
     "mappingConfidence": "medium",
@@ -187,18 +234,20 @@
       "namedSource"
     ],
     "mappingEvidenceTokens": [
-      "\uae40\ub3d9\uc544"
+      "김동아"
     ],
-    "notes": "Single-hospital source docs, raw patient token, and coordinate reference point to the same case."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=singleHospital",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   },
   {
     "caseName": "Case20",
     "sourceCaseIndex": 20,
-    "sourceCaseName": "\uae40\uc18c\uc6d0",
+    "sourceCaseName": "김소원",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case20.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case20_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uae40\uc18c\uc6d0\\\ubc18\ub4ef\ud55c\uc815\ud615\uc678\uacfc\uc758\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\김소원\\반듯한정형외과의원.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case20",
     "mappingConfidence": "medium",
@@ -212,18 +261,20 @@
       "namedSource"
     ],
     "mappingEvidenceTokens": [
-      "\uae40\uc18c\uc6d0"
+      "김소원"
     ],
-    "notes": "Raw patient token, single source document, and coordinate reference align well enough to keep."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=singleDocument",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   },
   {
     "caseName": "Case34",
     "sourceCaseIndex": 34,
-    "sourceCaseName": "\uc724\ud76c\uc815",
+    "sourceCaseName": "윤희정",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case34.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case34_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uc724\ud76c\uc815\\\uc77c\uc0b0\ubcd1\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\윤희정\\일산병원.pdf"
     ],
     "coordinateReferencePath": null,
     "mappingConfidence": "medium",
@@ -237,21 +288,23 @@
       "hospitalSwitchCandidate"
     ],
     "mappingEvidenceTokens": [
-      "\uc724\ud76c\uc815"
+      "윤희정"
     ],
-    "notes": "No coordinate reference exists, but raw patient token, Ilsan Hospital source doc, and report date range align."
+    "notes": "lock=kept;coordRef=no;rawPatientToken=yes;sourceDocMatch=yes;reportDateAlign=yes",
+    "selectedFinal": true,
+    "finalDecision": "kept_no_coordinate_reference"
   },
   {
     "caseName": "Case36",
     "sourceCaseIndex": 36,
-    "sourceCaseName": "\uc774\uae08\ud64d",
+    "sourceCaseName": "이금홍",
     "rawTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case36.txt",
     "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case36_report.txt",
     "sourceDocs": [
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uc774\uae08\ud64d\\\ub3d9\uad6d\ub300 \uae30\ud0c0.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uc774\uae08\ud64d\\\ub3d9\uad6d\ub300 \uccad\uad6c\uac74.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uc774\uae08\ud64d\\\uc5f0\uc138\ubc14\ub978\uac00\uc815\uc758\ud559\uacfc.pdf",
-      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\\uc774\uae08\ud64d\\\uc6b4\uc815\uc640\uc774\uc988\ubcd1\uc6d0.pdf"
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\동국대 기타.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\동국대 청구건.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\연세바른가정의학과.pdf",
+      "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\이금홍\\운정와이즈병원.pdf"
     ],
     "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case36",
     "mappingConfidence": "medium",
@@ -265,8 +318,10 @@
       "namedSource"
     ],
     "mappingEvidenceTokens": [
-      "\uc774\uae08\ud64d"
+      "이금홍"
     ],
-    "notes": "Raw patient token, multi-document source bundle, and coordinate reference align for pilot use."
+    "notes": "lock=kept;coordRef=yes;rawPatientToken=yes;sourceBundle=multiDocument",
+    "selectedFinal": true,
+    "finalDecision": "kept"
   }
 ]

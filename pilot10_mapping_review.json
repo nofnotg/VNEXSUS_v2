@@ -1,0 +1,90 @@
+[
+  {
+    "caseName": "Case2",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "high",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "coords+raw patient token+source docs aligned to Kim Mihwa NH bundle",
+    "confidenceReason": "replacement for Case13"
+  },
+  {
+    "caseName": "Case3",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "high",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw patient+insurer tokens and coords align",
+    "confidenceReason": "direct keep"
+  },
+  {
+    "caseName": "Case7",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "high",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw patient+diagnosis and coords align",
+    "confidenceReason": "direct keep"
+  },
+  {
+    "caseName": "Case10",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "high",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw mother/child tokens and paired source docs align",
+    "confidenceReason": "direct keep"
+  },
+  {
+    "caseName": "Case12",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "medium",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw patient token and disease-death context compatible",
+    "confidenceReason": "kept with moderate confidence"
+  },
+  {
+    "caseName": "Case13",
+    "finalLockStatus": "replaced",
+    "mappingConfidence": "low",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "issue tokens only; direct patient token weak",
+    "confidenceReason": "replaced by Case2"
+  },
+  {
+    "caseName": "Case16",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "medium",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw patient token and two-hospital bundle align",
+    "confidenceReason": "kept with moderate confidence"
+  },
+  {
+    "caseName": "Case17",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "medium",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw patient token and single-hospital bundle align",
+    "confidenceReason": "kept with moderate confidence"
+  },
+  {
+    "caseName": "Case20",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "medium",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw patient token and single-doc bundle align",
+    "confidenceReason": "kept with moderate confidence"
+  },
+  {
+    "caseName": "Case34",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "medium",
+    "hasCoordinateReference": false,
+    "linkageEvidenceSummary": "raw patient token + ilsan hospital doc + report dates align",
+    "confidenceReason": "kept without coordinate reference"
+  },
+  {
+    "caseName": "Case36",
+    "finalLockStatus": "selected",
+    "mappingConfidence": "medium",
+    "hasCoordinateReference": true,
+    "linkageEvidenceSummary": "raw patient token and multi-doc bundle align",
+    "confidenceReason": "kept with moderate confidence"
+  }
+]
