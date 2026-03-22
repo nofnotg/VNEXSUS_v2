@@ -1,0 +1,73 @@
+{
+  "phase": "Phase 12.6",
+  "attemptedCases": [
+    "Case3",
+    "Case10",
+    "Case36"
+  ],
+  "successfulValidationCases": [
+    "Case3",
+    "Case10"
+  ],
+  "failedValidationCases": [
+    "Case36"
+  ],
+  "perCaseStatus": [
+    {
+      "caseName": "Case3",
+      "status": "tailrisk_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case10",
+      "status": "tailrisk_improved_partial_match"
+    },
+    {
+      "caseName": "Case36",
+      "status": "tailrisk_regressed"
+    }
+  ],
+  "perCaseLowEndRiskState": [
+    {
+      "caseName": "Case3",
+      "lowEndRiskState": "low_end_risk_present"
+    },
+    {
+      "caseName": "Case10",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case36",
+      "lowEndRiskState": "low_end_risk_present"
+    }
+  ],
+  "perCaseTailRiskState": [
+    {
+      "caseName": "Case3",
+      "tailRiskState": "unchanged"
+    },
+    {
+      "caseName": "Case10",
+      "tailRiskState": "reduced"
+    },
+    {
+      "caseName": "Case36",
+      "tailRiskState": "worsened"
+    }
+  ],
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "phase12SuccessfullyReducedTailRiskSet": true,
+  "anyProductBlockingTailRiskCase": true,
+  "readyForRenewedStabilizationReview": false,
+  "anyRegression": true,
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_runtime\\Case3_runtime_tailrisk.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_runtime\\Case10_runtime_tailrisk.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_runtime\\Case36_runtime_tailrisk.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_compare\\Case3_compare_tailrisk.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_compare\\Case10_compare_tailrisk.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_compare\\Case36_compare_tailrisk.json"
+  ],
+  "generatedAt": "2026-03-22T22:27:01.461Z"
+}

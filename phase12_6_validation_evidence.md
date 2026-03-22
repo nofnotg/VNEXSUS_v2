@@ -1,0 +1,45 @@
+# Phase 12.6 Focused Validation Evidence
+
+- targetBranch: `codex/phase12-6-tailrisk-date-fix`
+- validationScript: `scripts/validation/phase12_6_validate.ts`
+- validationCommitShas:
+  - `975d098`
+- attemptedCases:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+- validationOrder:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+- targetedTestsRerun:
+  - `pnpm exec vitest run packages/domain/src/dates/date-extraction.test.ts`
+  - `pnpm exec vitest run apps/web/lib/server/services/date-extraction-service.test.ts`
+- focusedValidationArtifacts:
+  - `phase12_6_runtime/Case3_runtime_tailrisk.json`
+  - `phase12_6_runtime/Case10_runtime_tailrisk.json`
+  - `phase12_6_runtime/Case36_runtime_tailrisk.json`
+  - `phase12_6_compare/Case3_compare_tailrisk.json`
+  - `phase12_6_compare/Case10_compare_tailrisk.json`
+  - `phase12_6_compare/Case36_compare_tailrisk.json`
+  - `phase12_6_validation_manifest.json`
+  - `phase12_6_validation_evidence.md`
+- perCaseStatus:
+  - `Case3=tailrisk_unchanged_partial_match`
+  - `Case10=tailrisk_improved_partial_match`
+  - `Case36=tailrisk_regressed`
+- perCaseLowEndRiskState:
+  - `Case3=low_end_risk_present`
+  - `Case10=low_end_risk_possible`
+  - `Case36=low_end_risk_present`
+- targetedSymptomNotes:
+  - `Case3=missing-date stagnation unchanged and no regression observed; bundle count stayed 14`
+  - `Case10=target repeated later seeds removed relative to Phase 12.5; 2024-10-25 and 2024-10-30 no longer appear in the Phase 12.6 runtime date set; bundle count improved from 36 to 34`
+  - `Case36=target schedule/log-derived noisy dates were reduced relative to Phase 12.5; 2023-10-20, 2024-04-22, 2025-05-21, 2025-05-28, and 2025-06-04 no longer appear in the Phase 12.6 runtime date set, but latest locked baseline comparison still regressed because extra-date pressure remained above baseline and bundle count stayed above baseline`
+- timeoutLikeRuntimeFailureRecurred: `false`
+- anyRegression: `true`
+- broaderRerunStarted: `false`
+- renewedStabilizationReviewStarted: `false`
+- case7Included: `false`
+- frozenEarlierArtifactsModified: `false`
+- nextStepDecision: `Another Phase 12.6 fix cycle is needed`
