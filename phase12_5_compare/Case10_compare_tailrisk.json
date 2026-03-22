@@ -1,0 +1,99 @@
+{
+  "caseName": "Case10",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case10_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_5_runtime\\Case10_runtime_tailrisk.json",
+  "comparisonStatus": "tailrisk_regressed",
+  "latestLockedBaselinePhase": "phase10",
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "dominantResidualGap": "minor_date_noise_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "lowEndRiskState": "low_end_risk_present",
+  "dateCompletenessSummary": {
+    "previousMissingDates": [
+      "2024-05-01",
+      "2024-10-23",
+      "2024-12-20",
+      "2025-11-10",
+      "2054-11-10"
+    ],
+    "currentMissingDates": [
+      "2024-05-01",
+      "2024-12-20",
+      "2025-11-10",
+      "2054-11-10"
+    ],
+    "previousExtraDates": [
+      "2024-05-02",
+      "2024-06-05",
+      "2024-06-12",
+      "2024-07-12",
+      "2024-07-17",
+      "2024-08-07",
+      "2024-08-14",
+      "2024-09-03",
+      "2024-09-24",
+      "2024-10-11",
+      "2024-10-21",
+      "2024-11-01",
+      "2024-11-08",
+      "2024-11-22",
+      "2024-11-25",
+      "2024-12-02"
+    ],
+    "currentExtraDates": [
+      "2024-05-02",
+      "2024-06-05",
+      "2024-06-12",
+      "2024-07-12",
+      "2024-07-17",
+      "2024-08-07",
+      "2024-08-14",
+      "2024-09-03",
+      "2024-09-24",
+      "2024-10-11",
+      "2024-10-21",
+      "2024-10-25",
+      "2024-10-30",
+      "2024-11-01",
+      "2024-11-08",
+      "2024-11-22",
+      "2024-11-25",
+      "2024-12-02"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "previousMissingInstitutions": [],
+    "currentMissingInstitutions": [
+      "은평성모(이주희)",
+      "은평성모(조윤아)"
+    ],
+    "previousExtraInstitutions": [],
+    "currentExtraInstitutions": [
+      "shospital",
+      "subclinic"
+    ]
+  },
+  "bundleSummary": {
+    "previousBundleCount": 31,
+    "currentBundleCount": 36
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap",
+    "bundle_count_not_improved"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_latest_locked_baseline=worse",
+    "dominant_blocker_improved=false",
+    "timeout_like_recurred=false",
+    "previous_dominant_metric=16",
+    "current_dominant_metric=18",
+    "low_end_risk_state=low_end_risk_present"
+  ],
+  "relativeToLatestLockedBaseline": "worse",
+  "mediumConfidenceFromFrozenBaseline": false
+}
