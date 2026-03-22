@@ -20,6 +20,10 @@
   - `low_end_risk_present: 3`
 - stabilizationReviewCommit: `ed0d594`
 - evidenceCommit: `ed0d594`
+- remoteVerifiedCommit: `dc8a6de`
+- pushedCommitShas:
+  - `ed0d594`
+  - `dc8a6de`
 - directRemoteVerificationChecklist:
   - `Verify phase11_stabilization_manifest.json on origin/main`
   - `Verify phase11_stabilization_matrix.json on origin/main`
@@ -30,3 +34,5 @@
   - `Confirm no Phase 12 artifact exists`
 - nextStepDecision: `Another targeted fix cycle is needed before productization`
 - phase12RecommendedNext: `false`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`
