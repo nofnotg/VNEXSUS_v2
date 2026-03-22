@@ -13,7 +13,8 @@
   - `phase09_6_track2_fix_plan.md`
   - `phase09_6_track2_fix_evidence.md`
 - implementationCommitShas:
-  - `pending`
+  - `cdd3a02`
+  - `5b3565f`
 - directRemoteVerificationChecklist:
   - `Verify changed Track 2 code files on origin/main`
   - `Verify phase09_6_track2_fix_plan.md on origin/main`
@@ -28,5 +29,5 @@
 - tinyValidationChecksRun:
   - `pnpm exec vitest run packages/domain/src/entities/hospital-normalization.test.ts packages/domain/src/entities/entity-extraction.test.ts packages/domain/src/windows/date-centered-window.test.ts packages/domain/src/bundles/event-bundle-builder.test.ts`
   - `pnpm typecheck`
-- remoteVerificationStatus: `pending`
-- answerVsRepoMatch: `pending`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`
