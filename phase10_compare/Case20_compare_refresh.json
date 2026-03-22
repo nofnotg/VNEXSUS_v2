@@ -1,0 +1,78 @@
+{
+  "caseName": "Case20",
+  "track": "bundle",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case20_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case20_runtime_refresh.json",
+  "comparisonStatus": "refresh_unchanged_partial_match",
+  "latestLockedBaselinePhase": "phase09_5",
+  "timeoutFixStillHealthy": true,
+  "dominantResidualGap": "minor_bundle_density_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": true,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "latestMissingDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "refreshMissingDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "latestExtraDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "refreshExtraDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "latestMissingInstitutions": [],
+    "refreshMissingInstitutions": [],
+    "latestExtraInstitutions": [],
+    "refreshExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "latestBundleCount": 15,
+    "refreshBundleCount": 15
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_latest_locked_baseline=same",
+    "dominant_blocker_improved=false",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToLatestLockedBaseline": "same",
+  "mediumConfidenceFromFrozenBaseline": true
+}

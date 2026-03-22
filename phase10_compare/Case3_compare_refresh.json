@@ -1,0 +1,74 @@
+{
+  "caseName": "Case3",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case3_runtime_refresh.json",
+  "comparisonStatus": "refresh_unchanged_partial_match",
+  "latestLockedBaselinePhase": "phase09_5",
+  "timeoutFixStillHealthy": true,
+  "dominantResidualGap": "minor_date_missing_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": true,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "latestMissingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "refreshMissingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "latestExtraDates": [
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04"
+    ],
+    "refreshExtraDates": [
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "latestMissingInstitutions": [],
+    "refreshMissingInstitutions": [],
+    "latestExtraInstitutions": [],
+    "refreshExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "latestBundleCount": 14,
+    "refreshBundleCount": 14
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_latest_locked_baseline=same",
+    "dominant_blocker_improved=false",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToLatestLockedBaseline": "same",
+  "mediumConfidenceFromFrozenBaseline": false
+}

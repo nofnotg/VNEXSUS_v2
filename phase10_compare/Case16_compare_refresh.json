@@ -1,0 +1,57 @@
+{
+  "caseName": "Case16",
+  "track": "institution",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case16_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case16_runtime_refresh.json",
+  "comparisonStatus": "refresh_unchanged_partial_match",
+  "latestLockedBaselinePhase": "phase09_7",
+  "timeoutFixStillHealthy": true,
+  "dominantResidualGap": "minor_institution_canonicalization_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": true,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "latestMissingDates": [],
+    "refreshMissingDates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-08-21",
+      "2025-09-11",
+      "2025-09-19",
+      "2025-11-25"
+    ],
+    "latestExtraDates": [],
+    "refreshExtraDates": [
+      "2025-09-15",
+      "2025-09-24",
+      "2025-09-26",
+      "2025-10-01"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "latestMissingInstitutions": [
+      "일산백병원"
+    ],
+    "refreshMissingInstitutions": [
+      "일산백병원"
+    ],
+    "latestExtraInstitutions": [],
+    "refreshExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "latestBundleCount": 7,
+    "refreshBundleCount": 7
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_latest_locked_baseline=same",
+    "dominant_blocker_improved=false",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToLatestLockedBaseline": "same",
+  "mediumConfidenceFromFrozenBaseline": true
+}

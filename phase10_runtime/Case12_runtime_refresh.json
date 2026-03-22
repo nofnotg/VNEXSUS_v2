@@ -1,0 +1,164 @@
+{
+  "caseName": "Case12",
+  "track": "date",
+  "runtimeSource": {
+    "method": "phase10_refresh_service_runner",
+    "generatedAt": "2026-03-22T11:50:14.608Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn1p3az50e1ome9cp9tb4ifz",
+    "jobId": "cmn1p3ch60e1zme9cg69r38n1"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case12_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\요양급여내역서-김선삼.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\이대목동병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\KB손해보험 김선삼(질병사망)\\홍익병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case12",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2019-03-01",
+      "2024-03-31",
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07"
+    ],
+    "windowDates": [
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07"
+    ],
+    "atomDates": [
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07"
+    ],
+    "bundleDates": [
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07"
+    ],
+    "earliestDate": "2019-03-01",
+    "latestDate": "2025-03-07"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "영광종합병원",
+      "이대목동병원",
+      "종합병원"
+    ],
+    "bundleHospitals": [
+      "영광종합병원",
+      "이대목동병원",
+      "종합병원"
+    ],
+    "combinedInstitutions": [
+      "영광종합병원",
+      "이대목동병원",
+      "종합병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 3,
+    "uploadedDocumentPageCount": 54,
+    "ocrBlockCount": 5672,
+    "dateCandidateCount": 77,
+    "windowCount": 71,
+    "eventAtomCount": 71,
+    "eventBundleCount": 18,
+    "eventTypes": [
+      "admission",
+      "discharge",
+      "exam",
+      "mixed",
+      "outpatient",
+      "treatment"
+    ],
+    "bundleTypes": [
+      "admission",
+      "discharge",
+      "exam",
+      "mixed",
+      "outpatient",
+      "treatment"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 18,
+    "pdfByteSize": 58646
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.162,
+  "actualLlmCost": 0,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "dominantBlocker": null,
+  "dominantResidualGap": "minor_date_noise_residual",
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "relativeToLatestLockedBaseline": "better",
+  "notes": [
+    "budgetEstimatedCostUsd=0.162"
+  ]
+}

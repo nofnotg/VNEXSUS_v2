@@ -1,0 +1,64 @@
+{
+  "caseName": "Case17",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case17_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case17_runtime_refresh.json",
+  "comparisonStatus": "refresh_improved_partial_match",
+  "latestLockedBaselinePhase": "phase06_5",
+  "timeoutFixStillHealthy": true,
+  "dominantResidualGap": "minor_date_noise_residual",
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "latestMissingDates": [
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12"
+    ],
+    "refreshMissingDates": [
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12"
+    ],
+    "latestExtraDates": [
+      "2025-08-18",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28",
+      "2025-09-09"
+    ],
+    "refreshExtraDates": [
+      "2025-08-18",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "latestMissingInstitutions": [],
+    "refreshMissingInstitutions": [],
+    "latestExtraInstitutions": [],
+    "refreshExtraInstitutions": [
+      "헤븐리병원"
+    ]
+  },
+  "bundleSummary": {
+    "latestBundleCount": 21,
+    "refreshBundleCount": 17
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_latest_locked_baseline=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToLatestLockedBaseline": "better",
+  "mediumConfidenceFromFrozenBaseline": true
+}

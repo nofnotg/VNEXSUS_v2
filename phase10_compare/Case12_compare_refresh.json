@@ -1,0 +1,75 @@
+{
+  "caseName": "Case12",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case12_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case12_runtime_refresh.json",
+  "comparisonStatus": "refresh_improved_partial_match",
+  "latestLockedBaselinePhase": "phase07",
+  "timeoutFixStillHealthy": true,
+  "dominantResidualGap": "minor_date_noise_residual",
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "latestMissingDates": [
+      "2024-03-27",
+      "2025-02-18"
+    ],
+    "refreshMissingDates": [
+      "2024-03-27",
+      "2025-02-18"
+    ],
+    "latestExtraDates": [
+      "2024-05-11",
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07",
+      "2025-03-10"
+    ],
+    "refreshExtraDates": [
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-07"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "latestMissingInstitutions": [
+      "요양급여내역서-김선삼",
+      "이대목동병원",
+      "홍익병원"
+    ],
+    "refreshMissingInstitutions": [
+      "요양급여내역서-김선삼",
+      "홍익병원"
+    ],
+    "latestExtraInstitutions": [
+      "영광종합병원"
+    ],
+    "refreshExtraInstitutions": [
+      "영광종합병원",
+      "종합병원"
+    ]
+  },
+  "bundleSummary": {
+    "latestBundleCount": 20,
+    "refreshBundleCount": 18
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates",
+    "institution_alignment_gap"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_latest_locked_baseline=better",
+    "dominant_blocker_improved=true",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToLatestLockedBaseline": "better",
+  "mediumConfidenceFromFrozenBaseline": true
+}
