@@ -1,0 +1,45 @@
+{
+  "caseName": "Case2",
+  "track": "institution",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case2_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_runtime\\Case2_runtime_track2fix.json",
+  "comparisonStatus": "track2_improved_partial_match",
+  "latestLockedBaselinePhase": "phase09_5",
+  "institutionAliasDriftImproved": true,
+  "canonicalHospitalIdentityMoreStable": true,
+  "downstreamCarryForwardImproved": true,
+  "newFalseMergesAppeared": false,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "resultVsLatestLockedBaseline": "better",
+  "institutionCompletenessSummary": {
+    "previousMissingInstitutions": [
+      "에스엠영상의학과",
+      "sm영상의학과"
+    ],
+    "currentMissingInstitutions": [
+      "sm영상의학과"
+    ],
+    "previousExtraInstitutions": [
+      "에스엠영상의학과의원",
+      "smradiologyclinic"
+    ],
+    "currentExtraInstitutions": []
+  },
+  "bundleInstitutionSummary": {
+    "previousCombinedInstitutionCount": 3,
+    "currentCombinedInstitutionCount": 2,
+    "previousBundleCount": 34,
+    "currentBundleCount": 34
+  },
+  "reviewNotes": [
+    "result_vs_latest_locked_baseline=better",
+    "institution_alias_drift_improved=true",
+    "canonical_identity_more_stable=true",
+    "carry_forward_improved=true",
+    "new_false_merges=false",
+    "timeout_like_recurred=false",
+    "previous_gap=4",
+    "current_gap=1"
+  ],
+  "mediumConfidenceFromFrozenBaseline": false
+}

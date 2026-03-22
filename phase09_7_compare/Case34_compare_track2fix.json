@@ -1,0 +1,39 @@
+{
+  "caseName": "Case34",
+  "track": "institution",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case34_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_runtime\\Case34_runtime_track2fix.json",
+  "comparisonStatus": "track2_resolved",
+  "latestLockedBaselinePhase": "phase09_5",
+  "institutionAliasDriftImproved": true,
+  "canonicalHospitalIdentityMoreStable": true,
+  "downstreamCarryForwardImproved": false,
+  "newFalseMergesAppeared": false,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "resultVsLatestLockedBaseline": "better",
+  "institutionCompletenessSummary": {
+    "previousMissingInstitutions": [],
+    "currentMissingInstitutions": [],
+    "previousExtraInstitutions": [
+      "국민건강보험일산병원"
+    ],
+    "currentExtraInstitutions": []
+  },
+  "bundleInstitutionSummary": {
+    "previousCombinedInstitutionCount": 2,
+    "currentCombinedInstitutionCount": 1,
+    "previousBundleCount": 78,
+    "currentBundleCount": 78
+  },
+  "reviewNotes": [
+    "result_vs_latest_locked_baseline=better",
+    "institution_alias_drift_improved=true",
+    "canonical_identity_more_stable=true",
+    "carry_forward_improved=false",
+    "new_false_merges=false",
+    "timeout_like_recurred=false",
+    "previous_gap=1",
+    "current_gap=0"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}
