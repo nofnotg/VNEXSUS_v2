@@ -55,11 +55,12 @@
   - `phase09_5_compare/Case34_compare_postfix.json`
   - `phase09_5_compare/Case20_compare_postfix.json`
   - `phase09_5_validation_manifest.json`
-- validationRuntimeCommit: `pending`
-- validationCompareCommit: `pending`
-- remoteVerifiedCommit: `pending`
+- validationRuntimeCommit: `5ba079d`
+- validationCompareCommit: `5ba079d`
+- remoteVerifiedCommit: `89b8034`
 - pushedCommitShas:
-  - `pending`
+  - `5ba079d`
+  - `89b8034`
 - directRemoteVerificationChecklist:
   - `Verify phase09_5_validation_manifest.json on origin/main`
   - `Verify phase09_5_validation_evidence.md on origin/main`
@@ -67,4 +68,4 @@
   - `Verify all attempted compare postfix files on origin/main`
   - `Confirm frozen earlier artifacts were not modified`
   - `Confirm no broader post-fix rerun artifact was created`
-- answerVsRepoMatch: `pending`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`
