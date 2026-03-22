@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractDateCandidatesFromBlock } from "./date-extraction";
+import { extractDateCandidatesFromBlock, extractDateCandidatesFromDocument } from "./date-extraction";
 
 describe("DateCandidate extraction", () => {
   const baseInput = {
@@ -101,5 +101,45 @@ describe("DateCandidate extraction", () => {
     });
 
     expect(result).toHaveLength(0);
+  });
+
+  it("filters outpatient schedule log dates in high-pressure clinic time tables", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "[ 2025-05-28 ] 공단 . 재진 . 11 : 37/11 : 39.1 정형 외과 Dr. 이희두"
+    });
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("keeps the earliest repetitive inpatient diagnostic log seed while pruning later repeats", () => {
+    const result = extractDateCandidatesFromDocument([
+      { ...baseInput, blockIndex: 7, textRaw: "진료 기간 : 2024 / 10 / 22 ~ 2024 / 12 / 20" },
+      { ...baseInput, blockIndex: 8, textRaw: "주치의 : 윤정하" },
+      { ...baseInput, blockIndex: 9, textRaw: "병실 : NICU" },
+      { ...baseInput, blockIndex: 10, textRaw: "[ 입원 ]" },
+      { ...baseInput, blockIndex: 11, textRaw: "진료 일자 : 20241023" },
+      { ...baseInput, blockIndex: 12, textRaw: "진료과 : 소아 청소년 과" },
+      { ...baseInput, blockIndex: 13, textRaw: "[ 검사 일시 ]" },
+      { ...baseInput, blockIndex: 14, textRaw: "2024-10-23 14:45" },
+      { ...baseInput, blockIndex: 15, textRaw: "[ 판독 일시 ]" },
+      { ...baseInput, blockIndex: 16, textRaw: "2024-10-23 17:26" },
+      { ...baseInput, blockIndex: 19, textRaw: "진료 일자 : 20241025" },
+      { ...baseInput, blockIndex: 20, textRaw: "진료과 : 소아 청소년 과" },
+      { ...baseInput, blockIndex: 21, textRaw: "[ 검사 일시 ]" },
+      { ...baseInput, blockIndex: 22, textRaw: "2024-10-25 15:54" },
+      { ...baseInput, blockIndex: 23, textRaw: "[ 판독 일시 ]" },
+      { ...baseInput, blockIndex: 24, textRaw: "2024-10-26 11:30" },
+      { ...baseInput, blockIndex: 27, textRaw: "진료 일자 : 20241030" },
+      { ...baseInput, blockIndex: 28, textRaw: "진료과 : 소아 청소년 과" },
+      { ...baseInput, blockIndex: 29, textRaw: "[ 검사 일시 ]" },
+      { ...baseInput, blockIndex: 30, textRaw: "2024-10-30 12:01" },
+      { ...baseInput, blockIndex: 31, textRaw: "[ 판독 일시 ]" },
+      { ...baseInput, blockIndex: 32, textRaw: "2024-10-30 15:42" }
+    ]);
+
+    expect(result.map((item) => item.normalizedDate)).toContain("2024-10-23");
+    expect(result.map((item) => item.normalizedDate)).not.toContain("2024-10-25");
+    expect(result.map((item) => item.normalizedDate)).not.toContain("2024-10-30");
   });
 });

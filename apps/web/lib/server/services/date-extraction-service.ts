@@ -1,5 +1,5 @@
 import { ApiError, dateCandidateResponseContractSchema } from "@vnexus/shared";
-import { extractDateCandidatesFromBlock } from "@vnexus/domain";
+import { extractDateCandidatesFromDocument } from "@vnexus/domain";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
 import type { UserRole } from "@vnexus/shared";
@@ -27,8 +27,8 @@ export async function extractAndPersistDateCandidatesForDocument(caseId: string,
     orderBy: [{ fileOrder: "asc" }, { pageOrder: "asc" }, { blockIndex: "asc" }]
   });
 
-  const extractedCandidates = blocks.flatMap((block) =>
-    extractDateCandidatesFromBlock({
+  const extractedCandidates = extractDateCandidatesFromDocument(
+    blocks.map((block) => ({
       caseId,
       sourceFileId: block.sourceFileId,
       sourcePageId: block.sourcePageId,
@@ -36,7 +36,7 @@ export async function extractAndPersistDateCandidatesForDocument(caseId: string,
       pageOrder: block.pageOrder,
       blockIndex: block.blockIndex,
       textRaw: block.textRaw
-    })
+    }))
   );
 
   await prisma.$transaction(async (tx) => {

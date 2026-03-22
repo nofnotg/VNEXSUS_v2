@@ -18,6 +18,11 @@ type CandidateContext = {
   after: string;
 };
 
+type DateCandidateWithSignature = {
+  candidate: DateCandidateInput;
+  repetitiveInpatientLogKey: string | null;
+};
+
 const DATE_PATTERNS = [
   /(?<!\d)(\d{4})[./-](\d{1,2})[./-](\d{1,2})(?!\d)/g,
   /(?<!\d)(\d{4})(\d{2})(\d{2})(?!\d)/g,
@@ -118,6 +123,8 @@ const STRONG_METADATA_KEYWORDS = [
 
 const MIN_YEAR = 1900;
 const CONTEXT_RADIUS = 40;
+const INPATIENT_LOG_BEFORE_RADIUS = 20;
+const INPATIENT_LOG_AFTER_RADIUS = 8;
 
 function normalizeWhitespace(text: string) {
   return text.replace(/\s+/g, " ").trim();
@@ -283,6 +290,21 @@ function inferConfidence(rawDateText: string, dateTypeCandidate: DateTypeCandida
   return Math.max(0.35, Math.min(0.98, Number(confidence.toFixed(2))));
 }
 
+function hasOutpatientScheduleNoise(textRaw: string, context: CandidateContext, dateTypeCandidate: DateTypeCandidate) {
+  if (dateTypeCandidate !== "visit") {
+    return false;
+  }
+
+  const haystack = `${textRaw} ${context.local}`.toLowerCase();
+  const hasScheduleTimeRange = /\d{1,2}\s*:\s*\d{2}(?:\.\d+)?\s*\/\s*\d{1,2}\s*:\s*\d{2}(?:\.\d+)?/.test(haystack);
+  const hasOutpatientLogMarkers =
+    haystack.includes("공단") &&
+    (haystack.includes("초진") || haystack.includes("재진")) &&
+    (haystack.includes("progress") || haystack.includes("order list") || haystack.includes("dr."));
+
+  return hasScheduleTimeRange && hasOutpatientLogMarkers;
+}
+
 function shouldKeepDateCandidate(textRaw: string, context: CandidateContext, dateTypeCandidate: DateTypeCandidate) {
   if (dateTypeCandidate === "irrelevant") {
     return false;
@@ -300,6 +322,10 @@ function shouldKeepDateCandidate(textRaw: string, context: CandidateContext, dat
     return false;
   }
 
+  if (hasOutpatientScheduleNoise(textRaw, context, dateTypeCandidate)) {
+    return false;
+  }
+
   if (
     hasStrongMetadataMarkerNearCandidate(context) &&
     !hasClinicalDateLabelNearCandidate(context) &&
@@ -313,6 +339,129 @@ function shouldKeepDateCandidate(textRaw: string, context: CandidateContext, dat
   }
 
   return true;
+}
+
+function buildBlockKey(block: Pick<DateExtractionBlockInput, "sourceFileId" | "sourcePageId" | "blockIndex">) {
+  return `${block.sourceFileId}:${block.sourcePageId}:${block.blockIndex}`;
+}
+
+function buildCandidateKey(candidate: DateCandidateInput) {
+  return `${candidate.sourceFileId}:${candidate.sourcePageId}:${candidate.blockIndex}:${candidate.normalizedDate}:${candidate.rawDateText}`;
+}
+
+function collectNearbyBlockText(
+  blocksOnPage: DateExtractionBlockInput[],
+  anchorBlockIndex: number,
+  beforeRadius = INPATIENT_LOG_BEFORE_RADIUS,
+  afterRadius = INPATIENT_LOG_AFTER_RADIUS
+) {
+  return normalizeWhitespace(
+    blocksOnPage
+      .filter(
+        (block) =>
+          block.blockIndex >= anchorBlockIndex - beforeRadius && block.blockIndex <= anchorBlockIndex + afterRadius
+      )
+      .map((block) => block.textRaw)
+      .join(" ")
+  );
+}
+
+function extractClinicalPeriodKey(text: string) {
+  const match = text.match(
+    /진료\s*기간\s*:\s*(\d{4})\s*[./-]?\s*(\d{1,2})\s*[./-]?\s*(\d{1,2})\s*~\s*(\d{4})\s*[./-]?\s*(\d{1,2})\s*[./-]?\s*(\d{1,2})/
+  );
+  if (!match) {
+    return null;
+  }
+
+  const [, startYear, startMonth, startDay, endYear, endMonth, endDay] = match;
+  return [
+    toIsoDate(Number(startYear), Number(startMonth), Number(startDay)),
+    toIsoDate(Number(endYear), Number(endMonth), Number(endDay))
+  ].join("~");
+}
+
+function getRepetitiveInpatientLogKey(
+  candidate: DateCandidateInput,
+  blockByKey: Map<string, DateExtractionBlockInput>,
+  blocksByPage: Map<string, DateExtractionBlockInput[]>
+) {
+  if (candidate.dateTypeCandidate !== "visit") {
+    return null;
+  }
+
+  const anchorBlock = blockByKey.get(buildBlockKey(candidate));
+  if (!anchorBlock) {
+    return null;
+  }
+
+  const pageKey = `${candidate.sourceFileId}:${candidate.sourcePageId}`;
+  const blocksOnPage = blocksByPage.get(pageKey) ?? [];
+  const nearbyText = collectNearbyBlockText(blocksOnPage, candidate.blockIndex).toLowerCase();
+  const hasRepetitiveInpatientSignature =
+    nearbyText.includes("진료 기간") &&
+    nearbyText.includes("병실") &&
+    nearbyText.includes("nicu") &&
+    nearbyText.includes("입원") &&
+    nearbyText.includes("진료 일자") &&
+    nearbyText.includes("검사 일시") &&
+    nearbyText.includes("판독 일시");
+
+  if (!hasRepetitiveInpatientSignature) {
+    return null;
+  }
+
+  const periodKey = extractClinicalPeriodKey(nearbyText);
+  return `${candidate.sourceFileId}:${periodKey ?? "no-period"}`;
+}
+
+function filterDocumentLocalDateCandidates(
+  blocks: DateExtractionBlockInput[],
+  candidates: DateCandidateInput[]
+) {
+  const blockByKey = new Map(blocks.map((block) => [buildBlockKey(block), block]));
+  const blocksByPage = new Map<string, DateExtractionBlockInput[]>();
+
+  for (const block of blocks) {
+    const pageKey = `${block.sourceFileId}:${block.sourcePageId}`;
+    const existing = blocksByPage.get(pageKey);
+    if (existing) {
+      existing.push(block);
+    } else {
+      blocksByPage.set(pageKey, [block]);
+    }
+  }
+
+  const candidateSignatures: DateCandidateWithSignature[] = candidates.map((candidate) => ({
+    candidate,
+    repetitiveInpatientLogKey: getRepetitiveInpatientLogKey(candidate, blockByKey, blocksByPage)
+  }));
+
+  const earliestDateBySignature = new Map<string, string>();
+  for (const item of candidateSignatures) {
+    if (!item.repetitiveInpatientLogKey) {
+      continue;
+    }
+
+    const currentEarliest = earliestDateBySignature.get(item.repetitiveInpatientLogKey);
+    if (!currentEarliest || item.candidate.normalizedDate.localeCompare(currentEarliest) < 0) {
+      earliestDateBySignature.set(item.repetitiveInpatientLogKey, item.candidate.normalizedDate);
+    }
+  }
+
+  return candidateSignatures
+    .filter((item) => {
+      if (!item.repetitiveInpatientLogKey) {
+        return true;
+      }
+
+      return earliestDateBySignature.get(item.repetitiveInpatientLogKey) === item.candidate.normalizedDate;
+    })
+    .map((item) => item.candidate)
+    .filter(
+      (candidate, index, allCandidates) =>
+        allCandidates.findIndex((item) => buildCandidateKey(item) === buildCandidateKey(candidate)) === index
+    );
 }
 
 export function extractDateCandidatesFromBlock(input: DateExtractionBlockInput): DateCandidateInput[] {
@@ -374,4 +523,15 @@ export function extractDateCandidatesFromBlock(input: DateExtractionBlockInput):
       });
     })
     .filter((candidate): candidate is DateCandidateInput => candidate !== null);
+}
+
+export function extractDateCandidatesFromDocument(blocks: DateExtractionBlockInput[]) {
+  const sortedBlocks = [...blocks].sort((a, b) => {
+    if (a.fileOrder !== b.fileOrder) return a.fileOrder - b.fileOrder;
+    if (a.pageOrder !== b.pageOrder) return a.pageOrder - b.pageOrder;
+    return a.blockIndex - b.blockIndex;
+  });
+
+  const extractedCandidates = sortedBlocks.flatMap((block) => extractDateCandidatesFromBlock(block));
+  return filterDocumentLocalDateCandidates(sortedBlocks, extractedCandidates);
 }

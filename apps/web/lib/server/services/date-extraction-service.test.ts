@@ -28,8 +28,8 @@ const state = vi.hoisted(() => ({
       fileOrder: 1,
       pageOrder: 1,
       blockIndex: 1,
-      textRaw: "서류 발급일 2024/03/08",
-      textNormalized: "서류 발급일 2024/03/08",
+      textRaw: "검사 일자 2024/03/08",
+      textNormalized: "검사 일자 2024/03/08",
       bboxJson: null,
       confidence: 0.87,
       createdAt: new Date("2026-03-08T00:00:01.000Z")
@@ -122,7 +122,7 @@ describe("date extraction service", () => {
 
     expect(result.candidateCount).toBe(2);
     expect(state.dateCandidates.map((item) => item.normalizedDate)).toEqual(["2024-03-07", "2024-03-08"]);
-    expect(state.dateCandidates.map((item) => item.dateTypeCandidate)).toEqual(["visit", "admin"]);
+    expect(state.dateCandidates.map((item) => item.dateTypeCandidate)).toEqual(["visit", "exam"]);
   });
 
   it("returns DateCandidates sorted by fileOrder/pageOrder/blockIndex with createdAt", async () => {
@@ -132,6 +132,6 @@ describe("date extraction service", () => {
 
     expect(result.map((item) => item.blockIndex)).toEqual([0, 1]);
     expect(result[0]?.createdAt).toBe("2026-03-08T00:00:00.000Z");
-    expect(result[1]?.dateTypeCandidate).toBe("admin");
+    expect(result[1]?.dateTypeCandidate).toBe("exam");
   });
 });
