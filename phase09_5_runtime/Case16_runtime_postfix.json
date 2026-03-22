@@ -1,0 +1,129 @@
+{
+  "caseName": "Case16",
+  "track": "institution",
+  "runtimeSource": {
+    "method": "phase09_5_service_runner",
+    "generatedAt": "2026-03-22T05:48:28.002Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn1c621v0gpdmeh4xj9fvirk",
+    "jobId": "cmn1c637k0gplmeh4lkm59ht8"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case16_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산백병원.pdf",
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\곽동인\\일산차병원.pdf"
+  ],
+  "mappingConfidence": "medium",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case16",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2025-09-10",
+      "2025-09-24",
+      "2025-09-25",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01"
+    ],
+    "windowDates": [
+      "2025-09-10",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01"
+    ],
+    "atomDates": [
+      "2025-09-10",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01"
+    ],
+    "bundleDates": [
+      "2025-09-10",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01"
+    ],
+    "earliestDate": "2025-09-10",
+    "latestDate": "2025-10-01"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "일산차병원",
+      "차병원"
+    ],
+    "bundleHospitals": [
+      "일산차병원",
+      "차병원"
+    ],
+    "combinedInstitutions": [
+      "일산차병원",
+      "차병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 2,
+    "uploadedDocumentPageCount": 20,
+    "ocrBlockCount": 741,
+    "dateCandidateCount": 28,
+    "windowCount": 26,
+    "eventAtomCount": 26,
+    "eventBundleCount": 6,
+    "eventTypes": [
+      "exam",
+      "mixed",
+      "pathology"
+    ],
+    "bundleTypes": [
+      "exam",
+      "mixed"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 6,
+    "pdfByteSize": 55613
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.06,
+  "actualLlmCost": 0,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "dominantBlocker": null,
+  "dominantResidualGap": "minor_institution_canonicalization_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": true,
+  "newBlockerAppeared": null,
+  "relativeToPreviousLockedBaseline": "same",
+  "notes": [
+    "budgetEstimatedCostUsd=0.06"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "caseName": "Case3",
+  "track": "date",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case3_runtime_postfix.json",
+  "comparisonStatus": "phase09_5_unchanged_partial_match",
+  "previousLockedBaselinePhase": "phase07",
+  "timeoutFixStillHealthy": true,
+  "dominantResidualGap": "minor_date_missing_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": true,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "previousMissingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "postfixMissingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-19"
+    ],
+    "previousExtraDates": [
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04"
+    ],
+    "postfixExtraDates": [
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "previousMissingInstitutions": [
+      "이대목동병원"
+    ],
+    "postfixMissingInstitutions": [],
+    "previousExtraInstitutions": [],
+    "postfixExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "previousBundleCount": 15,
+    "postfixBundleCount": 14
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_previous_locked_baseline=same",
+    "dominant_blocker_improved=false",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPreviousLockedBaseline": "same",
+  "mediumConfidenceFromFrozenBaseline": false
+}

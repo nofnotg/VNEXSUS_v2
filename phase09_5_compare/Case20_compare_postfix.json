@@ -1,0 +1,80 @@
+{
+  "caseName": "Case20",
+  "track": "bundle",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case20_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case20_runtime_postfix.json",
+  "comparisonStatus": "phase09_5_unchanged_partial_match",
+  "previousLockedBaselinePhase": "phase06_5",
+  "timeoutFixStillHealthy": true,
+  "dominantResidualGap": "minor_bundle_density_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": true,
+  "newBlockerAppeared": null,
+  "dateCompletenessSummary": {
+    "previousMissingDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "postfixMissingDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "previousExtraDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "postfixExtraDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ]
+  },
+  "institutionCompletenessSummary": {
+    "previousMissingInstitutions": [
+      "반듯한정형외과의원"
+    ],
+    "postfixMissingInstitutions": [],
+    "previousExtraInstitutions": [],
+    "postfixExtraInstitutions": []
+  },
+  "bundleSummary": {
+    "previousBundleCount": 15,
+    "postfixBundleCount": 15
+  },
+  "remainingSemanticQualityGaps": [
+    "missing_golden_dates",
+    "extra_runtime_dates"
+  ],
+  "evidenceBackedNotes": [
+    "relative_to_previous_locked_baseline=same",
+    "dominant_blocker_improved=false",
+    "timeout_like_recurred=false"
+  ],
+  "relativeToPreviousLockedBaseline": "same",
+  "mediumConfidenceFromFrozenBaseline": true
+}

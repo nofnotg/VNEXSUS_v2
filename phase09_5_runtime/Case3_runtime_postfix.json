@@ -1,0 +1,154 @@
+{
+  "caseName": "Case3",
+  "track": "date",
+  "runtimeSource": {
+    "method": "phase09_5_service_runner",
+    "generatedAt": "2026-03-22T05:43:38.209Z",
+    "investigatorUserEmail": "charmorzr@gmail.com",
+    "caseId": "cmn1bzug60001meh4zqpqfufk",
+    "jobId": "cmn1bzve30006meh41x0kvzaj"
+  },
+  "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case3_report.txt",
+  "sourceDocs": [
+    "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\sample_pdf\\현대해상 김민아(뇌 양성종양)\\이대목동병원.pdf"
+  ],
+  "mappingConfidence": "high",
+  "manualConfirmed": true,
+  "coordinateReferenceSupportAvailable": true,
+  "coordinateReferencePath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\prepared_coordinate_cases\\prepared_coordinate_cases\\2025-12-28T10-52-07-642Z\\coords\\Case3",
+  "pipelineStageStatus": {
+    "caseCreated": true,
+    "patientInputSaved": true,
+    "uploadCompleted": true,
+    "ocrJobCreated": true,
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "windowsAvailable": true,
+    "eventAtomsAvailable": true,
+    "eventBundlesAvailable": true,
+    "structuredOutputAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "normalizedTimelineDateSummary": {
+    "dateCandidateDates": [
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04"
+    ],
+    "windowDates": [
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04"
+    ],
+    "atomDates": [
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04"
+    ],
+    "bundleDates": [
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17",
+      "2025-02-03",
+      "2025-02-04",
+      "2025-03-04"
+    ],
+    "earliestDate": "2024-12-13",
+    "latestDate": "2025-03-04"
+  },
+  "normalizedInstitutionSummary": {
+    "atomHospitals": [
+      "이대목동병원"
+    ],
+    "bundleHospitals": [
+      "이대목동병원"
+    ],
+    "combinedInstitutions": [
+      "이대목동병원"
+    ]
+  },
+  "normalizedEventCoverageSummary": {
+    "uploadedDocumentCount": 1,
+    "uploadedDocumentPageCount": 24,
+    "ocrBlockCount": 1230,
+    "dateCandidateCount": 22,
+    "windowCount": 21,
+    "eventAtomCount": 21,
+    "eventBundleCount": 14,
+    "eventTypes": [
+      "exam",
+      "pathology"
+    ],
+    "bundleTypes": [
+      "exam",
+      "pathology"
+    ],
+    "reportSectionTitles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "narrativeSectionCount": 14,
+    "pdfByteSize": 55575
+  },
+  "extractionWarnings": [],
+  "parsingAmbiguityNotes": [
+    "env_override_source:C:\\VNEXSUS\\VNEXSUS_v2\\.env.local"
+  ],
+  "failureTaxonomy": null,
+  "actualOcrCost": 0.072,
+  "actualLlmCost": 0,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "dominantBlocker": null,
+  "dominantResidualGap": "minor_date_missing_residual",
+  "dominantBlockerImproved": false,
+  "previousBlockerRemainedUnchanged": true,
+  "newBlockerAppeared": null,
+  "relativeToPreviousLockedBaseline": "same",
+  "notes": [
+    "budgetEstimatedCostUsd=0.072"
+  ]
+}
