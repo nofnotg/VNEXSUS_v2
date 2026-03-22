@@ -3,10 +3,10 @@
   "track": "date",
   "runtimeSource": {
     "method": "phase12_6_tailrisk_service_runner",
-    "generatedAt": "2026-03-22T22:23:15.043Z",
+    "generatedAt": "2026-03-22T23:22:57.098Z",
     "investigatorUserEmail": "charmorzr@gmail.com",
-    "caseId": "cmn2bpcv80168mek0btwyyohg",
-    "jobId": "cmn2bpe52016gmek0gmcmlucd"
+    "caseId": "cmn2du4sq015sme58gwy9zu3t",
+    "jobId": "cmn2du6mj0160me58d8i5s4cr"
   },
   "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case10_report.txt",
   "sourceDocs": [
@@ -135,7 +135,7 @@
   "normalizedEventCoverageSummary": {
     "uploadedDocumentCount": 2,
     "uploadedDocumentPageCount": 89,
-    "ocrBlockCount": 6050,
+    "ocrBlockCount": 6051,
     "dateCandidateCount": 64,
     "windowCount": 50,
     "eventAtomCount": 50,

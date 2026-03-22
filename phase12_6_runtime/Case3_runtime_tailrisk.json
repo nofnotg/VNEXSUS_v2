@@ -3,10 +3,10 @@
   "track": "date",
   "runtimeSource": {
     "method": "phase12_6_tailrisk_service_runner",
-    "generatedAt": "2026-03-22T22:22:34.381Z",
+    "generatedAt": "2026-03-22T23:22:21.679Z",
     "investigatorUserEmail": "charmorzr@gmail.com",
-    "caseId": "cmn2bohhs0001mek0qzsv9seu",
-    "jobId": "cmn2boi9f0006mek0q3fyow7h"
+    "caseId": "cmn2dtdgz0001me580yw0i77q",
+    "jobId": "cmn2dtemj0006me585hpe5fo5"
   },
   "reportTxtPath": "C:\\VNEXSUS\\VNEXSUS_reports_pdf\\sample_pdf\\caseN_report\\Case3_report.txt",
   "sourceDocs": [
@@ -41,10 +41,7 @@
       "2025-01-02",
       "2025-01-13",
       "2025-01-15",
-      "2025-01-17",
-      "2025-02-03",
-      "2025-02-04",
-      "2025-03-04"
+      "2025-01-17"
     ],
     "windowDates": [
       "2024-12-13",
@@ -54,10 +51,7 @@
       "2025-01-02",
       "2025-01-13",
       "2025-01-15",
-      "2025-01-17",
-      "2025-02-03",
-      "2025-02-04",
-      "2025-03-04"
+      "2025-01-17"
     ],
     "atomDates": [
       "2024-12-13",
@@ -67,10 +61,7 @@
       "2025-01-02",
       "2025-01-13",
       "2025-01-15",
-      "2025-01-17",
-      "2025-02-03",
-      "2025-02-04",
-      "2025-03-04"
+      "2025-01-17"
     ],
     "bundleDates": [
       "2024-12-13",
@@ -80,13 +71,10 @@
       "2025-01-02",
       "2025-01-13",
       "2025-01-15",
-      "2025-01-17",
-      "2025-02-03",
-      "2025-02-04",
-      "2025-03-04"
+      "2025-01-17"
     ],
     "earliestDate": "2024-12-13",
-    "latestDate": "2025-03-04"
+    "latestDate": "2025-01-17"
   },
   "normalizedInstitutionSummary": {
     "atomHospitals": [
@@ -102,11 +90,11 @@
   "normalizedEventCoverageSummary": {
     "uploadedDocumentCount": 1,
     "uploadedDocumentPageCount": 24,
-    "ocrBlockCount": 1243,
-    "dateCandidateCount": 18,
-    "windowCount": 16,
-    "eventAtomCount": 16,
-    "eventBundleCount": 14,
+    "ocrBlockCount": 1242,
+    "dateCandidateCount": 15,
+    "windowCount": 13,
+    "eventAtomCount": 13,
+    "eventBundleCount": 11,
     "eventTypes": [
       "exam",
       "pathology"
@@ -126,13 +114,10 @@
       null,
       null,
       null,
-      null,
-      null,
-      null,
       null
     ],
-    "narrativeSectionCount": 14,
-    "pdfByteSize": 55575
+    "narrativeSectionCount": 11,
+    "pdfByteSize": 55270
   },
   "extractionWarnings": [],
   "parsingAmbiguityNotes": [
@@ -144,10 +129,10 @@
   "timeoutLikeRuntimeFailureRecurred": false,
   "dominantBlocker": null,
   "dominantResidualGap": "minor_date_missing_residual",
-  "dominantBlockerImproved": false,
-  "previousBlockerRemainedUnchanged": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
   "newBlockerAppeared": null,
-  "relativeToLatestLockedBaseline": "same",
+  "relativeToLatestLockedBaseline": "better",
   "notes": [
     "budgetEstimatedCostUsd=0.072"
   ]

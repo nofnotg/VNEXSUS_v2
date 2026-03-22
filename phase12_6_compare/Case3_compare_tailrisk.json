@@ -3,14 +3,14 @@
   "track": "date",
   "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
   "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_runtime\\Case3_runtime_tailrisk.json",
-  "comparisonStatus": "tailrisk_unchanged_partial_match",
+  "comparisonStatus": "tailrisk_improved_partial_match",
   "latestLockedBaselinePhase": "phase10",
   "timeoutLikeRuntimeFailureRecurred": false,
   "dominantResidualGap": "minor_date_missing_residual",
-  "dominantBlockerImproved": false,
-  "previousBlockerRemainedUnchanged": true,
+  "dominantBlockerImproved": true,
+  "previousBlockerRemainedUnchanged": false,
   "newBlockerAppeared": null,
-  "lowEndRiskState": "low_end_risk_present",
+  "lowEndRiskState": "low_end_risk_possible",
   "dateCompletenessSummary": {
     "previousMissingDates": [
       "2019-11-22",
@@ -28,6 +28,7 @@
       "2023-11-22",
       "2024-08-22",
       "2024-11-22",
+      "2025-03-04",
       "2025-03-19"
     ],
     "previousExtraDates": [
@@ -46,9 +47,7 @@
       "2024-12-31",
       "2025-01-02",
       "2025-01-13",
-      "2025-01-17",
-      "2025-02-03",
-      "2025-02-04"
+      "2025-01-17"
     ]
   },
   "institutionCompletenessSummary": {
@@ -59,20 +58,20 @@
   },
   "bundleSummary": {
     "previousBundleCount": 14,
-    "currentBundleCount": 14
+    "currentBundleCount": 11
   },
   "remainingSemanticQualityGaps": [
     "missing_golden_dates",
     "extra_runtime_dates"
   ],
   "evidenceBackedNotes": [
-    "relative_to_latest_locked_baseline=same",
-    "dominant_blocker_improved=false",
+    "relative_to_latest_locked_baseline=better",
+    "dominant_blocker_improved=true",
     "timeout_like_recurred=false",
     "previous_dominant_metric=7",
-    "current_dominant_metric=7",
-    "low_end_risk_state=low_end_risk_present"
+    "current_dominant_metric=8",
+    "low_end_risk_state=low_end_risk_possible"
   ],
-  "relativeToLatestLockedBaseline": "same",
+  "relativeToLatestLockedBaseline": "better",
   "mediumConfidenceFromFrozenBaseline": false
 }

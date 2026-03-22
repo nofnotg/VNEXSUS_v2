@@ -7,15 +7,14 @@
   ],
   "successfulValidationCases": [
     "Case3",
-    "Case10"
-  ],
-  "failedValidationCases": [
+    "Case10",
     "Case36"
   ],
+  "failedValidationCases": [],
   "perCaseStatus": [
     {
       "caseName": "Case3",
-      "status": "tailrisk_unchanged_partial_match"
+      "status": "tailrisk_improved_partial_match"
     },
     {
       "caseName": "Case10",
@@ -23,13 +22,13 @@
     },
     {
       "caseName": "Case36",
-      "status": "tailrisk_regressed"
+      "status": "tailrisk_improved_partial_match"
     }
   ],
   "perCaseLowEndRiskState": [
     {
       "caseName": "Case3",
-      "lowEndRiskState": "low_end_risk_present"
+      "lowEndRiskState": "low_end_risk_possible"
     },
     {
       "caseName": "Case10",
@@ -37,13 +36,13 @@
     },
     {
       "caseName": "Case36",
-      "lowEndRiskState": "low_end_risk_present"
+      "lowEndRiskState": "low_end_risk_possible"
     }
   ],
   "perCaseTailRiskState": [
     {
       "caseName": "Case3",
-      "tailRiskState": "unchanged"
+      "tailRiskState": "reduced"
     },
     {
       "caseName": "Case10",
@@ -51,14 +50,14 @@
     },
     {
       "caseName": "Case36",
-      "tailRiskState": "worsened"
+      "tailRiskState": "reduced"
     }
   ],
   "timeoutLikeRuntimeFailureRecurred": false,
   "phase12SuccessfullyReducedTailRiskSet": true,
-  "anyProductBlockingTailRiskCase": true,
-  "readyForRenewedStabilizationReview": false,
-  "anyRegression": true,
+  "anyProductBlockingTailRiskCase": false,
+  "readyForRenewedStabilizationReview": true,
+  "anyRegression": false,
   "generatedRuntimeFiles": [
     "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_runtime\\Case3_runtime_tailrisk.json",
     "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_runtime\\Case10_runtime_tailrisk.json",
@@ -69,5 +68,5 @@
     "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_compare\\Case10_compare_tailrisk.json",
     "C:\\VNEXSUS\\VNEXSUS_v2\\phase12_6_compare\\Case36_compare_tailrisk.json"
   ],
-  "generatedAt": "2026-03-22T22:27:01.461Z"
+  "generatedAt": "2026-03-22T23:26:49.460Z"
 }
