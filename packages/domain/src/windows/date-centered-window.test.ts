@@ -57,7 +57,7 @@ describe("Date-centered window aggregation", () => {
     });
 
     expect(result).toHaveLength(1);
-    expect(result[0]?.candidateSummaryJson.hospitals).toEqual(["\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0"]);
+    expect(result[0]?.candidateSummaryJson.hospitals).toEqual(["\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC"]);
     expect(result[0]?.candidateSummaryJson.diagnoses).toEqual(["\uC8FC\uC0C1\uBCD1"]);
   });
 
@@ -171,7 +171,7 @@ describe("Date-centered window aggregation", () => {
     });
 
     expect(result).toHaveLength(1);
-    expect(result[0]?.candidateSummaryJson.hospitals).toEqual(["\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8 \uC77C\uC0B0\uBCD1\uC6D0"]);
+    expect(result[0]?.candidateSummaryJson.hospitals).toEqual(["\uC77C\uC0B0\uBCD1\uC6D0"]);
     expect(result[0]?.candidateSummaryJson.diagnoses).toEqual(["\uC8FC\uC0C1\uBCD1"]);
   });
 });

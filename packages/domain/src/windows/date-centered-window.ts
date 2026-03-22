@@ -6,7 +6,7 @@ import {
   type DateCenteredWindowInput,
   type EntityCandidateResponseContract
 } from "@vnexus/shared";
-import { canonicalizeHospitalName } from "../entities/hospital-normalization";
+import { collapseHospitalVariants } from "../entities/hospital-normalization";
 
 export type DateCenteredWindowInputSource = {
   dateCandidates: DateCandidateResponseContract[];
@@ -79,7 +79,7 @@ function appendCandidate(summary: CandidateSummary, candidate: EntityCandidateRe
 
 function finalizeSummary(summary: CandidateSummary): CandidateSummary {
   return candidateSummarySchema.parse({
-    hospitals: dedupe(summary.hospitals.map((hospital) => canonicalizeHospitalName(hospital) ?? hospital)),
+    hospitals: collapseHospitalVariants(summary.hospitals),
     departments: dedupe(summary.departments),
     diagnoses: dedupe(summary.diagnoses),
     tests: dedupe(summary.tests),

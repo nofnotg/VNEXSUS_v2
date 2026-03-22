@@ -18,12 +18,21 @@ const ADDRESS_TOKEN_PATTERN =
 const GENERIC_PREFIX_PATTERN =
   /^(\uC758\uB8CC\uBC95\uC778|\uC7AC\uB2E8\uBC95\uC778|\uD559\uAD50\uBC95\uC778)/u;
 
-const HOSPITAL_ALIAS_RULES: Array<{ match: (compactKey: string) => boolean; canonicalName: string }> = [
+const HOSPITAL_ALIAS_RULES: Array<{
+  match: (compactKey: string) => boolean;
+  canonicalName: string;
+  aliasKey?: string;
+}> = [
   {
     match: (compactKey) =>
+      compactKey.includes("smradiologyclinic") ||
+      compactKey.includes("smradiology") ||
+      compactKey.includes("sm\uc601\uc0c1\uc758\ud559\uacfc") ||
+      compactKey.includes("\uc5d0\uc2a4\uc5e0\uc601\uc0c1\uc758\ud559\uacfc") ||
       compactKey.includes("sm\uc601\uc0c1\uc758\ud559\uacfc\uc758\uc6d0") ||
       compactKey.includes("\uc5d0\uc2a4\uc5e0\uc601\uc0c1\uc758\ud559\uacfc\uc758\uc6d0"),
-    canonicalName: "\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0"
+    canonicalName: "\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC",
+    aliasKey: "family:sm-radiology"
   },
   {
     match: (compactKey) => compactKey.includes("\uC0BC\uC131\uC11C\uC6B8\uBCD1\uC6D0"),
@@ -39,16 +48,19 @@ const HOSPITAL_ALIAS_RULES: Array<{ match: (compactKey: string) => boolean; cano
   {
     match: (compactKey) =>
       compactKey.includes("\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8\uC77C\uC0B0\uBCD1\uC6D0") ||
-      compactKey.includes("\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8\uACF5\uB2E8\uC77C\uC0B0\uBCD1\uC6D0"),
-    canonicalName: "\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8 \uC77C\uC0B0\uBCD1\uC6D0"
+      compactKey.includes("\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8\uACF5\uB2E8\uC77C\uC0B0\uBCD1\uC6D0") ||
+      compactKey.includes("\uC77C\uC0B0\uBCD1\uC6D0"),
+    canonicalName: "\uC77C\uC0B0\uBCD1\uC6D0",
+    aliasKey: "family:ilsan-hospital"
   },
   {
     match: (compactKey) => compactKey.includes("\uC77C\uC0B0\uBC31\uBCD1\uC6D0"),
     canonicalName: "\uC77C\uC0B0\uBC31\uBCD1\uC6D0"
   },
   {
-    match: (compactKey) => compactKey.includes("\uC77C\uC0B0\uCC28\uBCD1\uC6D0"),
-    canonicalName: "\uC77C\uC0B0\uCC28\uBCD1\uC6D0"
+    match: (compactKey) => compactKey.includes("\uC77C\uC0B0\uCC28\uBCD1\uC6D0") || compactKey === "\uCC28\uBCD1\uC6D0",
+    canonicalName: "\uC77C\uC0B0\uCC28\uBCD1\uC6D0",
+    aliasKey: "family:ilsan-cha"
   }
 ];
 
@@ -117,11 +129,81 @@ export function canonicalizeHospitalName(rawText: string) {
   return stripped || normalized;
 }
 
+function scoreHospitalRepresentative(name: string) {
+  const compact = buildCompactKey(name);
+  let score = compact.length;
+
+  if (/[A-Za-z]/.test(name) && !/[\uAC00-\uD7A3]/u.test(name)) {
+    score -= 10;
+  }
+
+  if (name.includes("\uBCD1\uC6D0")) {
+    score += 4;
+  }
+
+  if (name.includes("\uC758\uC6D0")) {
+    score += 2;
+  }
+
+  if (/^\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8/u.test(name)) {
+    score -= 4;
+  }
+
+  return score;
+}
+
+function choosePreferredHospitalName(values: string[]) {
+  return [...values].sort((left, right) => {
+    const scoreDiff = scoreHospitalRepresentative(right) - scoreHospitalRepresentative(left);
+    if (scoreDiff !== 0) {
+      return scoreDiff;
+    }
+
+    return right.length - left.length;
+  })[0] ?? null;
+}
+
 export function buildHospitalAliasKey(rawText: string) {
-  const canonical = canonicalizeHospitalName(rawText);
+  const normalized = normalizeWhitespace(stripBracketedSegments(rawText));
+  const compactKey = buildCompactKey(normalized);
+  const aliasRule = HOSPITAL_ALIAS_RULES.find((rule) => rule.match(compactKey));
+  const canonical = aliasRule ? aliasRule.canonicalName : canonicalizeHospitalName(rawText);
   if (!canonical) {
     return null;
   }
 
-  return buildCompactKey(canonical);
+  return aliasRule?.aliasKey ?? buildCompactKey(canonical);
+}
+
+export function collapseHospitalVariants(values: Array<string | null | undefined>) {
+  const groups = new Map<string, string[]>();
+
+  for (const rawValue of values) {
+    if (!rawValue) {
+      continue;
+    }
+
+    const canonical = canonicalizeHospitalName(rawValue);
+    if (!canonical) {
+      continue;
+    }
+
+    const aliasKey = buildHospitalAliasKey(rawValue) ?? `raw:${buildCompactKey(canonical)}`;
+    const existing = groups.get(aliasKey);
+    if (existing) {
+      existing.push(canonical);
+    } else {
+      groups.set(aliasKey, [canonical]);
+    }
+  }
+
+  const collapsed: string[] = [];
+  for (const canonicalValues of groups.values()) {
+    const preferred = choosePreferredHospitalName([...new Set(canonicalValues)]);
+    if (preferred) {
+      collapsed.push(preferred);
+    }
+  }
+
+  return [...new Set(collapsed)];
 }

@@ -6,7 +6,7 @@ import {
   type EventBundleInput,
   type UnresolvedBundleSlots
 } from "@vnexus/shared";
-import { buildHospitalAliasKey, canonicalizeHospitalName } from "../entities/hospital-normalization";
+import { buildHospitalAliasKey, canonicalizeHospitalName, collapseHospitalVariants } from "../entities/hospital-normalization";
 
 function uniqueNonNull(values: Array<string | null | undefined>) {
   return [...new Set(values.filter((value): value is string => Boolean(value)).map((value) => value.trim()).filter(Boolean))];
@@ -46,7 +46,8 @@ function chooseHospitalRepresentative(values: Array<string | null | undefined>) 
 
   if (groups.size === 1) {
     const onlyGroup = [...groups.values()][0];
-    return { value: onlyGroup?.canonical ?? null, conflicting: false };
+    const representative = collapseHospitalVariants(onlyGroup?.rawValues ?? [onlyGroup?.canonical ?? null])[0] ?? onlyGroup?.canonical ?? null;
+    return { value: representative, conflicting: false };
   }
 
   return { value: null, conflicting: true };
@@ -54,7 +55,7 @@ function chooseHospitalRepresentative(values: Array<string | null | undefined>) 
 
 function mergeSummary(atoms: EventAtomResponseContract[]): CandidateSummary {
   return {
-    hospitals: uniqueNonNull(atoms.map((atom) => atom.primaryHospital)),
+    hospitals: collapseHospitalVariants(atoms.map((atom) => atom.primaryHospital)),
     departments: uniqueNonNull(atoms.map((atom) => atom.primaryDepartment)),
     diagnoses: uniqueNonNull(atoms.map((atom) => atom.primaryDiagnosis)),
     tests: uniqueNonNull(atoms.map((atom) => atom.primaryTest)),

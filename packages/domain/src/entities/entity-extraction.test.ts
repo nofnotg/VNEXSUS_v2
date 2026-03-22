@@ -50,7 +50,7 @@ describe("EntityCandidate extraction", () => {
 
     const hospital = result.find((item) => item.candidateType === "hospital");
 
-    expect(hospital?.normalizedText).toBe("\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0");
+    expect(hospital?.normalizedText).toBe("\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC");
     expect(result.some((item) => item.candidateType === "department")).toBe(true);
     expect(result.some((item) => item.candidateType === "diagnosis")).toBe(true);
     expect(result.some((item) => item.candidateType === "test")).toBe(true);
@@ -94,6 +94,6 @@ describe("EntityCandidate extraction", () => {
     });
 
     const hospital = result.find((item) => item.candidateType === "hospital");
-    expect(hospital?.normalizedText).toBe("\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8 \uC77C\uC0B0\uBCD1\uC6D0");
+    expect(hospital?.normalizedText).toBe("\uC77C\uC0B0\uBCD1\uC6D0");
   });
 });

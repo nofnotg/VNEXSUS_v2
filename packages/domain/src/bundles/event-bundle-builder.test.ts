@@ -106,11 +106,8 @@ describe("event bundle builder", () => {
 
     expect(bundles).toHaveLength(1);
     expect(bundles[0]?.bundleTypeCandidate).toBe("mixed");
-    expect(bundles[0]?.primaryHospital).toBe("\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0");
-    expect(bundles[0]?.candidateSnapshotJson.hospitals).toEqual([
-      "SM \uC601\uC0C1\uC758\uD559\uACFC \uC758\uC6D0",
-      "\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC\uC758\uC6D0"
-    ]);
+    expect(bundles[0]?.primaryHospital).toBe("\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC");
+    expect(bundles[0]?.candidateSnapshotJson.hospitals).toEqual(["\uC5D0\uC2A4\uC5E0\uC601\uC0C1\uC758\uD559\uACFC"]);
     expect(bundles[0]?.atomIdsJson).toEqual(["atom-1", "atom-2"]);
   });
 
@@ -325,5 +322,112 @@ describe("event bundle builder", () => {
     expect(bundles).toHaveLength(2);
     expect(bundles[0]?.bundleTypeCandidate).toBe("surgery");
     expect(bundles[1]?.bundleTypeCandidate).toBe("treatment");
+  });
+
+  it("prefers the more specific hospital alias within the same family", () => {
+    const bundles = buildProvisionalEventBundles([
+      {
+        id: "atom-1",
+        caseId: "case-1",
+        sourceWindowId: "window-1",
+        sourceFileId: "doc-1",
+        sourcePageId: "page-1",
+        canonicalDate: "2024-03-07",
+        fileOrder: 1,
+        pageOrder: 1,
+        anchorBlockIndex: 2,
+        primaryHospital: "\uCC28\uBCD1\uC6D0",
+        primaryDepartment: "\uC0C1\uBD80\uC18C\uD654\uAE30\uB0B4\uACFC",
+        primaryDiagnosis: "\uC5ED\uB958\uC131 \uC2DD\uB3C4\uC5FC",
+        primaryTest: null,
+        primaryTreatment: "\uC57D\uBB3C\uCE58\uB8CC",
+        primaryProcedure: null,
+        primarySurgery: null,
+        admissionStatus: null,
+        pathologySummary: null,
+        medicationSummary: null,
+        symptomSummary: null,
+        eventTypeCandidate: "treatment",
+        ambiguityScore: 0.2,
+        requiresReview: false,
+        unresolvedSlotsJson: {
+          hospitalMissing: false,
+          diagnosisMissing: false,
+          conflictingDiagnosis: false,
+          conflictingHospital: false,
+          weakEvidence: false,
+          needsManualReview: false,
+          notes: []
+        },
+        candidateSnapshotJson: {
+          hospitals: ["\uCC28\uBCD1\uC6D0"],
+          departments: ["\uC0C1\uBD80\uC18C\uD654\uAE30\uB0B4\uACFC"],
+          diagnoses: ["\uC5ED\uB958\uC131 \uC2DD\uB3C4\uC5FC"],
+          tests: [],
+          treatments: ["\uC57D\uBB3C\uCE58\uB8CC"],
+          procedures: [],
+          surgeries: [],
+          admissions: [],
+          discharges: [],
+          pathologies: [],
+          medications: [],
+          symptoms: []
+        },
+        createdAt: "2026-03-08T00:00:00.000Z"
+      },
+      {
+        id: "atom-2",
+        caseId: "case-1",
+        sourceWindowId: "window-2",
+        sourceFileId: "doc-1",
+        sourcePageId: "page-1",
+        canonicalDate: "2024-03-07",
+        fileOrder: 1,
+        pageOrder: 1,
+        anchorBlockIndex: 7,
+        primaryHospital: "\uC77C\uC0B0\uCC28\uBCD1\uC6D0",
+        primaryDepartment: "\uC0C1\uBD80\uC18C\uD654\uAE30\uB0B4\uACFC",
+        primaryDiagnosis: "\uC5ED\uB958\uC131 \uC2DD\uB3C4\uC5FC",
+        primaryTest: "CT",
+        primaryTreatment: null,
+        primaryProcedure: null,
+        primarySurgery: null,
+        admissionStatus: null,
+        pathologySummary: null,
+        medicationSummary: null,
+        symptomSummary: null,
+        eventTypeCandidate: "exam",
+        ambiguityScore: 0.18,
+        requiresReview: false,
+        unresolvedSlotsJson: {
+          hospitalMissing: false,
+          diagnosisMissing: false,
+          conflictingDiagnosis: false,
+          conflictingHospital: false,
+          weakEvidence: false,
+          needsManualReview: false,
+          notes: []
+        },
+        candidateSnapshotJson: {
+          hospitals: ["\uC77C\uC0B0\uCC28\uBCD1\uC6D0"],
+          departments: ["\uC0C1\uBD80\uC18C\uD654\uAE30\uB0B4\uACFC"],
+          diagnoses: ["\uC5ED\uB958\uC131 \uC2DD\uB3C4\uC5FC"],
+          tests: ["CT"],
+          treatments: [],
+          procedures: [],
+          surgeries: [],
+          admissions: [],
+          discharges: [],
+          pathologies: [],
+          medications: [],
+          symptoms: []
+        },
+        createdAt: "2026-03-08T00:00:01.000Z"
+      }
+    ]);
+
+    expect(bundles).toHaveLength(1);
+    expect(bundles[0]?.primaryHospital).toBe("\uC77C\uC0B0\uCC28\uBCD1\uC6D0");
+    expect(bundles[0]?.candidateSnapshotJson.hospitals).toEqual(["\uC77C\uC0B0\uCC28\uBCD1\uC6D0"]);
   });
 });
