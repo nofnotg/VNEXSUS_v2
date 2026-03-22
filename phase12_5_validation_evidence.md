@@ -1,0 +1,26 @@
+# Phase 12.5 Tail-Risk Validation Evidence
+
+- targetBranch: `main`
+- validationRuntimeCommit: `1af17b3`
+- validationCompareCommit: `1af17b3`
+- remoteVerifiedCommit: `pending_post_push_direct_fetch`
+- pushedCommitShas:
+  - `1af17b3`
+- attemptedCases:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+- validationOrder:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+- focusedTailRiskEffectivenessSummary:
+  - `Case3=unchanged`
+  - `Case10=regressed`
+  - `Case36=regressed`
+- timeoutLikeRuntimeFailureRecurred: `false`
+- broaderRerunOrRenewedStabilizationReviewRecommendedNext: `false`
+- nextStepDecision: `Another tail-risk fix cycle is needed before renewed stabilization review`
+- frozenEarlierArtifactsModified: `false`
+- case7Included: `false`
+- answerVsRepoMatch: `pending_post_push_direct_fetch`
