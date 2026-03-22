@@ -76,4 +76,24 @@ describe("EntityCandidate extraction", () => {
 
     expect(result.some((item) => item.candidateType === "hospital")).toBe(false);
   });
+
+  it("trims address-heavy prefixes before canonicalizing hospitals", () => {
+    const result = extractEntityCandidates({
+      ocrBlocks: [
+        {
+          caseId: "case-1",
+          sourceFileId: "doc-1",
+          sourcePageId: "page-1",
+          fileOrder: 1,
+          pageOrder: 2,
+          blockIndex: 1,
+          textRaw: "\uACBD\uAE30\uB3C4 \uACE0\uC591\uC2DC \uC77C\uC0B0\uAD6C \uBC31\uC11D\uB3D9 \uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8\uACF5\uB2E8 \uC77C\uC0B0\uBCD1\uC6D0"
+        }
+      ],
+      dateCandidates
+    });
+
+    const hospital = result.find((item) => item.candidateType === "hospital");
+    expect(hospital?.normalizedText).toBe("\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8 \uC77C\uC0B0\uBCD1\uC6D0");
+  });
 });

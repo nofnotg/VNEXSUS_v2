@@ -6,7 +6,7 @@ import {
   type EventBundleInput,
   type UnresolvedBundleSlots
 } from "@vnexus/shared";
-import { buildHospitalAliasKey } from "../entities/hospital-normalization";
+import { buildHospitalAliasKey, canonicalizeHospitalName } from "../entities/hospital-normalization";
 
 function uniqueNonNull(values: Array<string | null | undefined>) {
   return [...new Set(values.filter((value): value is string => Boolean(value)).map((value) => value.trim()).filter(Boolean))];
@@ -21,6 +21,32 @@ function chooseRepresentative(values: Array<string | null | undefined>) {
 
   if (uniqueValues.length === 1) {
     return { value: uniqueValues[0] ?? null, conflicting: false };
+  }
+
+  return { value: null, conflicting: true };
+}
+
+function chooseHospitalRepresentative(values: Array<string | null | undefined>) {
+  const hospitalValues = uniqueNonNull(values);
+  if (hospitalValues.length === 0) {
+    return { value: null, conflicting: false };
+  }
+
+  const groups = new Map<string, { canonical: string; rawValues: string[] }>();
+  for (const rawValue of hospitalValues) {
+    const aliasKey = buildHospitalAliasKey(rawValue) ?? `raw:${rawValue}`;
+    const canonical = canonicalizeHospitalName(rawValue) ?? rawValue;
+    const existing = groups.get(aliasKey);
+    if (existing) {
+      existing.rawValues.push(rawValue);
+    } else {
+      groups.set(aliasKey, { canonical, rawValues: [rawValue] });
+    }
+  }
+
+  if (groups.size === 1) {
+    const onlyGroup = [...groups.values()][0];
+    return { value: onlyGroup?.canonical ?? null, conflicting: false };
   }
 
   return { value: null, conflicting: true };
@@ -82,6 +108,29 @@ function hospitalsCompatible(bundle: EventAtomResponseContract[], atom: EventAto
   return bundleHospitalKeys.includes(atomHospitalKey);
 }
 
+function sharesClinicalContext(left: EventAtomResponseContract, right: EventAtomResponseContract) {
+  const leftSignals = uniqueNonNull([
+    left.primaryDepartment,
+    left.primaryDiagnosis,
+    left.primaryTest,
+    left.primaryTreatment,
+    left.primaryProcedure,
+    left.primarySurgery
+  ]);
+  const rightSignals = new Set(
+    uniqueNonNull([
+      right.primaryDepartment,
+      right.primaryDiagnosis,
+      right.primaryTest,
+      right.primaryTreatment,
+      right.primaryProcedure,
+      right.primarySurgery
+    ])
+  );
+
+  return leftSignals.some((signal) => rightSignals.has(signal));
+}
+
 function canJoinBundle(bundle: EventAtomResponseContract[], atom: EventAtomResponseContract) {
   const bundleTail = bundle.at(-1);
   if (!bundleTail) {
@@ -90,11 +139,17 @@ function canJoinBundle(bundle: EventAtomResponseContract[], atom: EventAtomRespo
 
   const sameDate = bundleTail.canonicalDate === atom.canonicalDate;
   const sameFile = bundleTail.fileOrder === atom.fileOrder;
-  const nearbyPage = Math.abs(bundleTail.pageOrder - atom.pageOrder) <= 1;
-  const nearbyBlock = Math.abs(bundleTail.anchorBlockIndex - atom.anchorBlockIndex) <= 8;
+  const pageDistance = Math.abs(bundleTail.pageOrder - atom.pageOrder);
+  const blockDistance = Math.abs(bundleTail.anchorBlockIndex - atom.anchorBlockIndex);
   const typeCompatible = areCompatibleTypes(bundleTail.eventTypeCandidate, atom.eventTypeCandidate);
 
-  if (!sameDate || !sameFile || !nearbyPage || !nearbyBlock || !typeCompatible) {
+  if (!sameDate || !sameFile || !typeCompatible) {
+    return false;
+  }
+
+  const directlyNearby = pageDistance <= 1 && blockDistance <= 8;
+  const continuityJoin = pageDistance <= 2 && blockDistance <= 20 && sharesClinicalContext(bundleTail, atom);
+  if (!directlyNearby && !continuityJoin) {
     return false;
   }
 
@@ -234,7 +289,7 @@ export function buildProvisionalEventBundles(
       throw new Error("Expected non-empty bundle group");
     }
 
-    const primaryHospital = chooseRepresentative(group.map((atom) => atom.primaryHospital));
+    const primaryHospital = chooseHospitalRepresentative(group.map((atom) => atom.primaryHospital));
     const representativeDiagnosis = chooseRepresentative(group.map((atom) => atom.primaryDiagnosis));
     const representativeTest = chooseRepresentative(group.map((atom) => atom.primaryTest));
     const representativeTreatment = chooseRepresentative(group.map((atom) => atom.primaryTreatment));

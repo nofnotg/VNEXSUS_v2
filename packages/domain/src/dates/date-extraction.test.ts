@@ -39,6 +39,16 @@ describe("DateCandidate extraction", () => {
     expect(result).toHaveLength(0);
   });
 
+  it("keeps clinically anchored dates even when the same block contains a birth date", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "\uC0DD\uB144\uC6D4\uC77C 1982.04.03 / \uC9C4\uB8CC\uC77C 2024.03.10 MRI \uC2DC\uD589"
+    });
+
+    expect(result.map((item) => item.normalizedDate)).toEqual(["2024-03-10"]);
+    expect(result[0]?.dateTypeCandidate).toBe("exam");
+  });
+
   it("marks reservation dates as plan", () => {
     const result = extractDateCandidatesFromBlock({
       ...baseInput,
@@ -47,5 +57,14 @@ describe("DateCandidate extraction", () => {
 
     expect(result[0]?.normalizedDate).toBe("2024-03-11");
     expect(result[0]?.dateTypeCandidate).toBe("plan");
+  });
+
+  it("filters metadata-style dates without clinical anchors", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "\uBC1C\uAE09\uC77C 2024-03-11 / page 3 / \uC778\uC1C4"
+    });
+
+    expect(result).toHaveLength(0);
   });
 });

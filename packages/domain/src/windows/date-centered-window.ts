@@ -109,6 +109,36 @@ function hasClinicalAnchors(summary: CandidateSummary) {
   );
 }
 
+function collectFallbackHospitals(
+  dateCandidate: DateCandidateResponseContract,
+  entityCandidates: EntityCandidateResponseContract[],
+  summary: CandidateSummary
+) {
+  if (summary.hospitals.length > 0) {
+    return;
+  }
+
+  const fallbackHospitals = entityCandidates
+    .filter(
+      (candidate) =>
+        candidate.sourceFileId === dateCandidate.sourceFileId &&
+        candidate.candidateType === "hospital" &&
+        Math.abs(candidate.pageOrder - dateCandidate.pageOrder) <= 1 &&
+        Math.abs(candidate.blockIndex - dateCandidate.blockIndex) <= 8
+    )
+    .sort((left, right) => {
+      const leftDistance = Math.abs(left.pageOrder - dateCandidate.pageOrder) * 100 + Math.abs(left.blockIndex - dateCandidate.blockIndex);
+      const rightDistance =
+        Math.abs(right.pageOrder - dateCandidate.pageOrder) * 100 + Math.abs(right.blockIndex - dateCandidate.blockIndex);
+      return leftDistance - rightDistance;
+    })
+    .slice(0, 2);
+
+  for (const hospitalCandidate of fallbackHospitals) {
+    appendCandidate(summary, hospitalCandidate);
+  }
+}
+
 export function aggregateDateCenteredWindows(input: DateCenteredWindowInputSource): DateCenteredWindowInput[] {
   const sortedDates = [...input.dateCandidates].sort((a, b) => {
     if (a.fileOrder !== b.fileOrder) return a.fileOrder - b.fileOrder;
@@ -139,6 +169,8 @@ export function aggregateDateCenteredWindows(input: DateCenteredWindowInputSourc
     for (const candidate of nearbyCandidates) {
       appendCandidate(summary, candidate);
     }
+
+    collectFallbackHospitals(dateCandidate, input.entityCandidates, summary);
 
     const finalizedSummary = finalizeSummary(summary);
     if (!hasClinicalAnchors(finalizedSummary)) {

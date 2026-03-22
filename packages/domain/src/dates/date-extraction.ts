@@ -12,22 +12,51 @@ export type DateExtractionBlockInput = {
 
 type DateTypeCandidate = DateCandidateInput["dateTypeCandidate"] | "irrelevant";
 
+type CandidateContext = {
+  local: string;
+  before: string;
+  after: string;
+};
+
 const DATE_PATTERNS = [
   /(?<!\d)(\d{4})[./-](\d{1,2})[./-](\d{1,2})(?!\d)/g,
   /(?<!\d)(\d{2})[./-](\d{1,2})[./-](\d{1,2})(?!\d)/g,
-  /(?<!\d)(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일(?!\d)/g,
-  /(?<!\d)(\d{2})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일(?!\d)/g
+  /(?<!\d)(\d{4})\s*\uB144\s*(\d{1,2})\s*\uC6D4\s*(\d{1,2})\s*\uC77C(?!\d)/g,
+  /(?<!\d)(\d{2})\s*\uB144\s*(\d{1,2})\s*\uC6D4\s*(\d{1,2})\s*\uC77C(?!\d)/g
 ];
 
-const ADMIN_KEYWORDS = ["발급", "작성일", "보험", "접수", "서류", "페이지", "page"];
-const PLAN_KEYWORDS = ["예약", "예정", "추후 방문", "next visit", "follow up"];
-const BIRTH_KEYWORDS = ["생년월일", "출생", "주민등록", "년생", "dob", "birth"];
-const EXAM_KEYWORDS = ["검사", "검진", "촬영", "내시경", "초음파", "ct", "mri", "x-ray"];
-const REPORT_KEYWORDS = ["결과", "보고", "판독", "소견"];
-const PATHOLOGY_KEYWORDS = ["병리", "조직"];
-const SURGERY_KEYWORDS = ["수술", "시술"];
-const ADMISSION_KEYWORDS = ["입원", "재원"];
-const DISCHARGE_KEYWORDS = ["퇴원"];
+const ADMIN_KEYWORDS = [
+  "\uBC1C\uAE09",
+  "\uC791\uC131",
+  "\uBCF4\uD5D8",
+  "\uC811\uC218",
+  "\uC11C\uB958",
+  "\uD398\uC774\uC9C0",
+  "page"
+] as const;
+const PLAN_KEYWORDS = ["\uC608\uC57D", "\uC608\uC815", "\uCD94\uD6C4 \uBC29\uBB38", "next visit", "follow up"] as const;
+const BIRTH_KEYWORDS = [
+  "\uC0DD\uB144\uC6D4\uC77C",
+  "\uCD9C\uC0DD",
+  "\uC8FC\uBBFC\uB4F1\uB85D",
+  "\uC5F0\uB839",
+  "dob",
+  "birth"
+] as const;
+const EXAM_KEYWORDS = [
+  "\uAC80\uC0AC",
+  "\uAC80\uC9C4",
+  "\uCD08\uC74C\uD30C",
+  "\uB0B4\uC2DC\uACBD",
+  "ct",
+  "mri",
+  "x-ray"
+] as const;
+const REPORT_KEYWORDS = ["\uACB0\uACFC", "\uBCF4\uACE0", "\uD310\uB3C5", "\uC694\uC57D"] as const;
+const PATHOLOGY_KEYWORDS = ["\uBCD1\uB9AC", "\uC870\uC9C1"] as const;
+const SURGERY_KEYWORDS = ["\uC218\uC220", "\uC2DC\uC220"] as const;
+const ADMISSION_KEYWORDS = ["\uC785\uC6D0"] as const;
+const DISCHARGE_KEYWORDS = ["\uD1F4\uC6D0"] as const;
 const CLINICAL_ANCHOR_KEYWORDS = [
   ...EXAM_KEYWORDS,
   ...PATHOLOGY_KEYWORDS,
@@ -35,20 +64,44 @@ const CLINICAL_ANCHOR_KEYWORDS = [
   ...ADMISSION_KEYWORDS,
   ...DISCHARGE_KEYWORDS,
   ...REPORT_KEYWORDS,
-  "진료",
-  "외래",
-  "병원",
-  "의원",
-  "센터",
-  "진단",
-  "치료",
-  "약"
+  "\uC9C4\uB8CC",
+  "\uC678\uB798",
+  "\uBCD1\uC6D0",
+  "\uC758\uC6D0",
+  "\uC13C\uD130",
+  "\uC9C4\uB2E8",
+  "\uCE58\uB8CC",
+  "\uCC98\uCE58"
+] as const;
+const METADATA_KEYWORDS = [
+  "page",
+  "tel",
+  "fax",
+  "address",
+  "\uBCF4\uD5D8",
+  "\uCCAD\uAD6C",
+  "\uBC1C\uAE09",
+  "\uCD9C\uB825",
+  "\uC778\uC801",
+  "\uB4F1\uB85D\uBC88\uD638",
+  "\uCC28\uD2B8\uBC88\uD638"
 ] as const;
 
 const MIN_YEAR = 1900;
+const CONTEXT_RADIUS = 24;
 
 function normalizeWhitespace(text: string) {
   return text.replace(/\s+/g, " ").trim();
+}
+
+function extractCandidateContext(text: string, index: number, length: number): CandidateContext {
+  const start = Math.max(0, index - CONTEXT_RADIUS);
+  const end = Math.min(text.length, index + length + CONTEXT_RADIUS);
+  return {
+    local: text.slice(start, end),
+    before: text.slice(start, index),
+    after: text.slice(index + length, end)
+  };
 }
 
 function toFourDigitYear(year: string) {
@@ -88,49 +141,81 @@ function hasAnyKeyword(haystack: string, keywords: readonly string[]) {
   return keywords.some((keyword) => haystack.includes(keyword.toLowerCase()));
 }
 
-function inferDateTypeCandidate(textRaw: string): DateTypeCandidate {
-  const lower = textRaw.toLowerCase();
+function hasClinicalAnchors(textRaw: string) {
+  return hasAnyKeyword(textRaw.toLowerCase(), CLINICAL_ANCHOR_KEYWORDS);
+}
 
-  if (hasAnyKeyword(lower, BIRTH_KEYWORDS)) {
+function hasMetadataNoise(textRaw: string, context: CandidateContext) {
+  const haystack = `${textRaw.toLowerCase()} ${context.local.toLowerCase()}`;
+  return hasAnyKeyword(haystack, METADATA_KEYWORDS);
+}
+
+function hasBirthMarkerNearCandidate(context: CandidateContext) {
+  const immediateBefore = context.before.slice(-14).toLowerCase();
+  const immediateAfter = context.after.slice(0, 14).toLowerCase();
+  return hasAnyKeyword(`${immediateBefore} ${immediateAfter}`, BIRTH_KEYWORDS);
+}
+
+function inferDateTypeCandidate(textRaw: string, context: CandidateContext): DateTypeCandidate {
+  const lower = textRaw.toLowerCase();
+  const local = context.local.toLowerCase();
+
+  if (hasBirthMarkerNearCandidate(context)) {
     return "irrelevant";
   }
 
-  if (hasAnyKeyword(lower, ADMIN_KEYWORDS)) {
+  if (hasAnyKeyword(local, BIRTH_KEYWORDS) && !hasClinicalAnchors(local)) {
+    return "irrelevant";
+  }
+
+  if (hasAnyKeyword(local, PATHOLOGY_KEYWORDS)) {
+    return "pathology";
+  }
+
+  if (hasAnyKeyword(local, SURGERY_KEYWORDS)) {
+    return "surgery";
+  }
+
+  if (hasAnyKeyword(local, ADMISSION_KEYWORDS)) {
+    return "admission";
+  }
+
+  if (hasAnyKeyword(local, DISCHARGE_KEYWORDS)) {
+    return "discharge";
+  }
+
+  if (hasAnyKeyword(local, REPORT_KEYWORDS)) {
+    return "report";
+  }
+
+  if (hasAnyKeyword(local, EXAM_KEYWORDS)) {
+    return "exam";
+  }
+
+  if (hasAnyKeyword(local, PLAN_KEYWORDS) && !hasClinicalAnchors(local)) {
+    return "plan";
+  }
+
+  if (hasAnyKeyword(local, ADMIN_KEYWORDS) && !hasClinicalAnchors(local)) {
     return "admin";
+  }
+
+  if (hasClinicalAnchors(local) || hasClinicalAnchors(lower)) {
+    return "visit";
   }
 
   if (hasAnyKeyword(lower, PLAN_KEYWORDS)) {
     return "plan";
   }
 
-  if (hasAnyKeyword(lower, PATHOLOGY_KEYWORDS)) {
-    return "pathology";
-  }
-
-  if (hasAnyKeyword(lower, SURGERY_KEYWORDS)) {
-    return "surgery";
-  }
-
-  if (hasAnyKeyword(lower, ADMISSION_KEYWORDS)) {
-    return "admission";
-  }
-
-  if (hasAnyKeyword(lower, DISCHARGE_KEYWORDS)) {
-    return "discharge";
-  }
-
-  if (hasAnyKeyword(lower, REPORT_KEYWORDS)) {
-    return "report";
-  }
-
-  if (hasAnyKeyword(lower, EXAM_KEYWORDS)) {
-    return "exam";
+  if (hasAnyKeyword(lower, ADMIN_KEYWORDS)) {
+    return "admin";
   }
 
   return "visit";
 }
 
-function inferConfidence(rawDateText: string, dateTypeCandidate: DateTypeCandidate) {
+function inferConfidence(rawDateText: string, dateTypeCandidate: DateTypeCandidate, context: CandidateContext) {
   let confidence = rawDateText.length >= 8 ? 0.92 : 0.84;
 
   if (dateTypeCandidate === "admin") {
@@ -141,19 +226,31 @@ function inferConfidence(rawDateText: string, dateTypeCandidate: DateTypeCandida
     confidence = 0.4;
   }
 
-  return confidence;
+  if (hasClinicalAnchors(context.local)) {
+    confidence += 0.04;
+  }
+
+  if (hasMetadataNoise(rawDateText, context) && !hasClinicalAnchors(context.local)) {
+    confidence -= 0.18;
+  }
+
+  return Math.max(0.35, Math.min(0.98, Number(confidence.toFixed(2))));
 }
 
-function hasClinicalAnchors(textRaw: string) {
-  return hasAnyKeyword(textRaw.toLowerCase(), CLINICAL_ANCHOR_KEYWORDS);
-}
-
-function shouldKeepDateCandidate(textRaw: string, dateTypeCandidate: DateTypeCandidate) {
+function shouldKeepDateCandidate(textRaw: string, context: CandidateContext, dateTypeCandidate: DateTypeCandidate) {
   if (dateTypeCandidate === "irrelevant") {
     return false;
   }
 
-  if (dateTypeCandidate === "visit" && !hasClinicalAnchors(textRaw)) {
+  if (dateTypeCandidate === "admin" && !hasClinicalAnchors(context.local)) {
+    return false;
+  }
+
+  if (dateTypeCandidate === "visit" && !hasClinicalAnchors(context.local) && !hasClinicalAnchors(textRaw)) {
+    return false;
+  }
+
+  if (hasMetadataNoise(textRaw, context) && !hasClinicalAnchors(context.local)) {
     return false;
   }
 
@@ -199,8 +296,9 @@ export function extractDateCandidatesFromBlock(input: DateExtractionBlockInput):
 
   return uniqueMatches
     .map((match) => {
-      const dateTypeCandidate = inferDateTypeCandidate(normalizedText);
-      if (!shouldKeepDateCandidate(normalizedText, dateTypeCandidate)) {
+      const candidateContext = extractCandidateContext(normalizedText, match.index, match.rawDateText.length);
+      const dateTypeCandidate = inferDateTypeCandidate(normalizedText, candidateContext);
+      if (!shouldKeepDateCandidate(normalizedText, candidateContext, dateTypeCandidate)) {
         return null;
       }
 
@@ -214,7 +312,7 @@ export function extractDateCandidatesFromBlock(input: DateExtractionBlockInput):
         rawDateText: match.rawDateText,
         normalizedDate: match.normalizedDate,
         dateTypeCandidate,
-        confidence: inferConfidence(match.rawDateText, dateTypeCandidate)
+        confidence: inferConfidence(match.rawDateText, dateTypeCandidate, candidateContext)
       });
     })
     .filter((candidate): candidate is DateCandidateInput => candidate !== null);

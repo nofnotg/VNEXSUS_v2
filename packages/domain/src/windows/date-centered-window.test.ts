@@ -115,4 +115,63 @@ describe("Date-centered window aggregation", () => {
 
     expect(result).toHaveLength(0);
   });
+
+  it("carries forward nearby hospital context when the local window lacks one", () => {
+    const result = aggregateDateCenteredWindows({
+      dateCandidates: [
+        {
+          id: "date-2",
+          caseId: "case-1",
+          sourceFileId: "doc-1",
+          sourcePageId: "page-2",
+          fileOrder: 1,
+          pageOrder: 2,
+          blockIndex: 12,
+          rawDateText: "2024.03.10",
+          normalizedDate: "2024-03-10",
+          dateTypeCandidate: "visit",
+          confidence: 0.88,
+          createdAt: "2026-03-08T00:00:03.000Z"
+        }
+      ],
+      entityCandidates: [
+        {
+          id: "entity-hospital",
+          caseId: "case-1",
+          sourceFileId: "doc-1",
+          sourcePageId: "page-1",
+          relatedDateCandidateId: null,
+          fileOrder: 1,
+          pageOrder: 1,
+          blockIndex: 8,
+          candidateType: "hospital",
+          rawText: "\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8\uACF5\uB2E8 \uC77C\uC0B0\uBCD1\uC6D0",
+          normalizedText: "\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8 \uC77C\uC0B0\uBCD1\uC6D0",
+          confidence: 0.86,
+          metadataJson: null,
+          createdAt: "2026-03-08T00:00:00.000Z"
+        },
+        {
+          id: "entity-diagnosis",
+          caseId: "case-1",
+          sourceFileId: "doc-1",
+          sourcePageId: "page-2",
+          relatedDateCandidateId: "date-2",
+          fileOrder: 1,
+          pageOrder: 2,
+          blockIndex: 13,
+          candidateType: "diagnosis",
+          rawText: "\uC8FC\uC0C1\uBCD1",
+          normalizedText: "\uC8FC\uC0C1\uBCD1",
+          confidence: 0.8,
+          metadataJson: null,
+          createdAt: "2026-03-08T00:00:04.000Z"
+        }
+      ]
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.candidateSummaryJson.hospitals).toEqual(["\uAD6D\uBBFC\uAC74\uAC15\uBCF4\uD5D8 \uC77C\uC0B0\uBCD1\uC6D0"]);
+    expect(result[0]?.candidateSummaryJson.diagnoses).toEqual(["\uC8FC\uC0C1\uBCD1"]);
+  });
 });
