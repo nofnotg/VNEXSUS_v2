@@ -2,8 +2,11 @@
 
 - targetBranch: `codex/phase12-6-tailrisk-date-fix`
 - validationScript: `scripts/validation/phase12_6_validate.ts`
+- addendumFixCommitsVerified:
+  - `dd6e36a`
+  - `3acc813`
 - validationCommitShas:
-  - `0caca43`
+  - `ce8511e`
 - attemptedCases:
   - `Case3`
   - `Case10`
@@ -25,23 +28,25 @@
   - `phase12_6_validation_manifest.json`
   - `phase12_6_validation_evidence.md`
 - perCaseStatus:
-  - `Case3=tailrisk_unchanged_partial_match`
+  - `Case3=tailrisk_improved_partial_match`
   - `Case10=tailrisk_improved_partial_match`
-  - `Case36=tailrisk_regressed`
+  - `Case36=tailrisk_improved_partial_match`
 - perCaseLowEndRiskState:
-  - `Case3=low_end_risk_present`
+  - `Case3=low_end_risk_possible`
   - `Case10=low_end_risk_possible`
-  - `Case36=low_end_risk_present`
+  - `Case36=low_end_risk_possible`
 - targetedSymptomNotes:
-  - `Case3=missing-date stagnation unchanged and no regression observed; bundle count stayed 14`
-  - `Case10=target repeated later seeds removed relative to Phase 12.5; 2024-10-25 and 2024-10-30 no longer appear in the Phase 12.6 runtime date set; bundle count improved from 36 to 34`
-  - `Case36=target schedule/log-derived noisy dates were reduced relative to Phase 12.5; 2023-10-20, 2024-04-22, 2025-05-21, 2025-05-28, and 2025-06-04 no longer appear in the Phase 12.6 runtime date set, but latest locked baseline comparison still regressed because extra-date pressure remained above baseline and bundle count stayed above baseline`
+  - `Case3=non-regression held and compare status improved; currentMissingDates=8 vs previousMissingDates=7, currentExtraDates=6 vs previousExtraDates=8, currentBundleCount=11 vs previousBundleCount=14`
+  - `Case10=Case10 protection held; 2024-10-25 and 2024-10-30 do not appear in the runtime date set, comparisonStatus remained tailrisk_improved_partial_match, and bundle count stayed 34`
+  - `Case36=2025-08-06 no longer appears in the runtime date set after the authored outpatient header suppression guardrail; comparisonStatus moved from tailrisk_regressed to tailrisk_improved_partial_match, currentExtraDates dropped from 54 to 42, and currentBundleCount dropped from prior regressed 96 / locked baseline 95 to 80`
+- case36RequiredNote:
+  - `runtimeContains2025-08-06=false`
+  - `removalGuardrail=authored outpatient header + parenthesized date + no stronger clinical label suppression at candidate stage`
+  - `bundleCountChange=96_to_80_and_below_locked_baseline_95`
 - timeoutLikeRuntimeFailureRecurred: `false`
-- anyRegression: `true`
+- anyRegression: `false`
 - broaderRerunStarted: `false`
 - renewedStabilizationReviewStarted: `false`
 - case7Included: `false`
 - frozenEarlierArtifactsModified: `false`
-- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_branch`
-- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_branch`
-- nextStepDecision: `Another Phase 12.6 fix cycle is needed`
+- nextStepDecision: `Ready for renewed stabilization review decision`
