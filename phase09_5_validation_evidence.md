@@ -57,10 +57,11 @@
   - `phase09_5_validation_manifest.json`
 - validationRuntimeCommit: `5ba079d`
 - validationCompareCommit: `5ba079d`
-- remoteVerifiedCommit: `89b8034`
+- remoteVerifiedCommit: `7429c5f`
 - pushedCommitShas:
   - `5ba079d`
   - `89b8034`
+  - `7429c5f`
 - directRemoteVerificationChecklist:
   - `Verify phase09_5_validation_manifest.json on origin/main`
   - `Verify phase09_5_validation_evidence.md on origin/main`
