@@ -18,5 +18,15 @@
   - `low_end_risk_cleared: 2`
   - `low_end_risk_possible: 4`
   - `low_end_risk_present: 3`
+- stabilizationReviewCommit: `ed0d594`
+- evidenceCommit: `ed0d594`
+- directRemoteVerificationChecklist:
+  - `Verify phase11_stabilization_manifest.json on origin/main`
+  - `Verify phase11_stabilization_matrix.json on origin/main`
+  - `Verify phase11_stabilization_review.md on origin/main`
+  - `Verify phase11_stabilization_evidence.md on origin/main`
+  - `Confirm frozen earlier artifacts were not modified`
+  - `Confirm Case7 remained excluded`
+  - `Confirm no Phase 12 artifact exists`
 - nextStepDecision: `Another targeted fix cycle is needed before productization`
 - phase12RecommendedNext: `false`
