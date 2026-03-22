@@ -21,4 +21,5 @@
   - `pnpm typecheck`
 - broaderRerunStarted: `false`
 - case7Included: `false`
-- answerVsRepoMatch: `pending_post_push_direct_fetch`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`
