@@ -1,0 +1,24 @@
+# Phase 12 Tail-Risk Fix Evidence
+
+- targetBranch: `main`
+- implementationCommitShas:
+  - `e0b8135`
+- filesChanged:
+  - `packages/domain/src/dates/date-extraction.ts`
+  - `packages/domain/src/dates/date-extraction.test.ts`
+  - `phase12_tailrisk_fix_plan.md`
+  - `phase12_tailrisk_fix_evidence.md`
+- directRemoteVerificationChecklist:
+  - `git show origin/main:packages/domain/src/dates/date-extraction.ts`
+  - `git show origin/main:packages/domain/src/dates/date-extraction.test.ts`
+  - `git show origin/main:phase12_tailrisk_fix_plan.md`
+  - `git show origin/main:phase12_tailrisk_fix_evidence.md`
+  - `git diff --name-only 6c08ef3..origin/main`
+  - `git ls-tree --name-only -r origin/main | Select-String -Pattern '^phase12_5|^phase13'`
+- frozenEarlierArtifactsModified: `false`
+- tinyValidationChecksRun:
+  - `pnpm exec vitest run packages/domain/src/dates/date-extraction.test.ts`
+  - `pnpm typecheck`
+- broaderRerunStarted: `false`
+- case7Included: `false`
+- answerVsRepoMatch: `pending_post_push_direct_fetch`
