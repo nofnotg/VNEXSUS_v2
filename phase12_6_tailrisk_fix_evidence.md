@@ -13,6 +13,7 @@
   - `apps/web/lib/server/services/date-extraction-service.test.ts`
   - `phase12_6_tailrisk_fix_plan.md`
   - `phase12_6_tailrisk_fix_evidence.md`
+  - `phase12_6_case36_fix_notes.md`
 - directRemoteVerificationChecklist:
   - `git fetch origin codex/phase12-6-tailrisk-date-fix`
   - `git show origin/codex/phase12-6-tailrisk-date-fix:packages/domain/src/dates/date-extraction.ts`
@@ -31,3 +32,28 @@
 - case7Included: `false`
 - remoteVerificationStatus: `matched_after_direct_fetch_on_origin_branch`
 - answerVsRepoMatch: `matched_after_direct_fetch_on_origin_branch`
+
+## Case36 Addendum
+
+- additionalImplementationCommitShas:
+  - `dd6e36a`
+- additionalFilesChanged:
+  - `packages/domain/src/dates/date-extraction.ts`
+  - `packages/domain/src/dates/date-extraction.test.ts`
+  - `apps/web/lib/server/services/date-extraction-service.test.ts`
+  - `phase12_6_case36_fix_notes.md`
+  - `phase12_6_tailrisk_fix_evidence.md`
+- case36RootCause:
+  - `The remaining regression was concentrated in one new extra date family, 2025-08-06, from an authored outpatient header block that survived candidate -> window -> atom -> bundle and added one extra surgery bundle over the locked baseline.`
+- case36Guardrail:
+  - `Added narrow authored-header suppression for visit candidates shaped like outpatient authored department headers with parenthesized dates and no stronger clinical date label.`
+- case10Protection:
+  - `The inpatient NICU repetitive-log pruning path was left unchanged, so the earlier-seed protection for Case10 remains intact.`
+- case3NonGoal:
+  - `No recall-expansion logic was added; Case3 remains intentionally untouched beyond non-regression protection.`
+- tinyValidationChecksRerunForAddendum:
+  - `pnpm exec vitest run packages/domain/src/dates/date-extraction.test.ts`
+  - `pnpm exec vitest run apps/web/lib/server/services/date-extraction-service.test.ts`
+- broaderRerunStartedForAddendum: `false`
+- renewedStabilizationReviewStartedForAddendum: `false`
+- nextStep: `ready for another Phase 12.6 focused validation`
