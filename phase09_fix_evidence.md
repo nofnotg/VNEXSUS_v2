@@ -32,4 +32,5 @@
 - `Case7` remained outside this fix track
 - frozen earlier artifacts were not modified
 
-- answerVsRepoMatch: pending_remote_verification
+- remoteVerificationStatus: direct_fetch_matched_on_origin_main
+- answerVsRepoMatch: matched
