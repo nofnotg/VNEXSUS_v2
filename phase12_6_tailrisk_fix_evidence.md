@@ -1,0 +1,30 @@
+# Phase 12.6 Tail-Risk Fix Evidence
+
+- targetBranch: `codex/phase12-6-tailrisk-date-fix`
+- implementationCommitShas:
+  - `5f5cfc7`
+  - `e9f873d`
+- filesChanged:
+  - `packages/domain/src/dates/date-extraction.ts`
+  - `packages/domain/src/dates/date-extraction.test.ts`
+  - `apps/web/lib/server/services/date-extraction-service.ts`
+  - `apps/web/lib/server/services/date-extraction-service.test.ts`
+  - `phase12_6_tailrisk_fix_plan.md`
+  - `phase12_6_tailrisk_fix_evidence.md`
+- directRemoteVerificationChecklist:
+  - `git fetch origin codex/phase12-6-tailrisk-date-fix`
+  - `git show origin/codex/phase12-6-tailrisk-date-fix:packages/domain/src/dates/date-extraction.ts`
+  - `git show origin/codex/phase12-6-tailrisk-date-fix:packages/domain/src/dates/date-extraction.test.ts`
+  - `git show origin/codex/phase12-6-tailrisk-date-fix:apps/web/lib/server/services/date-extraction-service.ts`
+  - `git show origin/codex/phase12-6-tailrisk-date-fix:apps/web/lib/server/services/date-extraction-service.test.ts`
+  - `git show origin/codex/phase12-6-tailrisk-date-fix:phase12_6_tailrisk_fix_plan.md`
+  - `git show origin/codex/phase12-6-tailrisk-date-fix:phase12_6_tailrisk_fix_evidence.md`
+  - `git diff --name-only origin/main..origin/codex/phase12-6-tailrisk-date-fix`
+  - `git ls-tree --name-only -r origin/codex/phase12-6-tailrisk-date-fix | Select-String -Pattern '^phase13'`
+- frozenEarlierArtifactsModified: `false`
+- tinyValidationChecksRun:
+  - `pnpm exec vitest run packages/domain/src/dates/date-extraction.test.ts`
+  - `pnpm exec vitest run apps/web/lib/server/services/date-extraction-service.test.ts`
+- broaderRerunStarted: `false`
+- case7Included: `false`
+- answerVsRepoMatch: `pending_final_remote_fetch_verification`
