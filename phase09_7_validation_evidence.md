@@ -36,6 +36,11 @@
   - `phase09_7_validation_manifest.json`
 - validationRuntimeCommit: `2bc02f0`
 - validationCompareCommit: `2bc02f0`
+- validationEvidenceCommit: `6ee6d01`
+- remoteVerifiedCommit: `6ee6d01`
+- pushedCommitShas:
+  - `2bc02f0`
+  - `6ee6d01`
 - directRemoteVerificationChecklist:
   - `Verify phase09_7_validation_manifest.json on origin/main`
   - `Verify phase09_7_validation_evidence.md on origin/main`
@@ -45,3 +50,5 @@
   - `Confirm Case7 remained outside this validation track`
   - `Confirm no broader rerun artifact was created`
   - `Confirm no Phase 10 artifact exists`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`
