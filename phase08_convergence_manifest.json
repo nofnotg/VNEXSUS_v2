@@ -1,0 +1,102 @@
+{
+  "phase": "Phase 8",
+  "recoverableCases": [
+    {
+      "caseName": "Case16",
+      "latestLockedStatus": "broader_postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_institution_canonicalization_residual",
+      "secondaryResidualBlocker": "minor_date_missing_residual",
+      "convergenceLevel": "moderate_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case3",
+      "latestLockedStatus": "broader_postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_date_missing_residual",
+      "secondaryResidualBlocker": "minor_institution_alias_residual",
+      "convergenceLevel": "weak_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": false
+    },
+    {
+      "caseName": "Case17",
+      "latestLockedStatus": "postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_date_noise_residual",
+      "secondaryResidualBlocker": "minor_date_missing_residual",
+      "convergenceLevel": "moderate_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": false,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case2",
+      "latestLockedStatus": "postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_institution_alias_residual",
+      "secondaryResidualBlocker": "minor_date_noise_residual",
+      "convergenceLevel": "moderate_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": false
+    },
+    {
+      "caseName": "Case20",
+      "latestLockedStatus": "postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_bundle_density_residual",
+      "secondaryResidualBlocker": "minor_institution_canonicalization_residual",
+      "convergenceLevel": "moderate_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case34",
+      "latestLockedStatus": "postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_date_noise_residual",
+      "secondaryResidualBlocker": "medium_confidence_baseline_caution",
+      "convergenceLevel": "weak_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case12",
+      "latestLockedStatus": "broader_postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_date_noise_residual",
+      "secondaryResidualBlocker": "minor_institution_canonicalization_residual",
+      "convergenceLevel": "moderate_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case10",
+      "latestLockedStatus": "postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_date_noise_residual",
+      "secondaryResidualBlocker": "minor_date_missing_residual",
+      "convergenceLevel": "weak_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": false
+    },
+    {
+      "caseName": "Case36",
+      "latestLockedStatus": "broader_postfix_improved_partial_match",
+      "dominantResidualBlocker": "minor_date_noise_residual",
+      "secondaryResidualBlocker": "minor_institution_canonicalization_residual",
+      "convergenceLevel": "weak_convergence",
+      "operationallyStable": true,
+      "additionalTargetedFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    }
+  ],
+  "convergenceCounts": {
+    "strong_convergence": 0,
+    "moderate_convergence": 5,
+    "weak_convergence": 4
+  },
+  "case7Included": false,
+  "nextStepDecision": "Another targeted quality-fix cycle is needed before stabilization"
+}
