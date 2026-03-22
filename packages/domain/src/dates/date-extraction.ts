@@ -20,6 +20,7 @@ type CandidateContext = {
 
 const DATE_PATTERNS = [
   /(?<!\d)(\d{4})[./-](\d{1,2})[./-](\d{1,2})(?!\d)/g,
+  /(?<!\d)(\d{4})(\d{2})(\d{2})(?!\d)/g,
   /(?<!\d)(\d{2})[./-](\d{1,2})[./-](\d{1,2})(?!\d)/g,
   /(?<!\d)(\d{4})\s*\uB144\s*(\d{1,2})\s*\uC6D4\s*(\d{1,2})\s*\uC77C(?!\d)/g,
   /(?<!\d)(\d{2})\s*\uB144\s*(\d{1,2})\s*\uC6D4\s*(\d{1,2})\s*\uC77C(?!\d)/g
@@ -35,6 +36,20 @@ const ADMIN_KEYWORDS = [
   "page"
 ] as const;
 const PLAN_KEYWORDS = ["\uC608\uC57D", "\uC608\uC815", "\uCD94\uD6C4 \uBC29\uBB38", "next visit", "follow up"] as const;
+const CLINICAL_DATE_LABEL_KEYWORDS = [
+  "\uC9C4\uB8CC\uC77C\uC790",
+  "\uC9C4\uB8CC\uAE30\uAC04",
+  "\uC9C4\uB8CC\uC2DC\uC791\uC77C",
+  "\uC9C4\uB8CC\uC885\uB8CC\uC77C",
+  "\uAC80\uC0AC\uC77C",
+  "\uC218\uC220\uC77C",
+  "\uC2DC\uD589\uC77C",
+  "\uC785\uC6D0\uC77C",
+  "\uD1F4\uC6D0\uC77C",
+  "\uC678\uB798",
+  "\uCD08\uC9C4",
+  "\uC7AC\uC9C4"
+] as const;
 const BIRTH_KEYWORDS = [
   "\uC0DD\uB144\uC6D4\uC77C",
   "\uCD9C\uC0DD",
@@ -86,9 +101,23 @@ const METADATA_KEYWORDS = [
   "\uB4F1\uB85D\uBC88\uD638",
   "\uCC28\uD2B8\uBC88\uD638"
 ] as const;
+const STRONG_METADATA_KEYWORDS = [
+  "pid",
+  "date:",
+  "assurance",
+  "\uC5F4\uB78C\uB300\uC0C1\uAE30\uAC04",
+  "\uD310\uB3C5\uC77C\uC2DC",
+  "\uC791\uC131\uC77C\uC2DC",
+  "\uCC98\uBC29\uC804\uAD50\uBD80\uBC88\uD638",
+  "\uC0AC\uC5C5\uC7A5\uAE30\uD638",
+  "\uC870\uD569\uBA85\uCE6D",
+  "\uD658\uC790\uBC88\uD638",
+  "\uD1F4\uC6D0\uC608\uC815\uC77C",
+  "care plan"
+] as const;
 
 const MIN_YEAR = 1900;
-const CONTEXT_RADIUS = 24;
+const CONTEXT_RADIUS = 40;
 
 function normalizeWhitespace(text: string) {
   return text.replace(/\s+/g, " ").trim();
@@ -142,12 +171,21 @@ function hasAnyKeyword(haystack: string, keywords: readonly string[]) {
 }
 
 function hasClinicalAnchors(textRaw: string) {
-  return hasAnyKeyword(textRaw.toLowerCase(), CLINICAL_ANCHOR_KEYWORDS);
+  return hasAnyKeyword(textRaw.toLowerCase(), [...CLINICAL_ANCHOR_KEYWORDS, ...CLINICAL_DATE_LABEL_KEYWORDS]);
 }
 
-function hasMetadataNoise(textRaw: string, context: CandidateContext) {
-  const haystack = `${textRaw.toLowerCase()} ${context.local.toLowerCase()}`;
+function hasClinicalDateLabelNearCandidate(context: CandidateContext) {
+  return hasAnyKeyword(context.local.toLowerCase(), CLINICAL_DATE_LABEL_KEYWORDS);
+}
+
+function hasMetadataNoise(context: CandidateContext) {
+  const haystack = `${context.before.toLowerCase()} ${context.local.toLowerCase()} ${context.after.toLowerCase()}`;
   return hasAnyKeyword(haystack, METADATA_KEYWORDS);
+}
+
+function hasStrongMetadataMarkerNearCandidate(context: CandidateContext) {
+  const haystack = `${context.before.toLowerCase()} ${context.local.toLowerCase()} ${context.after.toLowerCase()}`;
+  return hasAnyKeyword(haystack, STRONG_METADATA_KEYWORDS);
 }
 
 function hasBirthMarkerNearCandidate(context: CandidateContext) {
@@ -230,8 +268,16 @@ function inferConfidence(rawDateText: string, dateTypeCandidate: DateTypeCandida
     confidence += 0.04;
   }
 
-  if (hasMetadataNoise(rawDateText, context) && !hasClinicalAnchors(context.local)) {
+  if (hasClinicalDateLabelNearCandidate(context)) {
+    confidence += 0.03;
+  }
+
+  if (hasMetadataNoise(context) && !hasClinicalAnchors(context.local) && !hasClinicalDateLabelNearCandidate(context)) {
     confidence -= 0.18;
+  }
+
+  if (hasStrongMetadataMarkerNearCandidate(context) && !hasClinicalDateLabelNearCandidate(context)) {
+    confidence -= 0.12;
   }
 
   return Math.max(0.35, Math.min(0.98, Number(confidence.toFixed(2))));
@@ -246,11 +292,23 @@ function shouldKeepDateCandidate(textRaw: string, context: CandidateContext, dat
     return false;
   }
 
+  if (dateTypeCandidate === "plan" && !hasClinicalDateLabelNearCandidate(context) && !hasClinicalAnchors(context.local)) {
+    return false;
+  }
+
   if (dateTypeCandidate === "visit" && !hasClinicalAnchors(context.local) && !hasClinicalAnchors(textRaw)) {
     return false;
   }
 
-  if (hasMetadataNoise(textRaw, context) && !hasClinicalAnchors(context.local)) {
+  if (
+    hasStrongMetadataMarkerNearCandidate(context) &&
+    !hasClinicalDateLabelNearCandidate(context) &&
+    !hasClinicalAnchors(context.local)
+  ) {
+    return false;
+  }
+
+  if (hasMetadataNoise(context) && !hasClinicalAnchors(context.local) && !hasClinicalDateLabelNearCandidate(context)) {
     return false;
   }
 

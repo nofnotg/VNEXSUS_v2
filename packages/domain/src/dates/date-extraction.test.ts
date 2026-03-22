@@ -55,14 +55,49 @@ describe("DateCandidate extraction", () => {
       textRaw: "\uC608\uC57D \uC77C\uC790 24-03-11"
     });
 
-    expect(result[0]?.normalizedDate).toBe("2024-03-11");
-    expect(result[0]?.dateTypeCandidate).toBe("plan");
+    expect(result).toHaveLength(0);
   });
 
   it("filters metadata-style dates without clinical anchors", () => {
     const result = extractDateCandidatesFromBlock({
       ...baseInput,
       textRaw: "\uBC1C\uAE09\uC77C 2024-03-11 / page 3 / \uC778\uC1C4"
+    });
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("extracts compact yyyyMMdd dates when clinical labels are present", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "\uC9C4\uB8CC\uC77C\uC790:20241023 \uC9C4\uB8CC\uACFC : \uC18C\uC544\uCCAD\uC18C\uB144\uACFC"
+    });
+
+    expect(result.map((item) => item.normalizedDate)).toContain("2024-10-23");
+  });
+
+  it("filters compact identifier-like dates in administrative strings", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "\uCC98\uBC29\uC804\uAD50\uBD80\uBC88\uD638 20230117-00008"
+    });
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("keeps clinical period boundary dates when the range is medically labeled", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "\uC9C4\uB8CC\uAE30\uAC04: 2024/10/22~2024/12/20 [\uC785\uC6D0]"
+    });
+
+    expect(result.map((item) => item.normalizedDate)).toEqual(["2024-10-22", "2024-12-20"]);
+  });
+
+  it("filters read-timestamp style dates when only pid metadata is present", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "[PID: 2511081 / Date: 2024-10-23] Unconfirmed Diagnosis"
     });
 
     expect(result).toHaveLength(0);
