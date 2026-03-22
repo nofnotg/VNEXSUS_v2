@@ -3,7 +3,7 @@
 - targetBranch: `codex/phase12-6-tailrisk-date-fix`
 - validationScript: `scripts/validation/phase12_6_validate.ts`
 - validationCommitShas:
-  - `975d098`
+  - `0caca43`
 - attemptedCases:
   - `Case3`
   - `Case10`
@@ -42,4 +42,6 @@
 - renewedStabilizationReviewStarted: `false`
 - case7Included: `false`
 - frozenEarlierArtifactsModified: `false`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_branch`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_branch`
 - nextStepDecision: `Another Phase 12.6 fix cycle is needed`
