@@ -27,4 +27,5 @@
   - `pnpm exec vitest run apps/web/lib/server/services/date-extraction-service.test.ts`
 - broaderRerunStarted: `false`
 - case7Included: `false`
-- answerVsRepoMatch: `pending_final_remote_fetch_verification`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_branch`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_branch`
