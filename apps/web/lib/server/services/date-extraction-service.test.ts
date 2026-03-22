@@ -33,6 +33,21 @@ const state = vi.hoisted(() => ({
       bboxJson: null,
       confidence: 0.87,
       createdAt: new Date("2026-03-08T00:00:01.000Z")
+    },
+    {
+      id: "block-3",
+      caseId: "case-1",
+      sourceFileId: "doc-1",
+      sourcePageId: "page-1",
+      fileOrder: 1,
+      pageOrder: 1,
+      blockIndex: 2,
+      textRaw: "\uC678\uB798 \uCD08\uC9C4 \uC791\uC131 \uACFC : \uD638\uD761\uAE30 \uB0B4\uACFC \uBD84\uACFC ( 2025-08-06 )",
+      textNormalized:
+        "\uC678\uB798 \uCD08\uC9C4 \uC791\uC131 \uACFC : \uD638\uD761\uAE30 \uB0B4\uACFC \uBD84\uACFC ( 2025-08-06 )",
+      bboxJson: null,
+      confidence: 0.81,
+      createdAt: new Date("2026-03-08T00:00:02.000Z")
     }
   ],
   dateCandidates: [] as Array<{
@@ -133,5 +148,11 @@ describe("date extraction service", () => {
     expect(result.map((item) => item.blockIndex)).toEqual([0, 1]);
     expect(result[0]?.createdAt).toBe("2026-03-08T00:00:00.000Z");
     expect(result[1]?.dateTypeCandidate).toBe("exam");
+  });
+
+  it("does not persist outpatient authored-header noise dates", async () => {
+    await extractAndPersistDateCandidatesForDocument("case-1", "doc-1");
+
+    expect(state.dateCandidates.map((item) => item.normalizedDate)).not.toContain("2025-08-06");
   });
 });

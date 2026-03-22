@@ -305,6 +305,40 @@ function hasOutpatientScheduleNoise(textRaw: string, context: CandidateContext, 
   return hasScheduleTimeRange && hasOutpatientLogMarkers;
 }
 
+function hasOutpatientAuthoredHeaderNoise(
+  textRaw: string,
+  context: CandidateContext,
+  dateTypeCandidate: DateTypeCandidate
+) {
+  if (dateTypeCandidate !== "visit") {
+    return false;
+  }
+
+  const haystack = `${textRaw} ${context.local}`.toLowerCase();
+  const compactHaystack = haystack.replace(/\s+/g, "");
+  const hasOutpatientAuthoredHeader =
+    compactHaystack.includes("\uc678\ub798\ucd08\uc9c4\uc791\uc131\uacfc") ||
+    compactHaystack.includes("\uc678\ub798\uacbd\uacfc\uc791\uc131\uacfc");
+  const hasParenthesizedDate = /\(\s*\d{4}[./-]\d{1,2}[./-]\d{1,2}\s*\)/.test(haystack);
+  const hasStrongerClinicalDateLabel = hasAnyKeyword(haystack, [
+    "\uC9C4\uB8CC\uC77C\uC790",
+    "\uC9C4\uB8CC\uAE30\uAC04",
+    "\uAC80\uC0AC\uC77C",
+    "\uC218\uC220\uC77C",
+    "\uC2DC\uD589\uC77C",
+    "\uC785\uC6D0\uC77C",
+    "\uD1F4\uC6D0\uC77C",
+    ...EXAM_KEYWORDS,
+    ...REPORT_KEYWORDS,
+    ...PATHOLOGY_KEYWORDS,
+    ...SURGERY_KEYWORDS,
+    ...ADMISSION_KEYWORDS,
+    ...DISCHARGE_KEYWORDS
+  ]);
+
+  return hasOutpatientAuthoredHeader && hasParenthesizedDate && !hasStrongerClinicalDateLabel;
+}
+
 function shouldKeepDateCandidate(textRaw: string, context: CandidateContext, dateTypeCandidate: DateTypeCandidate) {
   if (dateTypeCandidate === "irrelevant") {
     return false;
@@ -323,6 +357,10 @@ function shouldKeepDateCandidate(textRaw: string, context: CandidateContext, dat
   }
 
   if (hasOutpatientScheduleNoise(textRaw, context, dateTypeCandidate)) {
+    return false;
+  }
+
+  if (hasOutpatientAuthoredHeaderNoise(textRaw, context, dateTypeCandidate)) {
     return false;
   }
 

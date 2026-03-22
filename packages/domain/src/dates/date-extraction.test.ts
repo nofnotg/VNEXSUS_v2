@@ -112,6 +112,26 @@ describe("DateCandidate extraction", () => {
     expect(result).toHaveLength(0);
   });
 
+  it("filters outpatient authored-header dates that can otherwise inflate Case36 bundle pressure", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw:
+        "\uC678\uB798 \uCD08\uC9C4 \uC791\uC131 \uACFC : \uD638\uD761\uAE30 \uB0B4\uACFC \uBD84\uACFC ( 2025-08-06 )"
+    });
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("keeps parenthesized surgery dates when a stronger clinical label is present", () => {
+    const result = extractDateCandidatesFromBlock({
+      ...baseInput,
+      textRaw: "\uC218\uC220\uC77C (2025-08-06) \uD76C\uB9DD \uC808\uC81C\uC220 \uC2DC\uD589"
+    });
+
+    expect(result.map((item) => item.normalizedDate)).toEqual(["2025-08-06"]);
+    expect(result[0]?.dateTypeCandidate).toBe("surgery");
+  });
+
   it("keeps the earliest repetitive inpatient diagnostic log seed while pruning later repeats", () => {
     const result = extractDateCandidatesFromDocument([
       { ...baseInput, blockIndex: 7, textRaw: "진료 기간 : 2024 / 10 / 22 ~ 2024 / 12 / 20" },
