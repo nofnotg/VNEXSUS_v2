@@ -63,6 +63,11 @@
   - `phase10_validation_manifest.json`
 - validationRuntimeCommit: `16dd945`
 - validationCompareCommit: `16dd945`
+- validationEvidenceCommit: `0b68024`
+- remoteVerifiedCommit: `0b68024`
+- pushedCommitShas:
+  - `16dd945`
+  - `0b68024`
 - directRemoteVerificationChecklist:
   - `Verify phase10_validation_manifest.json on origin/main`
   - `Verify phase10_validation_evidence.md on origin/main`
@@ -71,3 +76,5 @@
   - `Confirm frozen earlier artifacts were not modified`
   - `Confirm Case7 remained outside this rerun`
   - `Confirm no Phase 11 artifact exists`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`
