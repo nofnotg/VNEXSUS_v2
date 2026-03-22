@@ -1,0 +1,70 @@
+# Phase 9.5 Focused Post-Fix Validation Evidence
+
+- targetBranch: `main`
+- validationScope: `Phase 9.5 focused post-fix validation only`
+- attemptedCases:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+  - `Case16`
+  - `Case2`
+  - `Case34`
+  - `Case20`
+- exactValidationOrder:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+  - `Case16`
+  - `Case2`
+  - `Case34`
+  - `Case20`
+- perCaseStatus:
+  - `Case3: phase09_5_unchanged_partial_match`
+  - `Case10: phase09_5_unchanged_partial_match`
+  - `Case36: phase09_5_improved_partial_match`
+  - `Case16: phase09_5_unchanged_partial_match`
+  - `Case2: phase09_5_regressed`
+  - `Case34: phase09_5_improved_partial_match`
+  - `Case20: phase09_5_unchanged_partial_match`
+- perTrackEffectivenessSummary:
+  - `dateNormalization: improved`
+  - `institutionNormalization: regressed`
+  - `bundleGrouping: unchanged`
+- timeoutLikeRuntimeFailureRecurred: `false`
+- broaderPostFixRerunRecommended: `false`
+- broaderPostFixRerunDecision: `Another targeted quality fix is needed before broader rerun`
+- frozenArtifactsModified: `false`
+- case7Included: `false`
+- notes:
+  - `Case36` and `Case34` showed evidence-backed improvement against the latest locked baseline.
+  - `Case2` regressed on institution alias alignment and blocks a broader post-fix rerun recommendation.
+  - `Case3`, `Case10`, `Case16`, and `Case20` remained operationally stable but unchanged relative to the latest locked baseline.
+- validationArtifacts:
+  - `phase09_5_runtime/Case3_runtime_postfix.json`
+  - `phase09_5_runtime/Case10_runtime_postfix.json`
+  - `phase09_5_runtime/Case36_runtime_postfix.json`
+  - `phase09_5_runtime/Case16_runtime_postfix.json`
+  - `phase09_5_runtime/Case2_runtime_postfix.json`
+  - `phase09_5_runtime/Case34_runtime_postfix.json`
+  - `phase09_5_runtime/Case20_runtime_postfix.json`
+  - `phase09_5_compare/Case3_compare_postfix.json`
+  - `phase09_5_compare/Case10_compare_postfix.json`
+  - `phase09_5_compare/Case36_compare_postfix.json`
+  - `phase09_5_compare/Case16_compare_postfix.json`
+  - `phase09_5_compare/Case2_compare_postfix.json`
+  - `phase09_5_compare/Case34_compare_postfix.json`
+  - `phase09_5_compare/Case20_compare_postfix.json`
+  - `phase09_5_validation_manifest.json`
+- validationRuntimeCommit: `pending`
+- validationCompareCommit: `pending`
+- remoteVerifiedCommit: `pending`
+- pushedCommitShas:
+  - `pending`
+- directRemoteVerificationChecklist:
+  - `Verify phase09_5_validation_manifest.json on origin/main`
+  - `Verify phase09_5_validation_evidence.md on origin/main`
+  - `Verify all attempted runtime postfix files on origin/main`
+  - `Verify all attempted compare postfix files on origin/main`
+  - `Confirm frozen earlier artifacts were not modified`
+  - `Confirm no broader post-fix rerun artifact was created`
+- answerVsRepoMatch: `pending`
