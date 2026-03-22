@@ -3,10 +3,11 @@
 - targetBranch: `main`
 - validationRuntimeCommit: `1af17b3`
 - validationCompareCommit: `1af17b3`
-- remoteVerifiedCommit: `900fa9b`
+- remoteVerifiedCommit: `2cdf2b1`
 - pushedCommitShas:
   - `1af17b3`
   - `900fa9b`
+  - `2cdf2b1`
 - attemptedCases:
   - `Case3`
   - `Case10`
