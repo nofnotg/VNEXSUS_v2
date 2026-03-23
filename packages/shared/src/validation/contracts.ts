@@ -375,6 +375,71 @@ export const consumerSummaryJsonSchema = z.object({
   requiresReview: z.boolean()
 });
 
+export const starterCoreEventTypeSchema = z.enum([
+  "outpatient",
+  "admission",
+  "surgery",
+  "exam",
+  "pathology",
+  "treatment",
+  "procedure",
+  "follow_up",
+  "emergency",
+  "unknown"
+]);
+
+export const starterCaseBasicInfoSchema = z.object({
+  caseId: z.string().min(1),
+  insuranceJoinDateAvailable: z.boolean(),
+  analysisTimestamp: z.string().datetime(),
+  activeTier: z.literal("starter")
+});
+
+export const starterDocumentInventorySummarySchema = z.object({
+  totalDocuments: z.number().int().nonnegative(),
+  totalPages: z.number().int().nonnegative(),
+  hospitalsMentioned: z.array(z.string()),
+  dateRange: z
+    .object({
+      earliestEventDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+      latestEventDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()
+    })
+    .optional(),
+  sourceQualityNotices: z.array(z.string())
+});
+
+export const starterRepresentativeEvidenceSchema = z.object({
+  entryType: z.literal("event_bundle"),
+  eventBundleId: z.string().min(1),
+  fileOrder: z.number().int().positive(),
+  pageOrder: z.number().int().positive()
+});
+
+export const starterTimelineItemSchema = z.object({
+  eventBundleId: z.string().min(1),
+  canonicalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  hospital: z.string().nullable(),
+  eventType: starterCoreEventTypeSchema,
+  shortSummary: z.string().min(1),
+  reviewNeeded: z.boolean(),
+  representativeEvidenceEntryPoint: starterRepresentativeEvidenceSchema
+});
+
+export const starterWarningSummarySchema = z.object({
+  overallConfidence: z.enum(["high", "medium", "low"]),
+  reviewNeededCount: z.number().int().nonnegative(),
+  unresolvedCount: z.number().int().nonnegative(),
+  sourceQualityWarnings: z.array(z.string()),
+  mandatoryWarnings: z.array(z.string()).min(1)
+});
+
+export const starterCoreResultSchema = z.object({
+  caseBasicInfo: starterCaseBasicInfoSchema,
+  documentInventorySummary: starterDocumentInventorySummarySchema,
+  medicalEventTimeline: z.array(starterTimelineItemSchema),
+  warningSummary: starterWarningSummarySchema
+});
+
 export const investigatorReportEntrySchema = z.object({
   label: z.string().min(1),
   value: z.string().nullable()
@@ -702,6 +767,13 @@ export type InvestigatorSlotBundle = z.infer<typeof investigatorSlotBundleSchema
 export type InvestigatorSlotJson = z.infer<typeof investigatorSlotJsonSchema>;
 export type ConsumerTimelineItem = z.infer<typeof consumerTimelineItemSchema>;
 export type ConsumerSummaryJson = z.infer<typeof consumerSummaryJsonSchema>;
+export type StarterCoreEventType = z.infer<typeof starterCoreEventTypeSchema>;
+export type StarterCaseBasicInfo = z.infer<typeof starterCaseBasicInfoSchema>;
+export type StarterDocumentInventorySummary = z.infer<typeof starterDocumentInventorySummarySchema>;
+export type StarterRepresentativeEvidence = z.infer<typeof starterRepresentativeEvidenceSchema>;
+export type StarterTimelineItem = z.infer<typeof starterTimelineItemSchema>;
+export type StarterWarningSummary = z.infer<typeof starterWarningSummarySchema>;
+export type StarterCoreResult = z.infer<typeof starterCoreResultSchema>;
 export type InvestigatorReportEntry = z.infer<typeof investigatorReportEntrySchema>;
 export type InvestigatorReportSection = z.infer<typeof investigatorReportSectionSchema>;
 export type InvestigatorReportJson = z.infer<typeof investigatorReportJsonSchema>;
