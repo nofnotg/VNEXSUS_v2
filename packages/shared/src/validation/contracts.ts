@@ -415,6 +415,25 @@ export const starterRepresentativeEvidenceSchema = z.object({
   pageOrder: z.number().int().positive()
 });
 
+export const starterDiseaseClusterTypeSchema = z.enum([
+  "cancer",
+  "heart",
+  "brain_cerebrovascular",
+  "surgery",
+  "hospitalization",
+  "chronic_or_other_important"
+]);
+
+export const starterDiseaseClusterStatusSchema = z.enum(["present", "not_found", "review_needed"]);
+
+export const starterDiseaseClusterItemSchema = z.object({
+  clusterType: starterDiseaseClusterTypeSchema,
+  status: starterDiseaseClusterStatusSchema,
+  overview: z.string().min(1),
+  relatedEventIds: z.array(z.string().min(1)),
+  representativeEvidenceEntryPoint: starterRepresentativeEvidenceSchema.nullable()
+});
+
 export const starterTimelineItemSchema = z.object({
   eventBundleId: z.string().min(1),
   canonicalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -437,6 +456,7 @@ export const starterCoreResultSchema = z.object({
   caseBasicInfo: starterCaseBasicInfoSchema,
   documentInventorySummary: starterDocumentInventorySummarySchema,
   medicalEventTimeline: z.array(starterTimelineItemSchema),
+  diseaseClusters: z.array(starterDiseaseClusterItemSchema),
   warningSummary: starterWarningSummarySchema
 });
 
@@ -771,6 +791,9 @@ export type StarterCoreEventType = z.infer<typeof starterCoreEventTypeSchema>;
 export type StarterCaseBasicInfo = z.infer<typeof starterCaseBasicInfoSchema>;
 export type StarterDocumentInventorySummary = z.infer<typeof starterDocumentInventorySummarySchema>;
 export type StarterRepresentativeEvidence = z.infer<typeof starterRepresentativeEvidenceSchema>;
+export type StarterDiseaseClusterType = z.infer<typeof starterDiseaseClusterTypeSchema>;
+export type StarterDiseaseClusterStatus = z.infer<typeof starterDiseaseClusterStatusSchema>;
+export type StarterDiseaseClusterItem = z.infer<typeof starterDiseaseClusterItemSchema>;
 export type StarterTimelineItem = z.infer<typeof starterTimelineItemSchema>;
 export type StarterWarningSummary = z.infer<typeof starterWarningSummarySchema>;
 export type StarterCoreResult = z.infer<typeof starterCoreResultSchema>;

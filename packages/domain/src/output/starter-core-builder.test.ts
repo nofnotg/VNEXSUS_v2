@@ -120,6 +120,13 @@ describe("starter core builder", () => {
       earliestEventDate: "2024-03-07",
       latestEventDate: "2024-03-08"
     });
+    expect(result.diseaseClusters).toHaveLength(6);
+    expect(result.diseaseClusters[0]?.clusterType).toBe("cancer");
+    expect(result.diseaseClusters[0]?.status).toBe("present");
+    expect(result.diseaseClusters[0]?.representativeEvidenceEntryPoint?.eventBundleId).toBe("bundle-2");
+    expect(result.diseaseClusters[1]?.status).toBe("not_found");
+    expect(result.diseaseClusters[4]?.status).toBe("review_needed");
+    expect(result.diseaseClusters[5]?.status).toBe("not_found");
     expect(result.medicalEventTimeline[0]?.eventType).toBe("admission");
     expect(result.medicalEventTimeline[0]?.representativeEvidenceEntryPoint).toEqual({
       entryType: "event_bundle",
@@ -150,5 +157,6 @@ describe("starter core builder", () => {
     expect(result.warningSummary.overallConfidence).toBe("low");
     expect(result.warningSummary.reviewNeededCount).toBe(0);
     expect(result.medicalEventTimeline).toEqual([]);
+    expect(result.diseaseClusters.every((cluster) => cluster.status === "not_found")).toBe(true);
   });
 });

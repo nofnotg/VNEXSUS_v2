@@ -38,7 +38,7 @@ vi.mock("./event-bundle-service", () => ({
       pageOrder: 1,
       primaryHospital: "서울병원",
       bundleTypeCandidate: "exam" as const,
-      representativeDiagnosis: "폐렴",
+      representativeDiagnosis: "Coronary artery disease",
       representativeTest: "CT",
       representativeTreatment: null,
       representativeProcedure: null,
@@ -58,7 +58,7 @@ vi.mock("./event-bundle-service", () => ({
       candidateSnapshotJson: {
         hospitals: ["서울병원"],
         departments: ["호흡기내과"],
-        diagnoses: ["폐렴"],
+        diagnoses: ["Coronary artery disease"],
         tests: ["CT"],
         treatments: [],
         procedures: [],
@@ -87,6 +87,8 @@ describe("starter core service", () => {
       activeTier: "starter"
     });
     expect(result.documentInventorySummary.totalDocuments).toBe(1);
+    expect(result.diseaseClusters).toHaveLength(6);
+    expect(result.diseaseClusters.find((cluster) => cluster.clusterType === "heart")?.status).toBe("review_needed");
     expect(result.medicalEventTimeline[0]?.eventType).toBe("exam");
     expect(result.medicalEventTimeline[0]?.reviewNeeded).toBe(true);
     expect(result.warningSummary.reviewNeededCount).toBe(1);

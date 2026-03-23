@@ -5,3 +5,4 @@ export * from "./narrative";
 export * from "./renderers/consumer-report-renderer";
 export * from "./renderers/investigator-report-renderer";
 export * from "./starter-core-builder";
+export * from "./starter-disease-cluster-builder";

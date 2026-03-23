@@ -4,6 +4,7 @@ import {
   type StarterCoreEventType,
   type StarterCoreResult
 } from "@vnexus/shared";
+import { buildStarterDiseaseClusters } from "./starter-disease-cluster-builder";
 
 type StarterSourceDocument = {
   id: string;
@@ -188,6 +189,7 @@ export function buildStarterCoreResult({
         pageOrder: bundle.pageOrder
       }
     })),
+    diseaseClusters: buildStarterDiseaseClusters(sortedBundles),
     warningSummary: {
       overallConfidence: deriveOverallConfidence(sortedBundles),
       reviewNeededCount: sortedBundles.filter((bundle) => bundle.requiresReview).length,
