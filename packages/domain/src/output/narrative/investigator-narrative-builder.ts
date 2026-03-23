@@ -53,16 +53,29 @@ function buildSummaryParagraph(section: InvestigatorReportSection, lang: LocaleC
 function buildReviewParagraph(section: InvestigatorReportSection, lang: LocaleCode) {
   const locale = messages[lang];
   const notes = section.notes.filter((note) => note.trim().length > 0);
+  const qualitySignal =
+    section.bundleQualityState === "insufficient"
+      ? lang === "ko"
+        ? "구조화 검토 신호: 근거가 충분하지 않습니다."
+        : "Structured review signal: bundle evidence is insufficient."
+      : section.bundleQualityState === "review_required"
+        ? lang === "ko"
+          ? "구조화 검토 신호: 추가 검토가 필요합니다."
+          : "Structured review signal: additional review is required."
+        : null;
 
   if (!section.requiresReview && notes.length === 0) {
     return null;
   }
 
   if (notes.length === 0) {
-    return locale.investigatorReviewRequired;
+    return joinNarrativeParts([qualitySignal, locale.investigatorReviewRequired]);
   }
 
-  return formatMessage(locale.investigatorReviewNotes, { notes: notes.join("; ") });
+  return joinNarrativeParts([
+    qualitySignal,
+    formatMessage(locale.investigatorReviewNotes, { notes: notes.join("; ") })
+  ]);
 }
 
 export function buildInvestigatorNarrative(
@@ -75,6 +88,7 @@ export function buildInvestigatorNarrative(
     requiresReview: report.requiresReview,
     sections: report.sections.map((section) => ({
       heading: section.sectionTitle,
+      bundleQualityState: section.bundleQualityState,
       paragraphs: [buildSummaryParagraph(section, lang), buildReviewParagraph(section, lang)].filter(
         (paragraph): paragraph is string => Boolean(paragraph && paragraph.trim().length > 0)
       ),

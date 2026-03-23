@@ -9,6 +9,24 @@ function buildSectionTitle(bundle: InvestigatorSlotJson["bundles"][number]) {
   return [bundle.canonicalDate, bundle.bundleTypeCandidate].join(" | ");
 }
 
+function buildReviewSignalSummary(bundle: InvestigatorSlotJson["bundles"][number]) {
+  const summary: string[] = [];
+
+  if (bundle.bundleQualityGate.bundleQualityState !== "supported") {
+    summary.push(`bundleQualityState=${bundle.bundleQualityGate.bundleQualityState}`);
+  }
+
+  const unresolvedLabels = Object.entries(bundle.bundleQualityGate.unresolvedFlags)
+    .filter(([, value]) => value)
+    .map(([label]) => label);
+
+  if (unresolvedLabels.length > 0) {
+    summary.push(`unresolvedFlags=${unresolvedLabels.join(",")}`);
+  }
+
+  return summary;
+}
+
 export function buildInvestigatorReport(
   caseId: string,
   slotJson: InvestigatorSlotJson,
@@ -30,8 +48,11 @@ export function buildInvestigatorReport(
       { label: "medicationSummary", value: bundle.medicationSummary },
       { label: "symptomSummary", value: bundle.symptomSummary },
       { label: "bundleTypeCandidate", value: bundle.bundleTypeCandidate },
-      { label: "ambiguityScore", value: String(bundle.ambiguityScore) }
+      { label: "ambiguityScore", value: String(bundle.ambiguityScore) },
+      { label: "bundleQualityState", value: bundle.bundleQualityGate.bundleQualityState }
     ],
+    bundleQualityState: bundle.bundleQualityGate.bundleQualityState,
+    reviewSignalSummary: buildReviewSignalSummary(bundle),
     requiresReview: bundle.requiresReview,
     notes: [...bundle.notes]
   }));

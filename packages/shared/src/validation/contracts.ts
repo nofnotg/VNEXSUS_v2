@@ -383,6 +383,8 @@ export const investigatorReportEntrySchema = z.object({
 export const investigatorReportSectionSchema = z.object({
   sectionTitle: z.string().min(1),
   entries: z.array(investigatorReportEntrySchema),
+  bundleQualityState: bundleQualityStateSchema,
+  reviewSignalSummary: z.array(z.string()),
   requiresReview: z.boolean(),
   notes: z.array(z.string())
 });
@@ -417,6 +419,7 @@ export const consumerReportJsonSchema = z.object({
 
 export const investigatorNarrativeSectionSchema = z.object({
   heading: z.string().min(1),
+  bundleQualityState: bundleQualityStateSchema,
   paragraphs: z.array(z.string()),
   requiresReview: z.boolean()
 });

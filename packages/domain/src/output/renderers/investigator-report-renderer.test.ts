@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildInvestigatorReport } from "./investigator-report-renderer";
 
 describe("investigator report renderer", () => {
-  it("renders slot bundles into report sections", () => {
+  it("renders supported bundles without extra review summary noise", () => {
     const report = buildInvestigatorReport(
       "case-1",
       {
@@ -26,6 +26,27 @@ describe("investigator report renderer", () => {
             bundleTypeCandidate: "exam",
             ambiguityScore: 0.2,
             requiresReview: false,
+            bundleQualityGate: {
+              bundleQualityState: "supported",
+              evidenceAnchors: {
+                hospital: true,
+                department: true,
+                diagnosis: true,
+                test: true,
+                treatment: false,
+                procedure: false,
+                surgery: false,
+                pathology: false,
+                admissionOrDischarge: false
+              },
+              unresolvedFlags: {
+                hospitalConflict: false,
+                diagnosisConflict: false,
+                mixedAtomTypes: false,
+                weakGrouping: false,
+                needsManualReview: false
+              }
+            },
             notes: []
           }
         ]
@@ -37,10 +58,12 @@ describe("investigator report renderer", () => {
     expect(report.sections).toHaveLength(1);
     expect(report.sections[0]?.sectionTitle).toBe("2024-03-07 | exam");
     expect(report.sections[0]?.entries[1]).toEqual({ label: "hospital", value: "Seoul Hospital" });
+    expect(report.sections[0]?.bundleQualityState).toBe("supported");
+    expect(report.sections[0]?.reviewSignalSummary).toEqual([]);
     expect(report.requiresReview).toBe(false);
   });
 
-  it("propagates requiresReview and notes", () => {
+  it("propagates review-required quality signals and unresolved flags", () => {
     const report = buildInvestigatorReport(
       "case-1",
       {
@@ -64,6 +87,27 @@ describe("investigator report renderer", () => {
             bundleTypeCandidate: "mixed",
             ambiguityScore: 0.8,
             requiresReview: true,
+            bundleQualityGate: {
+              bundleQualityState: "review_required",
+              evidenceAnchors: {
+                hospital: false,
+                department: false,
+                diagnosis: false,
+                test: false,
+                treatment: false,
+                procedure: false,
+                surgery: false,
+                pathology: false,
+                admissionOrDischarge: true
+              },
+              unresolvedFlags: {
+                hospitalConflict: false,
+                diagnosisConflict: false,
+                mixedAtomTypes: true,
+                weakGrouping: true,
+                needsManualReview: true
+              }
+            },
             notes: ["bundle ambiguity exceeds provisional threshold"]
           }
         ]
@@ -72,6 +116,11 @@ describe("investigator report renderer", () => {
     );
 
     expect(report.sections[0]?.requiresReview).toBe(true);
+    expect(report.sections[0]?.bundleQualityState).toBe("review_required");
+    expect(report.sections[0]?.reviewSignalSummary).toEqual([
+      "bundleQualityState=review_required",
+      "unresolvedFlags=mixedAtomTypes,weakGrouping,needsManualReview"
+    ]);
     expect(report.sections[0]?.notes).toEqual(["bundle ambiguity exceeds provisional threshold"]);
     expect(report.requiresReview).toBe(true);
   });
