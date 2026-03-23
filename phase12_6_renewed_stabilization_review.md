@@ -1,5 +1,9 @@
 # Phase 12.6 Renewed Stabilization Review
 
+Historical scope note:
+- This document records the pre-broader-rerun decision point only.
+- The current verified baseline checkpoint is captured in `validated_baseline_checkpoint.md` together with the `broader_rerun_*` artifacts.
+
 ## Reviewed Branch / Commits
 
 - reviewedBranch: `codex/phase12-6-tailrisk-date-fix`

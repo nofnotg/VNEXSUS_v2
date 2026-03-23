@@ -34,6 +34,9 @@
 - broaderRerunCompleted: `true`
 - broaderRerunCommitShas:
   - `18a1ca0`
+  - `53bc30e`
+- broaderRerunVerifiedBaseline: `true`
+- currentCheckpointUse: `official_pre_next_stage_handoff_baseline`
 - productizationStarted: `false`
 - phase13Started: `false`
 - remoteVerificationStatus: `matched_after_direct_fetch_on_origin_branch`
