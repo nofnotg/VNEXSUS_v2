@@ -257,6 +257,34 @@ export const unresolvedBundleSlotsSchema = z.object({
   notes: z.array(z.string())
 });
 
+export const bundleQualityStateSchema = z.enum(["supported", "review_required", "insufficient"]);
+
+export const bundleEvidenceAnchorsSchema = z.object({
+  hospital: z.boolean(),
+  department: z.boolean(),
+  diagnosis: z.boolean(),
+  test: z.boolean(),
+  treatment: z.boolean(),
+  procedure: z.boolean(),
+  surgery: z.boolean(),
+  pathology: z.boolean(),
+  admissionOrDischarge: z.boolean()
+});
+
+export const bundleUnresolvedFlagsSchema = z.object({
+  hospitalConflict: z.boolean(),
+  diagnosisConflict: z.boolean(),
+  mixedAtomTypes: z.boolean(),
+  weakGrouping: z.boolean(),
+  needsManualReview: z.boolean()
+});
+
+export const bundleQualityGateSchema = z.object({
+  bundleQualityState: bundleQualityStateSchema,
+  evidenceAnchors: bundleEvidenceAnchorsSchema,
+  unresolvedFlags: bundleUnresolvedFlagsSchema
+});
+
 export const eventBundleSchema = z.object({
   id: z.string().optional(),
   caseId: z.string().min(1),
@@ -301,6 +329,7 @@ export const investigatorSlotBundleSchema = z.object({
   bundleTypeCandidate: bundleTypeCandidateSchema,
   ambiguityScore: z.number().min(0).max(1),
   requiresReview: z.boolean(),
+  bundleQualityGate: bundleQualityGateSchema,
   notes: z.array(z.string())
 });
 
@@ -660,6 +689,10 @@ export type UnresolvedSlots = z.infer<typeof unresolvedSlotsSchema>;
 export type EventAtomInput = z.infer<typeof eventAtomSchema>;
 export type EventAtomResponseContract = z.infer<typeof eventAtomResponseContractSchema>;
 export type UnresolvedBundleSlots = z.infer<typeof unresolvedBundleSlotsSchema>;
+export type BundleQualityState = z.infer<typeof bundleQualityStateSchema>;
+export type BundleEvidenceAnchors = z.infer<typeof bundleEvidenceAnchorsSchema>;
+export type BundleUnresolvedFlags = z.infer<typeof bundleUnresolvedFlagsSchema>;
+export type BundleQualityGate = z.infer<typeof bundleQualityGateSchema>;
 export type EventBundleInput = z.infer<typeof eventBundleSchema>;
 export type EventBundleResponseContract = z.infer<typeof eventBundleResponseContractSchema>;
 export type InvestigatorSlotBundle = z.infer<typeof investigatorSlotBundleSchema>;

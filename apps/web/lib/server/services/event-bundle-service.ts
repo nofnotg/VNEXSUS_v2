@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { buildProvisionalEventBundles } from "@vnexus/domain";
+import { applyBundleQualityInvariant, buildProvisionalEventBundles } from "@vnexus/domain";
 import { ApiError, eventBundleResponseContractSchema, type UserRole } from "@vnexus/shared";
 import { prisma } from "../../prisma";
 import { getCaseForUser } from "./case-service";
@@ -58,34 +58,36 @@ export async function buildAndPersistEventBundles(caseId: string) {
   });
 
   for (const bundle of bundles) {
+    const normalizedBundle = applyBundleQualityInvariant(bundle);
+
     await prisma.$transaction(
       async (tx) => {
         const createdBundle = await tx.eventBundle.create({
           data: {
-            caseId: bundle.caseId,
-            canonicalDate: bundle.canonicalDate,
-            fileOrder: bundle.fileOrder,
-            pageOrder: bundle.pageOrder,
-            primaryHospital: bundle.primaryHospital ?? null,
-            bundleTypeCandidate: bundle.bundleTypeCandidate,
-            representativeDiagnosis: bundle.representativeDiagnosis ?? null,
-            representativeTest: bundle.representativeTest ?? null,
-            representativeTreatment: bundle.representativeTreatment ?? null,
-            representativeProcedure: bundle.representativeProcedure ?? null,
-            representativeSurgery: bundle.representativeSurgery ?? null,
-            admissionStatus: bundle.admissionStatus ?? null,
-            ambiguityScore: bundle.ambiguityScore,
-            requiresReview: bundle.requiresReview,
-            unresolvedBundleSlotsJson: bundle.unresolvedBundleSlotsJson as Prisma.InputJsonValue,
-            atomIdsJson: bundle.atomIdsJson as Prisma.InputJsonValue,
-            candidateSnapshotJson: bundle.candidateSnapshotJson as Prisma.InputJsonValue
+            caseId: normalizedBundle.caseId,
+            canonicalDate: normalizedBundle.canonicalDate,
+            fileOrder: normalizedBundle.fileOrder,
+            pageOrder: normalizedBundle.pageOrder,
+            primaryHospital: normalizedBundle.primaryHospital ?? null,
+            bundleTypeCandidate: normalizedBundle.bundleTypeCandidate,
+            representativeDiagnosis: normalizedBundle.representativeDiagnosis ?? null,
+            representativeTest: normalizedBundle.representativeTest ?? null,
+            representativeTreatment: normalizedBundle.representativeTreatment ?? null,
+            representativeProcedure: normalizedBundle.representativeProcedure ?? null,
+            representativeSurgery: normalizedBundle.representativeSurgery ?? null,
+            admissionStatus: normalizedBundle.admissionStatus ?? null,
+            ambiguityScore: normalizedBundle.ambiguityScore,
+            requiresReview: normalizedBundle.requiresReview,
+            unresolvedBundleSlotsJson: normalizedBundle.unresolvedBundleSlotsJson as Prisma.InputJsonValue,
+            atomIdsJson: normalizedBundle.atomIdsJson as Prisma.InputJsonValue,
+            candidateSnapshotJson: normalizedBundle.candidateSnapshotJson as Prisma.InputJsonValue
           }
         });
 
         await tx.eventAtom.updateMany({
           where: {
             caseId,
-            id: { in: bundle.atomIdsJson }
+            id: { in: normalizedBundle.atomIdsJson }
           },
           data: { eventBundleId: createdBundle.id }
         });
@@ -108,9 +110,8 @@ export async function listEventBundles(caseId: string, userId: string, role: Use
     orderBy: [{ fileOrder: "asc" }, { pageOrder: "asc" }, { canonicalDate: "asc" }, { createdAt: "asc" }]
   });
 
-  return bundles.map((bundle) =>
-    eventBundleResponseContractSchema.parse({
-      id: bundle.id,
+  return bundles.map((bundle) => {
+    const normalizedBundle = applyBundleQualityInvariant({
       caseId: bundle.caseId,
       canonicalDate: bundle.canonicalDate,
       fileOrder: bundle.fileOrder,
@@ -127,8 +128,29 @@ export async function listEventBundles(caseId: string, userId: string, role: Use
       requiresReview: bundle.requiresReview,
       unresolvedBundleSlotsJson: bundle.unresolvedBundleSlotsJson as never,
       atomIdsJson: bundle.atomIdsJson as string[],
-      candidateSnapshotJson: bundle.candidateSnapshotJson as never,
+      candidateSnapshotJson: bundle.candidateSnapshotJson as never
+    });
+
+    return eventBundleResponseContractSchema.parse({
+      id: bundle.id,
+      caseId: normalizedBundle.caseId,
+      canonicalDate: normalizedBundle.canonicalDate,
+      fileOrder: normalizedBundle.fileOrder,
+      pageOrder: normalizedBundle.pageOrder,
+      primaryHospital: normalizedBundle.primaryHospital,
+      bundleTypeCandidate: normalizedBundle.bundleTypeCandidate,
+      representativeDiagnosis: normalizedBundle.representativeDiagnosis,
+      representativeTest: normalizedBundle.representativeTest,
+      representativeTreatment: normalizedBundle.representativeTreatment,
+      representativeProcedure: normalizedBundle.representativeProcedure,
+      representativeSurgery: normalizedBundle.representativeSurgery,
+      admissionStatus: normalizedBundle.admissionStatus,
+      ambiguityScore: normalizedBundle.ambiguityScore,
+      requiresReview: normalizedBundle.requiresReview,
+      unresolvedBundleSlotsJson: normalizedBundle.unresolvedBundleSlotsJson as never,
+      atomIdsJson: normalizedBundle.atomIdsJson as string[],
+      candidateSnapshotJson: normalizedBundle.candidateSnapshotJson as never,
       createdAt: bundle.createdAt.toISOString()
-    })
-  );
+    });
+  });
 }

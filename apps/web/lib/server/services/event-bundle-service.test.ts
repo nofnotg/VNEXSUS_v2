@@ -208,6 +208,14 @@ vi.mock("../../prisma", () => ({
         state.atoms = state.atoms.map((atom) =>
           atom.id === where.id ? { ...atom, eventBundleId: data.eventBundleId } : atom
         );
+      }),
+      updateMany: vi.fn(async ({ where, data }: { where: { caseId?: string; id?: { in: string[] } }; data: { eventBundleId: string | null } }) => {
+        state.atoms = state.atoms.map((atom) => {
+          const matchesCase = !where.caseId || atom.caseId === where.caseId;
+          const matchesIds = !where.id?.in || where.id.in.includes(atom.id);
+
+          return matchesCase && matchesIds ? { ...atom, eventBundleId: data.eventBundleId } : atom;
+        });
       })
     },
     eventBundle: {
@@ -242,6 +250,20 @@ vi.mock("../../prisma", () => ({
             state.atoms = state.atoms.map((atom) =>
               atom.id === where.id ? { ...atom, eventBundleId: data.eventBundleId } : atom
             );
+          },
+          updateMany: async ({
+            where,
+            data
+          }: {
+            where: { caseId?: string; id?: { in: string[] } };
+            data: { eventBundleId: string | null };
+          }) => {
+            state.atoms = state.atoms.map((atom) => {
+              const matchesCase = !where.caseId || atom.caseId === where.caseId;
+              const matchesIds = !where.id?.in || where.id.in.includes(atom.id);
+
+              return matchesCase && matchesIds ? { ...atom, eventBundleId: data.eventBundleId } : atom;
+            });
           }
         }
       })
@@ -337,5 +359,59 @@ describe("event bundle service", () => {
     expect(result[0]?.unresolvedBundleSlotsJson.diagnosisConflict).toBe(true);
     expect(result[0]?.atomIdsJson).toEqual(["atom-1", "atom-2"]);
     expect(result[0]?.createdAt).toBe("2026-03-08T00:00:00.000Z");
+  });
+
+  it("normalizes weak persisted bundles so invariant review signals are preserved", async () => {
+    state.bundles = [
+      {
+        id: "bundle-weak",
+        caseId: "case-1",
+        canonicalDate: "2024-03-08",
+        fileOrder: 1,
+        pageOrder: 2,
+        primaryHospital: null,
+        bundleTypeCandidate: "outpatient",
+        representativeDiagnosis: null,
+        representativeTest: null,
+        representativeTreatment: null,
+        representativeProcedure: null,
+        representativeSurgery: null,
+        admissionStatus: null,
+        ambiguityScore: 0.2,
+        requiresReview: false,
+        unresolvedBundleSlotsJson: {
+          hospitalConflict: false,
+          diagnosisConflict: false,
+          mixedAtomTypes: false,
+          weakGrouping: true,
+          needsManualReview: false,
+          notes: []
+        },
+        atomIdsJson: ["atom-1"],
+        candidateSnapshotJson: {
+          hospitals: [],
+          departments: ["Internal Medicine"],
+          diagnoses: [],
+          tests: [],
+          treatments: [],
+          procedures: [],
+          surgeries: [],
+          admissions: [],
+          discharges: [],
+          pathologies: [],
+          medications: ["Acetaminophen"],
+          symptoms: ["Headache"]
+        },
+        createdAt: new Date("2026-03-08T00:00:00.000Z")
+      }
+    ];
+
+    const result = await listEventBundles("case-1", "user-1", "consumer");
+
+    expect(result[0]?.requiresReview).toBe(true);
+    expect(result[0]?.unresolvedBundleSlotsJson.needsManualReview).toBe(true);
+    expect(result[0]?.unresolvedBundleSlotsJson.notes).toContain(
+      "bundle evidence is insufficient for clean structured output"
+    );
   });
 });

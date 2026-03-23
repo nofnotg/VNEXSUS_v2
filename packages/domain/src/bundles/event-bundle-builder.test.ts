@@ -430,4 +430,114 @@ describe("event bundle builder", () => {
     expect(bundles[0]?.primaryHospital).toBe("\uC77C\uC0B0\uCC28\uBCD1\uC6D0");
     expect(bundles[0]?.candidateSnapshotJson.hospitals).toEqual(["\uC77C\uC0B0\uCC28\uBCD1\uC6D0"]);
   });
+
+  it("marks weak multi-atom bundles as insufficient for clean structured output", () => {
+    const bundles = buildProvisionalEventBundles([
+      {
+        id: "atom-weak-1",
+        caseId: "case-1",
+        sourceWindowId: "window-1",
+        sourceFileId: "doc-1",
+        sourcePageId: "page-1",
+        canonicalDate: "2024-03-07",
+        fileOrder: 1,
+        pageOrder: 1,
+        anchorBlockIndex: 2,
+        primaryHospital: null,
+        primaryDepartment: "Internal Medicine",
+        primaryDiagnosis: null,
+        primaryTest: null,
+        primaryTreatment: null,
+        primaryProcedure: null,
+        primarySurgery: null,
+        admissionStatus: null,
+        pathologySummary: null,
+        medicationSummary: "Acetaminophen",
+        symptomSummary: "Headache",
+        eventTypeCandidate: "outpatient",
+        ambiguityScore: 0.2,
+        requiresReview: false,
+        unresolvedSlotsJson: {
+          hospitalMissing: true,
+          diagnosisMissing: true,
+          conflictingDiagnosis: false,
+          conflictingHospital: false,
+          weakEvidence: true,
+          needsManualReview: false,
+          notes: []
+        },
+        candidateSnapshotJson: {
+          hospitals: [],
+          departments: ["Internal Medicine"],
+          diagnoses: [],
+          tests: [],
+          treatments: [],
+          procedures: [],
+          surgeries: [],
+          admissions: [],
+          discharges: [],
+          pathologies: [],
+          medications: ["Acetaminophen"],
+          symptoms: ["Headache"]
+        },
+        createdAt: "2026-03-08T00:00:00.000Z"
+      },
+      {
+        id: "atom-weak-2",
+        caseId: "case-1",
+        sourceWindowId: "window-2",
+        sourceFileId: "doc-1",
+        sourcePageId: "page-1",
+        canonicalDate: "2024-03-07",
+        fileOrder: 1,
+        pageOrder: 1,
+        anchorBlockIndex: 5,
+        primaryHospital: null,
+        primaryDepartment: "Internal Medicine",
+        primaryDiagnosis: null,
+        primaryTest: null,
+        primaryTreatment: null,
+        primaryProcedure: null,
+        primarySurgery: null,
+        admissionStatus: null,
+        pathologySummary: null,
+        medicationSummary: null,
+        symptomSummary: "Dizziness",
+        eventTypeCandidate: "followup",
+        ambiguityScore: 0.22,
+        requiresReview: false,
+        unresolvedSlotsJson: {
+          hospitalMissing: true,
+          diagnosisMissing: true,
+          conflictingDiagnosis: false,
+          conflictingHospital: false,
+          weakEvidence: true,
+          needsManualReview: false,
+          notes: []
+        },
+        candidateSnapshotJson: {
+          hospitals: [],
+          departments: ["Internal Medicine"],
+          diagnoses: [],
+          tests: [],
+          treatments: [],
+          procedures: [],
+          surgeries: [],
+          admissions: [],
+          discharges: [],
+          pathologies: [],
+          medications: [],
+          symptoms: ["Dizziness"]
+        },
+        createdAt: "2026-03-08T00:00:01.000Z"
+      }
+    ]);
+
+    expect(bundles).toHaveLength(1);
+    expect(bundles[0]?.requiresReview).toBe(true);
+    expect(bundles[0]?.unresolvedBundleSlotsJson.needsManualReview).toBe(true);
+    expect(bundles[0]?.unresolvedBundleSlotsJson.notes).toContain(
+      "bundle evidence is insufficient for clean structured output"
+    );
+  });
 });

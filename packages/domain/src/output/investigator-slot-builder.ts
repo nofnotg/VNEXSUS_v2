@@ -4,6 +4,7 @@ import {
   type InvestigatorSlotBundle,
   type InvestigatorSlotJson
 } from "@vnexus/shared";
+import { deriveBundleQualityGate } from "../bundles/event-bundle-builder";
 
 function pickDepartment(bundle: EventBundleResponseContract) {
   const departments = bundle.candidateSnapshotJson.departments;
@@ -11,7 +12,17 @@ function pickDepartment(bundle: EventBundleResponseContract) {
 }
 
 function createNotes(bundle: EventBundleResponseContract) {
-  return [...bundle.unresolvedBundleSlotsJson.notes];
+  const qualityGate = deriveBundleQualityGate(bundle);
+  const notes = [...bundle.unresolvedBundleSlotsJson.notes];
+
+  if (
+    qualityGate.bundleQualityState === "insufficient" &&
+    !notes.includes("bundle evidence is insufficient for clean structured output")
+  ) {
+    notes.push("bundle evidence is insufficient for clean structured output");
+  }
+
+  return notes;
 }
 
 export function buildInvestigatorStructuredOutput(
@@ -25,34 +36,39 @@ export function buildInvestigatorStructuredOutput(
       if (a.pageOrder !== b.pageOrder) return a.pageOrder - b.pageOrder;
       return a.canonicalDate.localeCompare(b.canonicalDate);
     })
-    .map((bundle) => ({
-      eventBundleId: bundle.id,
-      canonicalDate: bundle.canonicalDate,
-      hospital: bundle.primaryHospital ?? null,
-      department: pickDepartment(bundle),
-      diagnosis: bundle.representativeDiagnosis ?? null,
-      test: bundle.representativeTest ?? null,
-      treatment: bundle.representativeTreatment ?? null,
-      procedure: bundle.representativeProcedure ?? null,
-      surgery: bundle.representativeSurgery ?? null,
-      admissionStatus: bundle.admissionStatus ?? null,
-      pathologySummary:
-        bundle.candidateSnapshotJson.pathologies.length > 0
-          ? bundle.candidateSnapshotJson.pathologies.join("; ")
-          : null,
-      medicationSummary:
-        bundle.candidateSnapshotJson.medications.length > 0
-          ? bundle.candidateSnapshotJson.medications.join("; ")
-          : null,
-      symptomSummary:
-        bundle.candidateSnapshotJson.symptoms.length > 0
-          ? bundle.candidateSnapshotJson.symptoms.join("; ")
-          : null,
-      bundleTypeCandidate: bundle.bundleTypeCandidate,
-      ambiguityScore: bundle.ambiguityScore,
-      requiresReview: bundle.requiresReview,
-      notes: createNotes(bundle)
-    }));
+    .map((bundle) => {
+      const bundleQualityGate = deriveBundleQualityGate(bundle);
+
+      return {
+        eventBundleId: bundle.id,
+        canonicalDate: bundle.canonicalDate,
+        hospital: bundle.primaryHospital ?? null,
+        department: pickDepartment(bundle),
+        diagnosis: bundle.representativeDiagnosis ?? null,
+        test: bundle.representativeTest ?? null,
+        treatment: bundle.representativeTreatment ?? null,
+        procedure: bundle.representativeProcedure ?? null,
+        surgery: bundle.representativeSurgery ?? null,
+        admissionStatus: bundle.admissionStatus ?? null,
+        pathologySummary:
+          bundle.candidateSnapshotJson.pathologies.length > 0
+            ? bundle.candidateSnapshotJson.pathologies.join("; ")
+            : null,
+        medicationSummary:
+          bundle.candidateSnapshotJson.medications.length > 0
+            ? bundle.candidateSnapshotJson.medications.join("; ")
+            : null,
+        symptomSummary:
+          bundle.candidateSnapshotJson.symptoms.length > 0
+            ? bundle.candidateSnapshotJson.symptoms.join("; ")
+            : null,
+        bundleTypeCandidate: bundle.bundleTypeCandidate,
+        ambiguityScore: bundle.ambiguityScore,
+        requiresReview: bundle.requiresReview || bundleQualityGate.bundleQualityState !== "supported",
+        bundleQualityGate,
+        notes: createNotes(bundle)
+      };
+    });
 
   return investigatorSlotJsonSchema.parse({
     caseId,

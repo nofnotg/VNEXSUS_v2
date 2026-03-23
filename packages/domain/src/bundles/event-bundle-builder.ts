@@ -1,6 +1,8 @@
 import {
+  bundleQualityGateSchema,
   eventBundleSchema,
   unresolvedBundleSlotsSchema,
+  type BundleQualityGate,
   type CandidateSummary,
   type EventAtomResponseContract,
   type EventBundleInput,
@@ -261,6 +263,94 @@ function buildUnresolvedBundleSlots(params: {
   });
 }
 
+type BundleInvariantSource = Pick<
+  EventBundleInput,
+  | "primaryHospital"
+  | "representativeDiagnosis"
+  | "representativeTest"
+  | "representativeTreatment"
+  | "representativeProcedure"
+  | "representativeSurgery"
+  | "admissionStatus"
+  | "candidateSnapshotJson"
+  | "unresolvedBundleSlotsJson"
+  | "requiresReview"
+>;
+
+function buildEvidenceAnchors(bundle: BundleInvariantSource) {
+  return {
+    hospital: Boolean(bundle.primaryHospital),
+    department: bundle.candidateSnapshotJson.departments.length > 0,
+    diagnosis: Boolean(bundle.representativeDiagnosis),
+    test: Boolean(bundle.representativeTest),
+    treatment: Boolean(bundle.representativeTreatment),
+    procedure: Boolean(bundle.representativeProcedure),
+    surgery: Boolean(bundle.representativeSurgery),
+    pathology: bundle.candidateSnapshotJson.pathologies.length > 0,
+    admissionOrDischarge: Boolean(bundle.admissionStatus)
+  };
+}
+
+function buildCarryForwardNotes(bundle: BundleInvariantSource, qualityState: BundleQualityGate["bundleQualityState"]) {
+  const notes = [...bundle.unresolvedBundleSlotsJson.notes];
+
+  if (qualityState === "insufficient" && !notes.includes("bundle evidence is insufficient for clean structured output")) {
+    notes.push("bundle evidence is insufficient for clean structured output");
+  }
+
+  return notes;
+}
+
+export function deriveBundleQualityGate(bundle: BundleInvariantSource): BundleQualityGate {
+  const evidenceAnchors = buildEvidenceAnchors(bundle);
+  const unresolvedFlags = {
+    hospitalConflict: bundle.unresolvedBundleSlotsJson.hospitalConflict,
+    diagnosisConflict: bundle.unresolvedBundleSlotsJson.diagnosisConflict,
+    mixedAtomTypes: bundle.unresolvedBundleSlotsJson.mixedAtomTypes,
+    weakGrouping: bundle.unresolvedBundleSlotsJson.weakGrouping,
+    needsManualReview: bundle.unresolvedBundleSlotsJson.needsManualReview
+  };
+
+  const hasHardClinicalAnchor =
+    evidenceAnchors.hospital ||
+    evidenceAnchors.diagnosis ||
+    evidenceAnchors.test ||
+    evidenceAnchors.treatment ||
+    evidenceAnchors.procedure ||
+    evidenceAnchors.surgery ||
+    evidenceAnchors.pathology ||
+    evidenceAnchors.admissionOrDischarge;
+
+  const qualityState: BundleQualityGate["bundleQualityState"] =
+    !hasHardClinicalAnchor && unresolvedFlags.weakGrouping
+      ? "insufficient"
+      : bundle.requiresReview || unresolvedFlags.needsManualReview
+        ? "review_required"
+        : "supported";
+
+  return bundleQualityGateSchema.parse({
+    bundleQualityState: qualityState,
+    evidenceAnchors,
+    unresolvedFlags
+  });
+}
+
+export function applyBundleQualityInvariant<T extends EventBundleInput>(bundle: T): T {
+  const qualityGate = deriveBundleQualityGate(bundle);
+  const notes = buildCarryForwardNotes(bundle, qualityGate.bundleQualityState);
+  const needsReview = qualityGate.bundleQualityState !== "supported";
+
+  return {
+    ...bundle,
+    requiresReview: bundle.requiresReview || needsReview,
+    unresolvedBundleSlotsJson: unresolvedBundleSlotsSchema.parse({
+      ...bundle.unresolvedBundleSlotsJson,
+      needsManualReview: bundle.unresolvedBundleSlotsJson.needsManualReview || needsReview,
+      notes
+    })
+  };
+}
+
 export function buildProvisionalEventBundles(
   atoms: EventAtomResponseContract[],
   ambiguityThreshold = 0.55
@@ -319,7 +409,7 @@ export function buildProvisionalEventBundles(
       bundleTypeCandidate
     });
 
-    return eventBundleSchema.parse({
+    const provisionalBundle = eventBundleSchema.parse({
       caseId: head.caseId,
       canonicalDate: head.canonicalDate,
       fileOrder: Math.min(...group.map((atom) => atom.fileOrder)),
@@ -344,5 +434,7 @@ export function buildProvisionalEventBundles(
       atomIdsJson: group.map((atom) => atom.id),
       candidateSnapshotJson: mergeSummary(group)
     });
+
+    return applyBundleQualityInvariant(provisionalBundle);
   });
 }
