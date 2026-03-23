@@ -23,8 +23,17 @@
 
 - 설계사 단일 타깃 방향 정리
 - Starter / Pro 상품 문서 정리
+- 공통 분석 출력 / Starter / Pro / 최종요약 / 고지의무 검토 스키마 정리
 - auth / social login / billing 정책 정리
 - 기존 consumer / investigator 문서 흔적 정리
+
+관련 문서:
+
+- `medical_analysis_report_schema_v2.md`
+- `starter_report_spec.md`
+- `pro_deep_analysis_spec.md`
+- `final_summary_output_rule.md`
+- `disclosure_review_engine_spec.md`
 
 ## Epic 1 — 코어 수집과 evidence 기반
 
