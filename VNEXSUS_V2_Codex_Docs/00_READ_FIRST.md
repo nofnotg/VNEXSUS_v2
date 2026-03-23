@@ -1,110 +1,106 @@
-# VNEXSUS V2 문서 세트 — 먼저 읽기
+# VNEXSUS V2 문서 세트 먼저 읽기
 
 ## 목적
-이 문서 세트는 `VNEXSUS V2`를 처음부터 다시 구축하기 위한 단일 기준 문서 묶음이다.
 
-목표:
-1. 비개발자인 제품 오너가 세부 구현에 계속 개입하지 않아도 된다.
-2. 코더가 문서를 순서대로 읽고 구현해도 구조가 흔들리지 않는다.
-3. 날짜-이벤트 추출, evidence 연결, 보고서 품질이 중심축으로 유지된다.
-4. 일반사용자와 손해사정조사자 UX가 하나의 엔진 위에서 역할별로 분기된다.
+이 문서 세트는 `VNEXSUS V2`를 설계사 실사용 중심의 의료문서 분석 앱으로 구현하기 위한 단일 기준 문서 묶음이다.
 
-## 한 줄 정의
-의료문서를 OCR로 추출하고, 날짜-이벤트를 근거와 함께 구조화하여,
-조사자용 경과보고서와 일반사용자용 리스크 안내 결과를 제공하는 SaaS 플랫폼
+이제 제품 방향은 다음처럼 이해해야 한다.
 
-## 가장 중요한 원칙 10개
-1. 보험가입일은 OCR로 추출하지 않는다. `case metadata`로만 입력받는다.
-2. 모든 핵심 이벤트는 근거(evidence)를 가져야 한다.
-3. 보고서는 자유문 생성보다 `구조화 → 렌더링` 순서로 만든다.
-4. 날짜 추출보다 중요한 것은 의미 있는 날짜 판정이다.
-5. 미리확인/Starter는 OCR 기반, 상위 플랜은 선택적 정밀분석 기반으로 간다.
-6. 전체 문서를 한 번에 정밀모델로 처리하지 않는다.
-7. LLM은 전체 대행자가 아니라 spot resolver + case helper 역할로 쓴다.
-8. 조사자용 결과와 일반사용자용 결과는 동일한 이벤트 엔진에서 파생된다.
-9. 라우트는 얇게, 서비스는 두껍게, 도메인 계층은 독립적으로 유지한다.
-10. 공개 오픈 전에는 민감정보 동의/처리방침/보안 정책 최소본이 반드시 갖춰져야 한다.
+- 앱의 핵심은 의료문서에서 날짜-이벤트를 구조화하고 evidence와 함께 보여주는 코어 엔진이다.
+- 이 엔진은 설계사가 고객 보험금 청구 건을 사전 검토하고 추가 확인 포인트를 찾는 데 쓰인다.
+- 결과물은 “최종 손해사정 보고서 자동작성기”가 아니라 “분석 화면 + 파생 리포트” 구조로 해석해야 한다.
+- Starter / Pro는 이 앱의 상품 계층이다.
+- productization은 아직 일부만 계획 수준이며, 코어 엔진보다 먼저 구현하지 않는다.
 
-## 문서 읽는 순서
+## 가장 중요한 현재 방향
+
+### 제품 타깃
+
+- 기본 타깃은 `설계사`
+- 설계사가 고객의 보험금청구 건을 현장에서 빠르게 검토할 수 있어야 한다.
+- 손해사정사 수준의 세부 검토 흐름 중 일부를 도와주는 도구이지만, 앱 자체가 보험사/의사의 최종 판단을 대체하지는 않는다.
+
+### 상품 구조
+
+- `Starter`
+  - 의료 이벤트 시계열 정리
+  - 주요 질환군/수술/입원/검사 개괄 정리
+  - 보험가입일 기준 고지의무 검토 개요
+  - 정확도/편차/누락 가능성 안내
+  - 의료적/보험적 최종 판단 금지 안내
+- `Pro`
+  - Starter 전체 포함
+  - selective vision cross-check
+  - 더 깊은 질환군별 정리
+  - 질문/검색/재질문 기능
+  - 보다 강한 evidence drill-down
+
+### 절대 고정 규칙
+
+1. 보험가입일은 OCR 추출 대상이 아니다. 항상 사용자 입력 case metadata 이다.
+2. evidence 없는 핵심 이벤트는 확정하지 않는다.
+3. 구조화 JSON이 먼저고, narrative/report는 그 다음이다.
+4. route는 얇게, 서비스/도메인 계층은 두껍게 유지한다.
+5. extraction 보호 경로를 함부로 다시 열지 않는다.
+6. productization 기능은 코어 엔진보다 먼저 붙이지 않는다.
+
+## 현재 문서 해석 규칙
+
+이 문서 세트 안에는 예전 방향의 흔적이 일부 남아 있다.
+
+특히 아래 문서군은 이제 `설계사 단일 타깃 + Starter/Pro` 기준으로 해석해야 한다.
+
+- `02_MASTER_PRD.md`
+- `08_AUTH_ROLES_PLANS_BILLING_ADMIN.md`
+- `11_EPICS_TASKS_AND_DELIVERY_PLAN.md`
+
+그리고 아래 문서는 새 방향을 반영한 canonical realign 문서로 우선 참고한다.
+
+- `medical_app_realign_plan_2026-03-23.md`
+- `17_PRODUCT_DIRECTION_REALIGN.md`
+- `18_STARTER_PRO_PRODUCT_MAP.md`
+- `19_SIGNUP_SOCIAL_LOGIN_AND_BILLING_POLICY.md`
+
+## 문서 읽기 순서
+
 1. `00_READ_FIRST.md`
-2. `01_EXPERT_PANEL_REVIEW.md`
-3. `02_MASTER_PRD.md`
-4. `03_CODEX_EXECUTION_RULES.md`
-5. `04_SYSTEM_ARCHITECTURE.md`
-6. `05_DATE_EVENT_EXTRACTION_SPEC.md`
-7. `06_EVIDENCE_CONTRACT.md`
-8. `07_LLM_STRATEGY_AND_PROMPTS.md`
-9. `08_AUTH_ROLES_PLANS_BILLING_ADMIN.md`
-10. `09_DATA_MODEL_AND_DB_SCHEMA.md`
-11. `10_API_CONTRACTS.md`
-12. `11_EPICS_TASKS_AND_DELIVERY_PLAN.md`
-13. `12_ACCEPTANCE_QA_AND_GOLDENSET.md`
-14. `13_MIGRATION_FROM_V1.md`
-15. `14_LEGAL_AND_CONSENT_PLACEHOLDERS.md`
-16. `prompts/CODEX_START_PROMPT.md`
-
-## Codex/IDE에 전달하는 방식
-### 방식 A
-- 이 문서 폴더 전체를 프로젝트 루트에 `docs/v2-blueprint`로 둔다.
-- `prompts/CODEX_START_PROMPT.md`를 먼저 읽게 한다.
-- 그 다음 문서를 순서대로 읽고 구현 계획부터 출력하게 한다.
-
-### 방식 B
-- 문서 폴더 전체를 업로드한다.
-- 다음 지시를 함께 준다.
-  - “문서를 순서대로 읽고, 구현 계획을 먼저 제시한 뒤 Epic 1부터 순차 구현하라.”
-  - “문서에 없는 추정 구현은 하기 전에 명시하라.”
-  - “폴더 구조와 계약을 먼저 만든 뒤 기능을 붙여라.”
-
-## 문서 사용 규칙
-- 문서 간 충돌이 있으면 상위 우선순위를 따른다.
-  - 우선순위: `PRD > Extraction Spec > Evidence Contract > LLM Strategy > API/DB > Tasks`
-- 문서에 없는 기능은 임의로 추가하지 않는다.
-- `TODO-LATER`는 MVP 필수 범위가 아니다.
-- 법무 문서는 템플릿이므로 실서비스 오픈 전 최종 검토가 필요하다.
-
-## 구현 스타일
-- 모놀리식 라우트 금지
-- 자기 자신에게 HTTP 재호출 금지
-- evidence 없는 핵심 이벤트 확정 금지
-- OCR 원문 전체를 바로 최종 보고서로 보내는 방식 금지
-- 프론트에서 직접 비즈니스 규칙 작성 금지
-- 테스트 없는 핵심 추출 로직 머지 금지
+2. `00A_START_HERE_ONE_ENTRY.md`
+3. `medical_app_realign_plan_2026-03-23.md`
+4. `17_PRODUCT_DIRECTION_REALIGN.md`
+5. `18_STARTER_PRO_PRODUCT_MAP.md`
+6. `19_SIGNUP_SOCIAL_LOGIN_AND_BILLING_POLICY.md`
+7. `02_MASTER_PRD.md`
+8. `03_CODEX_EXECUTION_RULES.md`
+9. `04_SYSTEM_ARCHITECTURE.md`
+10. `05_DATE_EVENT_EXTRACTION_SPEC.md`
+11. `06_EVIDENCE_CONTRACT.md`
+12. `07_LLM_STRATEGY_AND_PROMPTS.md`
+13. `08_AUTH_ROLES_PLANS_BILLING_ADMIN.md`
+14. `09_DATA_MODEL_AND_DB_SCHEMA.md`
+15. `10_API_CONTRACTS.md`
+16. `11_EPICS_TASKS_AND_DELIVERY_PLAN.md`
+17. `12_ACCEPTANCE_QA_AND_GOLDENSET.md`
+18. `13_MIGRATION_FROM_V1.md`
+19. `14_LEGAL_AND_CONSENT_PLACEHOLDERS.md`
+20. `01_EXPERT_PANEL_REVIEW.md`
 
 ## 구현 우선순위
-1. 코어 데이터 계약
-2. 날짜-이벤트 추출
-3. evidence 저장 및 연결
-4. 결과 렌더링
-5. 인증/권한
-6. 플랜/과금
-7. 관리자
-8. 법무/동의 정교화
 
-## 이번 V2에서 반드시 고칠 V1 문제
-- `/api/generate-report`가 내부 HTTP로 `/api/dna-report/generate`를 다시 호출하던 구조 제거
-- 라우트 파일 안에 프롬프트/후처리/저장/보고서 렌더링이 뒤섞인 구조 제거
-- stub 날짜 처리기 경로 제거
-- evidence가 optional 이었던 구조를 required 계약으로 승격
-- 출력 철학이 3개 이상 공존하던 상태를 `eventGraph → slotJSON → reportText`로 통일
+1. date-event extraction
+2. evidence linkage
+3. structured slot JSON
+4. Starter / Pro 분석 출력
+5. auth / social login / billing skeleton
+6. admin / export / release readiness
 
-## 최종 산출물
-### 조사자용
-- 파일 업로드
-- OCR/이벤트 추출
-- 10항목 보고서
-- click-to-evidence
-- 사용량/플랜/관리자
+## 하지 말아야 할 것
 
-### 일반사용자용
-- 파일 업로드
-- 리스크 안내
-- 정밀확인 업셀
-- 전문가연결 요청
+- consumer / investigator 이원 제품 구조를 다시 기본값으로 되돌리지 말 것
+- OCR 전체를 한 번에 최종 보고서로 보내지 말 것
+- extraction 보호 파일을 문서 개편 핑계로 건드리지 말 것
+- 의료적/보험적 최종 판단을 앱이 내리는 것처럼 쓰지 말 것
+- UI나 결제를 코어 엔진보다 먼저 만들지 말 것
 
-### 공통
-- evidence graph
-- event bundle
-- slot JSON
-- golden set test
-- 최소 동의/약관 구조
+## 최종 한 문장
+
+`VNEXSUS V2`는 이제 “일반사용자용 안내 SaaS + 조사자용 보고서 SaaS”가 아니라, **설계사가 보험금청구 건을 검토할 때 쓰는 의료문서 분석 앱**으로 정렬되어야 한다.

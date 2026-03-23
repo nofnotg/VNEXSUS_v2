@@ -1,153 +1,132 @@
-# VNEXSUS V2 시작 파일 (이것만 보면 됨)
+# VNEXSUS V2 시작 파일
 
-이 문서는 비개발자인 운영자 기준으로 **Codex/IDE에 무엇을 어떤 순서로 붙여넣을지** 하나로 정리한 파일이다.
+이 문서는 비개발자인 운영자 기준으로, Codex가 어떤 문서를 기준으로 읽고 어떤 방향으로 구현을 해석해야 하는지 한 번에 정리한 시작 파일이다.
 
 ## 핵심 원칙
-- 문서는 여러 개이지만, 실제 시작은 **한 번만** 하면 된다.
-- 처음에는 다른 파일을 따로 설명하지 말고, 아래 **[복붙용 첫 메시지]** 를 그대로 사용한다.
-- 구현이 시작되면 Codex가 문서 세트를 순서대로 읽고, 먼저 요약/구조/계획을 출력한 뒤에만 코딩해야 한다.
-- 운영자는 중간에 세부 구현을 설명하지 않는다. 문서 기준으로만 승인/수정 요청한다.
+
+- 현재 제품 방향은 `설계사 단일 타깃` 기준이다.
+- 기존의 `일반사용자 / 조사자` 이원 제품 구조는 더 이상 기본 방향이 아니다.
+- 코어 엔진은 계속 유지하되, 출력과 상품 정의는 `Starter / Pro` 기준으로 다시 정렬한다.
+- 구현보다 먼저 문서 방향 정렬이 우선이다.
 
 ---
 
-## 당신이 실제로 할 일
+## 실제 시작 방법
 
 ### 1단계
-프로젝트 작업 공간에 아래 문서 폴더 전체를 둔다.
+
+프로젝트 작업 공간에 아래 문서 폴더를 둔다.
+
 - `VNEXSUS_V2_Codex_Docs`
 
 ### 2단계
-Codex 또는 IDE 채팅창에 아래 **[복붙용 첫 메시지]** 를 그대로 붙여넣는다.
+
+Codex 또는 IDE 채팅창에 아래 메시지를 그대로 붙여넣는다.
 
 ### 3단계
-Codex가 아래 항목을 먼저 출력하는지 확인한다.
+
+Codex가 아래를 먼저 출력하는지 확인한다.
+
 - 문서 이해 요약
+- 현재 제품 방향 요약
+- 구현 범위 / 비범위
 - 시스템 경계
-- 구현 순서
-- 초기 파일 구조
+- 초기 폴더 구조
 - DB schema 초안
 - 환경변수 목록
-- 리스크 목록
+- 구현 순서와 리스크
 
-이 7개가 나오기 전에는 코딩을 승인하지 않는다.
-
-### 4단계
-이후에는 Codex가 Epic 0부터 순서대로 진행하게 둔다.
+위 항목이 나오기 전에는 코딩을 승인하지 않는다.
 
 ---
 
 ## 복붙용 첫 메시지
 
-첨부된 `VNEXSUS_V2_Codex_Docs` 문서 세트를 **단일 기준(spec)** 으로 사용하여 프로젝트를 구현하세요.
+첨부된 `VNEXSUS_V2_Codex_Docs` 문서 세트를 단일 기준(spec)으로 사용하여 프로젝트를 진행하세요.
 
 가장 중요한 규칙:
+
 1. 문서에 없는 임의 기능 추가 금지
 2. 기존 V1의 잘못된 구조 반복 금지
-3. OCR 전체를 한 번에 최종 보고서로 보내는 구조 금지
+3. OCR 전체를 한 번에 최종 결과로 보내는 구조 금지
 4. evidence 없는 핵심 이벤트 확정 금지
 5. 보험가입일 OCR 추출 금지. 사용자 입력 case metadata 로만 처리
-6. 라우트는 얇게, 서비스/도메인 계층은 두껍게 유지
+6. route는 얇게, 서비스/도메인 계층은 두껍게 유지
 7. 내부 HTTP 재호출 구조 금지
 8. UI를 코어보다 먼저 만들지 말 것
-9. 모든 중간 단계는 가능한 한 구조화된 JSON 계약을 우선할 것
-10. 구현은 문서의 Epic 순서를 따른다
+9. 모든 중간 단계는 구조화 JSON 계약을 우선할 것
+10. 현재 제품 타깃은 설계사이며, Starter / Pro 구조를 기준으로 해석할 것
 
 문서 읽기 순서:
+
 1. `00_READ_FIRST.md`
 2. `00A_START_HERE_ONE_ENTRY.md`
-3. `02_MASTER_PRD.md`
-4. `03_CODEX_EXECUTION_RULES.md`
-5. `04_SYSTEM_ARCHITECTURE.md`
-6. `05_DATE_EVENT_EXTRACTION_SPEC.md`
-7. `06_EVIDENCE_CONTRACT.md`
-8. `07_LLM_STRATEGY_AND_PROMPTS.md`
-9. `08_AUTH_ROLES_PLANS_BILLING_ADMIN.md`
-10. `09_DATA_MODEL_AND_DB_SCHEMA.md`
-11. `10_API_CONTRACTS.md`
-12. `11_EPICS_TASKS_AND_DELIVERY_PLAN.md`
-13. `12_ACCEPTANCE_QA_AND_GOLDENSET.md`
-14. `13_MIGRATION_FROM_V1.md`
-15. `14_LEGAL_AND_CONSENT_PLACEHOLDERS.md`
-16. `01_EXPERT_PANEL_REVIEW.md`
+3. `medical_app_realign_plan_2026-03-23.md`
+4. `17_PRODUCT_DIRECTION_REALIGN.md`
+5. `18_STARTER_PRO_PRODUCT_MAP.md`
+6. `19_SIGNUP_SOCIAL_LOGIN_AND_BILLING_POLICY.md`
+7. `02_MASTER_PRD.md`
+8. `03_CODEX_EXECUTION_RULES.md`
+9. `04_SYSTEM_ARCHITECTURE.md`
+10. `05_DATE_EVENT_EXTRACTION_SPEC.md`
+11. `06_EVIDENCE_CONTRACT.md`
+12. `07_LLM_STRATEGY_AND_PROMPTS.md`
+13. `08_AUTH_ROLES_PLANS_BILLING_ADMIN.md`
+14. `09_DATA_MODEL_AND_DB_SCHEMA.md`
+15. `10_API_CONTRACTS.md`
+16. `11_EPICS_TASKS_AND_DELIVERY_PLAN.md`
+17. `12_ACCEPTANCE_QA_AND_GOLDENSET.md`
+18. `13_MIGRATION_FROM_V1.md`
+19. `14_LEGAL_AND_CONSENT_PLACEHOLDERS.md`
+20. `01_EXPERT_PANEL_REVIEW.md`
 
-플랜/역할 고정값:
-- 일반사용자 플랜: `미리확인`, `정밀확인`, `전문가연결`
-- 조사자 플랜: `Starter`, `Pro`, `Studio`
-- 일반사용자와 조사자는 회원가입 시 role 이 분리되어야 하며, 결과 UX도 달라야 한다.
-- 보험가입일은 OCR 추출 대상이 아니며 user input metadata 이다.
+현재 제품 방향 해석 규칙:
 
-OCR/정밀분석 원칙:
-- `미리확인`은 OCR 중심 기본 분석
-- `정밀확인`부터 선택적 정밀분석을 허용
-- 조사자 `Pro` 이상은 선택적 또는 자동 정밀분석을 포함할 수 있음
-- 추가 분석은 ambiguity_score 또는 고위험 이벤트 감지 시 제안한다
+- 이 앱은 설계사가 고객의 보험금청구 건을 분석할 때 쓰는 의료문서 분석 도구이다.
+- Starter는 현장 1차 분석층이고, Pro는 심층 분석층이다.
+- 보고서는 최종 파생 출력물 중 하나이지, 제품 전체 정체성 그 자체가 아니다.
+- 의료적/보험적 최종 판단은 앱이 하지 않는다.
+- productization은 계획 대상이지만 여전히 코어 엔진보다 뒤 순서다.
 
 가장 먼저 해야 할 일:
-코드를 바로 쓰지 말고, 아래 8개를 먼저 출력하라.
+코드를 바로 쓰지 말고, 아래 항목을 먼저 출력하라.
+
 1. 문서 전체 이해 요약
-2. 구현 범위 / 비범위
-3. 시스템 경계와 모듈 경계
-4. 초기 폴더 구조 제안
-5. DB schema 초안
-6. 환경변수 목록 초안
-7. Epic 0 ~ Epic 2 구현 순서
-8. 현재 가장 큰 리스크 5개와 대응 전략
+2. 현재 제품 방향 요약
+3. 구현 범위 / 비범위
+4. 시스템 경계와 모듈 경계
+5. 초기 폴더 구조 제안
+6. DB schema 초안
+7. 환경변수 목록 초안
+8. 가장 큰 리스크 5개와 대응 전략
 
 그 다음에만 구현을 시작하라.
 
-구현 시작 규칙:
-- Epic 0부터 순차 진행
-- 각 단계마다 아래 형식으로 보고
-  - 목표
-  - 이번 단계에서 읽은 기준 문서
-  - 생성/수정 파일 목록
-  - 코드
-  - 테스트
-  - 실행 방법
-  - 남은 리스크
-  - 다음 단계
-
 현재 우선순위:
+
 1. 날짜-이벤트 추출 엔진
 2. click-to-evidence 계약
-3. OCR/정밀분석 분기 구조
-4. auth/roles/plans/billing skeleton
-5. report rendering
-6. admin/consent skeleton
+3. Starter / Pro 분석 출력 체계
+4. 선택적 정밀분석 / selective vision 경계
+5. auth / social login / billing skeleton
+6. admin / export
 
-특히 날짜-이벤트 추출 엔진에서는 다음을 반드시 지켜라.
-- `DateCandidate -> EventAtom -> EventBundle -> ReportSlot -> ReportText` 흐름 유지
-- 이벤트는 evidence 없이 확정하지 말 것
-- 허수 날짜, 발급일, 예정일, 문서 행정일과 실제 의료이벤트 날짜를 구분할 것
-- report_sample 스타일의 9~10항목 구조를 유지할 것
-- ICD/KCD, 한글/영문 병기 가능 구조를 확보할 것
-
-이제 문서를 읽고, 먼저 8개 항목을 출력하라. 코드는 그 다음이다.
+이제 문서를 읽고, 먼저 위 항목을 출력하라. 코드는 그 다음이다.
 
 ---
 
 ## 운영자 체크포인트
 
-아래가 안 나오면 멈추고 다시 시켜야 한다.
-- DB schema 없이 바로 UI부터 만드는 경우
-- date-event extraction 보다 auth 화면부터 만드는 경우
-- evidence contract 없이 보고서 화면부터 만드는 경우
-- 플랜/권한 분리 없이 단일 사용자 앱으로 가는 경우
+아래가 보이면 방향이 흐려진 것이다.
+
+- 설계사 단일 타깃이 다시 consumer / investigator 이원 구조로 되돌아가는 경우
+- date-event extraction 보다 로그인 화면이나 결제부터 만드는 경우
+- evidence contract 없이 보고서 텍스트부터 만드는 경우
 - 보험가입일을 OCR 또는 문서 텍스트에서 찾으려는 경우
+- Starter / Pro가 아닌 예전 플랜 구조를 기본값으로 설명하는 경우
 
 ---
 
-## 2번째 메시지(필요할 때만)
+## 한 문장 기억
 
-아래 메시지는 Codex가 방향을 흐릴 때만 추가로 넣는다.
-
-문서 기준을 벗어나지 말고, 지금 단계에서는 Epic 순서를 유지하세요.
-핵심은 날짜-이벤트 추출과 evidence contract 입니다.
-UI나 부가 기능보다 core pipeline 을 먼저 완성하세요.
-중간 산출물은 반드시 JSON 계약 중심으로 설계하고, 자유 텍스트 생성은 마지막 단계로 미루세요.
-
----
-
-## 헷갈리지 않게 기억할 한 문장
-
-**처음에는 이 파일의 [복붙용 첫 메시지]만 쓰면 된다.**
+**코어 엔진은 유지하되, 제품 해석은 설계사용 Starter / Pro 의료문서 분석 앱 기준으로 다시 정렬한다.**

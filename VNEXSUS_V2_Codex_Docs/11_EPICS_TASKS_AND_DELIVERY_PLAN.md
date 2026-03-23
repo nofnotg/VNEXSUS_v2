@@ -1,140 +1,104 @@
 # Epic / Task / Delivery Plan
 
-## Phase 0 — 기초 구조
-### Epic 0.1 모노레포 초기화
-- apps/web 생성
-- apps/worker 생성
-- packages/domain/shared/prompts/config 생성
-- lint/format/test 설정
-- env.example 작성
+## 현재 방향 요약
 
-### Epic 0.2 인증 뼈대
-- 회원가입/로그인 화면
-- role 선택
-- session 유지
-- route protection 기본 구현
+현재 개발은 “설계사가 쓰는 의료문서 분석 앱” 기준으로 재정렬되어야 한다.
 
-## Phase 1 — 업로드/OCR/evidence
-### Epic 1.1 케이스 및 문서 업로드
-- case CRUD
-- patient input form
-- document upload
-- fileOrder 관리
+이미 상당히 진척된 것은 코어 엔진이다.
 
-### Epic 1.2 OCR ingestion
-- OCR provider adapter
-- page split
-- ocr_blocks 저장
-- bbox 저장
-- job status 저장
+- 날짜-이벤트 추출
+- evidence linkage
+- structured output
+- weak evidence review signal
 
-### Epic 1.3 evidence registry
-- source_documents / source_pages / ocr_blocks / evidence_refs schema
-- evidence query API
-- page jump helper
+아직 제품 문서와 후속 구현이 필요한 것은 다음이다.
 
-## Phase 2 — 날짜-이벤트 추출
-### Epic 2.1 DateCandidate 추출
-- 날짜 regex/normalizer
-- 허수 날짜 1차 분류
-- date_candidates 저장
+- Starter / Pro 결과 체계
+- planner-facing UX 구조
+- 로그인 / 소셜 로그인
+- 결제 / 구독
+- Pro 질문 / 검색 / selective vision 운영 구조
 
-### Epic 2.2 엔티티 추출
-- hospital dictionary
-- diagnosis/exam/treatment 후보 추출
-- ICD/KCD 패턴 추출
+## Epic 0 — 문서/계약 realign
 
-### Epic 2.3 EventAtom 생성
-- date-centered window 구성
-- atom builder
-- sourceEvidenceIds 연결
+- 설계사 단일 타깃 방향 정리
+- Starter / Pro 상품 문서 정리
+- auth / social login / billing 정책 정리
+- 기존 consumer / investigator 문서 흔적 정리
 
-### Epic 2.4 EventBundle 생성
-- bundling heuristic
-- ambiguity score 계산
-- review flags 생성
+## Epic 1 — 코어 수집과 evidence 기반
 
-## Phase 3 — 정밀분석 / LLM
-### Epic 3.1 Spot Resolver
-- prompt template 구현
-- provider adapter 구현
-- JSON parsing / validation
-- retry / fallback
+- 파일 업로드
+- OCR ingestion
+- evidence registry
+- source file / page / block 연결
 
-### Epic 3.2 Case Helper
-- bundle conflict resolver
-- slot completeness enhancer
-- unresolved flagger
+## Epic 2 — 날짜-이벤트 구조화 엔진
 
-### Epic 3.3 Plan gating
-- 미리확인/Starter에서는 자동 실행 금지
-- 정밀확인/Pro 이상만 허용
-- 예상 차감량 계산
+- DateCandidate 추출
+- entity 추출
+- EventAtom 생성
+- EventBundle 생성
+- weak evidence / ambiguity gating
 
-## Phase 4 — 결과 렌더링
-### Epic 4.1 Slot Assembler
-- investigator slot JSON 10항목 생성
-- consumer summary slot 생성
+## Epic 3 — 보험가입일 기준 분석 확장
 
-### Epic 4.2 Report Renderer
-- 조사자용 텍스트/HTML 보고서
-- 일반사용자 요약 카드
-- evidence link binding
+- 보험가입일 metadata 입력
+- 가입 전/후 타임라인 정렬
+- 고지의무 구간 rule configuration
+- 후보 진료 태깅
 
-### Epic 4.3 click-to-evidence UI
-- PDF/image viewer
-- page jump
-- bbox highlight
-- quote/context panel
+## Epic 4 — Starter 결과 체계
 
-## Phase 5 — 플랜 / 과금 / 관리자
-### Epic 5.1 플랜/사용량
-- plan table
-- subscription table
-- usage ledger
-- usage gating
-- 예상 차감량 UI
+- 사건 개요
+- 의료 이벤트 시계열
+- 질환군별 개괄
+- 고지의무 검토 개요
+- 주의사항 / 판단 금지 안내
+- 기본 공유용 리포트
 
-### Epic 5.2 관리자페이지
-- 사용자 조회/상태 변경
-- 실패 job 조회/재시도
-- 사용량/결제 조회
+## Epic 5 — Pro 심층 분석 체계
 
-### Epic 5.3 전문가연결
-- connection request 생성
-- 관리자 조회
-- 상태 업데이트
+- selective vision cross-check
+- 근거 drill-down 강화
+- 질문 / 검색 / 재질문
+- 질환군별 상세 정리
+- 심층 리포트
 
-## Phase 6 — 결제 / 약관 / 오픈 준비
-### Epic 6.1 결제 연동
-- subscription checkout
-- one-time upgrade checkout
-- webhook
-- billing status sync
+## Epic 6 — 로그인 / 소셜 로그인 / 플랜 / 결제
 
-### Epic 6.2 동의/약관 골격
-- terms/privacy pages
-- consent checkboxes
-- consent version storage
+- 이름 / 이메일 중심 간편 가입
+- Google OAuth 우선
+- Kakao OAuth later option
+- Starter / Pro entitlement
+- billing / subscription skeleton
 
-### Epic 6.3 오픈 점검
-- 삭제/파기 기본 정책
-- 문의 경로
-- error logging
-- basic analytics
+## Epic 7 — 관리자와 운영
 
-## 병행 가능하지만 우선순위 낮은 항목
-- 판례/약관 검색 고도화
-- 팀 협업 상세 기능
-- 대량 batch 업로드 개선
-- 전문가 매칭 자동화
-- RAG 심화
+- 사용자 상태 조회
+- 작업 실패건 관리
+- 구독 / 결제 상태 관리
+- 지원 / 운영 로그 관리
 
-## 각 Phase 종료 시 산출물
-- 설계 반영 여부 체크리스트
-- DB migration
-- API 구현
-- UI 구현
-- 테스트 결과
-- 데모 경로
-- 남은 리스크
+## Epic 8 — export / release readiness
+
+- Starter 리포트 export
+- Pro 리포트 export
+- 운영/법무/동의 최소 구조
+- 배포 전 체크리스트
+
+## 구현 우선순위 원칙
+
+1. 코어 엔진 안정화
+2. Starter 분석 체계
+3. Pro 심층 분석 체계
+4. auth / social login / billing
+5. admin / export / release
+
+## 항상 지켜야 할 보호 조건
+
+- `Case3` 는 watch-only 로 유지
+- `Case10` 보호된 stable improved 상태 유지
+- `Case36` cleared-blocker 상태 유지
+- date-extraction 보호 파일은 함부로 건드리지 않음
+- productization 기능은 코어 엔진보다 먼저 붙이지 않음
