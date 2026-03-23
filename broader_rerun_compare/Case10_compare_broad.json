@@ -1,0 +1,132 @@
+{
+  "caseName": "Case10",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case10_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case10_runtime_broad.json",
+  "comparisonStatus": "broad_partial_match",
+  "timeoutFixAppearsEffective": true,
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2024-04-18",
+      "2024-05-01",
+      "2024-10-22",
+      "2024-10-23",
+      "2024-12-20",
+      "2025-11-10",
+      "2054-11-10"
+    ],
+    "runtimeDates": [
+      "2024-04-18",
+      "2024-05-02",
+      "2024-06-05",
+      "2024-06-12",
+      "2024-07-12",
+      "2024-07-17",
+      "2024-08-07",
+      "2024-08-14",
+      "2024-09-03",
+      "2024-09-24",
+      "2024-10-11",
+      "2024-10-21",
+      "2024-10-22",
+      "2024-10-23",
+      "2024-11-01",
+      "2024-11-08",
+      "2024-11-22",
+      "2024-11-25",
+      "2024-12-02"
+    ],
+    "missingDates": [
+      "2024-05-01",
+      "2024-12-20",
+      "2025-11-10",
+      "2054-11-10"
+    ],
+    "extraDates": [
+      "2024-05-02",
+      "2024-06-05",
+      "2024-06-12",
+      "2024-07-12",
+      "2024-07-17",
+      "2024-08-07",
+      "2024-08-14",
+      "2024-09-03",
+      "2024-09-24",
+      "2024-10-11",
+      "2024-10-21",
+      "2024-11-01",
+      "2024-11-08",
+      "2024-11-22",
+      "2024-11-25",
+      "2024-12-02"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "은평성모(이주희)",
+      "은평성모(조윤아)"
+    ],
+    "runtimeInstitutions": [
+      "S HOSPITAL",
+      "Subclinic"
+    ],
+    "missingInstitutionsNormalized": [
+      "은평성모(이주희)",
+      "은평성모(조윤아)"
+    ],
+    "extraInstitutionsNormalized": [
+      "shospital",
+      "subclinic"
+    ]
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2024-05-01",
+      "2024-12-20",
+      "2025-11-10",
+      "2054-11-10"
+    ],
+    "institutions": [
+      "은평성모(이주희)",
+      "은평성모(조윤아)"
+    ],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "2024-05-02",
+      "2024-06-05",
+      "2024-06-12",
+      "2024-07-12",
+      "2024-07-17",
+      "2024-08-07",
+      "2024-08-14",
+      "2024-09-03",
+      "2024-09-24",
+      "2024-10-11",
+      "2024-10-21",
+      "2024-11-01",
+      "2024-11-08",
+      "2024-11-22",
+      "2024-11-25",
+      "2024-12-02"
+    ],
+    "institutions": [
+      "shospital",
+      "subclinic"
+    ]
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "direct keep"
+  ],
+  "mediumConfidenceFromFrozenBaseline": false
+}

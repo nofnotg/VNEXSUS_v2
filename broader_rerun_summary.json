@@ -1,0 +1,101 @@
+{
+  "phase": "Broader Rerun",
+  "attemptedCases": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case36"
+  ],
+  "excludedCases": [
+    "Case7: watch-track excluded from broader rerun scope"
+  ],
+  "caseStatuses": [
+    {
+      "caseName": "Case16",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case17",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case2",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case20",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case34",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case12",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case10",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case36",
+      "comparisonStatus": "broad_partial_match"
+    }
+  ],
+  "statusCounts": {
+    "broad_match": 0,
+    "broad_partial_match": 9,
+    "broad_mismatch": 0,
+    "broad_failed": 0,
+    "needs_human_review": 0
+  },
+  "lowEndRiskSummary": {
+    "cleared": [],
+    "possible": [
+      "Case16",
+      "Case3",
+      "Case17",
+      "Case2",
+      "Case20",
+      "Case34",
+      "Case12",
+      "Case10",
+      "Case36"
+    ],
+    "present": []
+  },
+  "regressionSummary": {
+    "anyRegression": false,
+    "regressionCases": []
+  },
+  "targetCaseChecks": {
+    "case3Watch": {
+      "caseName": "Case3",
+      "remainsWatchItem": true,
+      "blockerEscalated": false,
+      "missingDateSensitivityNote": "missingDates=8;extraDates=6;bundleCount=11"
+    },
+    "case10Protection": {
+      "runtimeContains2024_10_25": false,
+      "runtimeContains2024_10_30": false,
+      "stableImproved": true
+    },
+    "case36Protection": {
+      "runtimeContains2025_08_06": false,
+      "blockerReappeared": false,
+      "bundleCount": 80
+    }
+  },
+  "finalBroaderRerunResult": "broader_rerun_completed_without_new_blocker",
+  "generatedAt": "2026-03-23T01:09:44.207Z"
+}

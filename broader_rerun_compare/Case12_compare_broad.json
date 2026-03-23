@@ -1,0 +1,104 @@
+{
+  "caseName": "Case12",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case12_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case12_runtime_broad.json",
+  "comparisonStatus": "broad_partial_match",
+  "timeoutFixAppearsEffective": true,
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2019-03-01",
+      "2024-03-27",
+      "2024-03-31",
+      "2025-02-18",
+      "2025-02-19",
+      "2025-02-20"
+    ],
+    "runtimeDates": [
+      "2019-03-01",
+      "2024-03-31",
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-19",
+      "2025-02-20",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-10"
+    ],
+    "missingDates": [
+      "2024-03-27",
+      "2025-02-18"
+    ],
+    "extraDates": [
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-10"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "요양급여내역서-김선삼",
+      "이대목동병원",
+      "홍익병원"
+    ],
+    "runtimeInstitutions": [
+      "영광종합병원",
+      "이대목동병원",
+      "전남대학교병원",
+      "종합병원",
+      "홍익병원"
+    ],
+    "missingInstitutionsNormalized": [
+      "요양급여내역서-김선삼"
+    ],
+    "extraInstitutionsNormalized": [
+      "영광종합병원",
+      "전남대학교병원",
+      "종합병원"
+    ]
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2024-03-27",
+      "2025-02-18"
+    ],
+    "institutions": [
+      "요양급여내역서-김선삼"
+    ],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "2024-05-13",
+      "2025-01-30",
+      "2025-02-21",
+      "2025-02-25",
+      "2025-02-26",
+      "2025-03-10"
+    ],
+    "institutions": [
+      "영광종합병원",
+      "전남대학교병원",
+      "종합병원"
+    ]
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

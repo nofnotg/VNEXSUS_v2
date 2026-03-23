@@ -1,0 +1,97 @@
+{
+  "caseName": "Case16",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case16_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case16_runtime_broad.json",
+  "comparisonStatus": "broad_partial_match",
+  "timeoutFixAppearsEffective": true,
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-08-21",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-19",
+      "2025-09-25",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-11-25"
+    ],
+    "runtimeDates": [
+      "2025-09-10",
+      "2025-09-15",
+      "2025-09-24",
+      "2025-09-25",
+      "2025-09-26",
+      "2025-09-29",
+      "2025-09-30",
+      "2025-10-01"
+    ],
+    "missingDates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-08-21",
+      "2025-09-11",
+      "2025-09-19",
+      "2025-11-25"
+    ],
+    "extraDates": [
+      "2025-09-15",
+      "2025-09-24",
+      "2025-09-26",
+      "2025-10-01"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "일산백병원",
+      "일산차병원"
+    ],
+    "runtimeInstitutions": [
+      "일산차병원"
+    ],
+    "missingInstitutionsNormalized": [
+      "일산백병원"
+    ],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2024-11-25",
+      "2025-02-23",
+      "2025-08-21",
+      "2025-09-11",
+      "2025-09-19",
+      "2025-11-25"
+    ],
+    "institutions": [
+      "일산백병원"
+    ],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "2025-09-15",
+      "2025-09-24",
+      "2025-09-26",
+      "2025-10-01"
+    ],
+    "institutions": []
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

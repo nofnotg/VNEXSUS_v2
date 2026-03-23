@@ -1,0 +1,136 @@
+{
+  "phase": "Broader Rerun",
+  "attemptedCases": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case36"
+  ],
+  "successfulRuntimeCases": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case36"
+  ],
+  "failedRuntimeCases": [],
+  "runtimeGenerationMethodSummary": "Broader rerun execution using real local env with .env.local override, real DB, and real storage/OCR path via createCaseForUser + upsertPatientInput + uploadDocumentFile + createOcrJob; frozen earlier artifacts preserved; Case7 excluded from this rerun track.",
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case16_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case3_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case17_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case2_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case20_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case34_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case12_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case10_runtime_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case36_runtime_broad.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case16_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case3_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case17_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case2_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case20_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case34_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case12_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case10_compare_broad.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_compare\\Case36_compare_broad.json"
+  ],
+  "allRuntimeArtifactsExist": true,
+  "timeoutFixEffectivenessSupportedAtBroadScale": true,
+  "priorSemanticTimeoutSymptomRecurred": false,
+  "rerunStoppedEarly": false,
+  "comparisonStatuses": [
+    {
+      "caseName": "Case16",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case17",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case2",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case20",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case34",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case12",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case10",
+      "comparisonStatus": "broad_partial_match"
+    },
+    {
+      "caseName": "Case36",
+      "comparisonStatus": "broad_partial_match"
+    }
+  ],
+  "perCaseLowEndRiskState": [
+    {
+      "caseName": "Case16",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case3",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case17",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case2",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case20",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case34",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case12",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case10",
+      "lowEndRiskState": "low_end_risk_possible"
+    },
+    {
+      "caseName": "Case36",
+      "lowEndRiskState": "low_end_risk_possible"
+    }
+  ],
+  "anyRegression": false,
+  "regressionCases": [],
+  "anyLowEndRiskPresent": false,
+  "watchlistCases": [
+    "Case3"
+  ],
+  "generatedAt": "2026-03-23T01:09:44.207Z"
+}

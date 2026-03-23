@@ -1,0 +1,87 @@
+{
+  "caseName": "Case17",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case17_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case17_runtime_broad.json",
+  "comparisonStatus": "broad_partial_match",
+  "timeoutFixAppearsEffective": true,
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2025-08-12",
+      "2025-08-14",
+      "2025-08-19",
+      "2030-08-12",
+      "2045-08-12"
+    ],
+    "runtimeDates": [
+      "2025-08-14",
+      "2025-08-18",
+      "2025-08-19",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28"
+    ],
+    "missingDates": [
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12"
+    ],
+    "extraDates": [
+      "2025-08-18",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "해븐리병원"
+    ],
+    "runtimeInstitutions": [
+      "해븐리병원",
+      "헤븐리병원"
+    ],
+    "missingInstitutionsNormalized": [],
+    "extraInstitutionsNormalized": [
+      "헤븐리병원"
+    ]
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2025-08-12",
+      "2030-08-12",
+      "2045-08-12"
+    ],
+    "institutions": [],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "2025-08-18",
+      "2025-08-20",
+      "2025-08-21",
+      "2025-08-22",
+      "2025-08-28"
+    ],
+    "institutions": [
+      "헤븐리병원"
+    ]
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

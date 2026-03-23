@@ -1,0 +1,105 @@
+{
+  "caseName": "Case20",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case20_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case20_runtime_broad.json",
+  "comparisonStatus": "broad_partial_match",
+  "timeoutFixAppearsEffective": true,
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "runtimeDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "missingDates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "extraDates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "반듯한정형외과의원"
+    ],
+    "runtimeInstitutions": [
+      "반듯한정형외과의원"
+    ],
+    "missingInstitutionsNormalized": [],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2025-01-02",
+      "2025-09-11"
+    ],
+    "institutions": [],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "2025-02-21",
+      "2025-04-03",
+      "2025-04-11",
+      "2025-04-17",
+      "2025-04-30",
+      "2025-05-01",
+      "2025-05-12",
+      "2025-05-16",
+      "2025-05-24",
+      "2025-06-05",
+      "2025-06-09",
+      "2025-06-16",
+      "2025-06-18",
+      "2025-06-27",
+      "2025-06-28"
+    ],
+    "institutions": []
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "medium-confidence mapping; human review required during comparison",
+    "kept with moderate confidence",
+    "medium_confidence_from_frozen_baseline"
+  ],
+  "mediumConfidenceFromFrozenBaseline": true
+}

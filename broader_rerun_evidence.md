@@ -1,0 +1,36 @@
+# Broader Rerun Evidence
+
+- targetBranch: `codex/phase12-6-tailrisk-date-fix`
+- broaderRerunScript: `scripts/validation/phase12_6_broader_rerun.ts`
+- renewedStabilizationDecisionVerified: `broad_rerun_ready_with_watchlist`
+- attemptedCases:
+  - `Case16`
+  - `Case3`
+  - `Case17`
+  - `Case2`
+  - `Case20`
+  - `Case34`
+  - `Case12`
+  - `Case10`
+  - `Case36`
+- excludedCases:
+  - `Case7=excluded_from_broader_rerun_scope`
+- broaderRerunArtifacts:
+  - `broader_rerun_manifest.json`
+  - `broader_rerun_summary.json`
+  - `broader_rerun_watchlist.md`
+  - `broader_rerun_runtime/*.json`
+  - `broader_rerun_compare/*.json`
+- regressionSummary:
+  - `anyRegression=false`
+  - `regressionCases=[]`
+- lowEndRiskSummary:
+  - `low_end_risk_present=[]`
+  - `low_end_risk_possible=[Case16, Case3, Case17, Case2, Case20, Case34, Case12, Case10, Case36]`
+- targetCaseChecks:
+  - `Case3=watch_item_retained_non_blocker`
+  - `Case10=repeated_later_seeds_2024-10-25_and_2024-10-30_remained_absent`
+  - `Case36=2025-08-06_remained_absent_and_prior_blocker_did_not_reappear`
+- broaderRerunCompleted: `true`
+- productizationStarted: `false`
+- phase13Started: `false`

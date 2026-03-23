@@ -1,0 +1,98 @@
+{
+  "caseName": "Case3",
+  "goldenFile": "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
+  "runtimeFile": "C:\\VNEXSUS\\VNEXSUS_v2\\broader_rerun_runtime\\Case3_runtime_broad.json",
+  "comparisonStatus": "broad_partial_match",
+  "timeoutFixAppearsEffective": true,
+  "dateCoverageComparison": {
+    "goldenReportDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2024-12-13",
+      "2025-01-15",
+      "2025-03-04",
+      "2025-03-19"
+    ],
+    "runtimeDates": [
+      "2024-12-13",
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-15",
+      "2025-01-17"
+    ],
+    "missingDates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-04",
+      "2025-03-19"
+    ],
+    "extraDates": [
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17"
+    ]
+  },
+  "institutionLinkageComparison": {
+    "goldenInstitutions": [
+      "이대목동병원"
+    ],
+    "runtimeInstitutions": [
+      "이대목동병원"
+    ],
+    "missingInstitutionsNormalized": [],
+    "extraInstitutionsNormalized": []
+  },
+  "structuralCompletenessComparison": {
+    "ocrCompleted": true,
+    "blocksAvailable": true,
+    "dateCandidatesAvailable": true,
+    "eventBundlesAvailable": true,
+    "investigatorReportAvailable": true,
+    "investigatorNarrativeAvailable": true,
+    "investigatorPdfAvailable": true
+  },
+  "missingItems": {
+    "dates": [
+      "2019-11-22",
+      "2020-03-20",
+      "2021-09-02",
+      "2023-11-22",
+      "2024-08-22",
+      "2024-11-22",
+      "2025-03-04",
+      "2025-03-19"
+    ],
+    "institutions": [],
+    "pipelineStages": []
+  },
+  "extraItems": {
+    "dates": [
+      "2024-12-15",
+      "2024-12-17",
+      "2024-12-31",
+      "2025-01-02",
+      "2025-01-13",
+      "2025-01-17"
+    ],
+    "institutions": []
+  },
+  "suspiciousValues": [],
+  "reviewerCautionNotes": [
+    "direct keep"
+  ],
+  "mediumConfidenceFromFrozenBaseline": false
+}
