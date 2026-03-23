@@ -1,0 +1,98 @@
+{
+  "phase": "Phase 2.6",
+  "assessmentGeneratedAt": "2026-03-21T07:20:00.000Z",
+  "pilotCases": [
+    {
+      "caseName": "Case2",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": false
+    },
+    {
+      "caseName": "Case3",
+      "phase25Status": "runtime_recovered_partial_match",
+      "blockerClass": "environment_fixed",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": false
+    },
+    {
+      "caseName": "Case7",
+      "phase25Status": "deferred",
+      "blockerClass": "intake_limit",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": true,
+      "mediumConfidenceFromBaseline": false
+    },
+    {
+      "caseName": "Case10",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": false
+    },
+    {
+      "caseName": "Case12",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case16",
+      "phase25Status": "runtime_recovered_partial_match",
+      "blockerClass": "environment_fixed",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case17",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case20",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case34",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case36",
+      "phase25Status": "rerun_failed",
+      "blockerClass": "semantic_transaction_timeout",
+      "immediateCodeOrConfigChangeRecommended": true,
+      "rerunWithoutCodeChangeRecommended": false,
+      "deferred": false,
+      "mediumConfidenceFromBaseline": true
+    }
+  ],
+  "decision": "Phase 3 fix implementation next",
+  "comparisonQuality": "execution-limited"
+}

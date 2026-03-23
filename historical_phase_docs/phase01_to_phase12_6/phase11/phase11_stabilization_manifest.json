@@ -1,0 +1,117 @@
+{
+  "phase": "Phase 11",
+  "recoverableCases": [
+    {
+      "caseName": "Case16",
+      "latestLockedStatus": "refresh_unchanged_partial_match",
+      "dominantResidualIssue": "minor_institution_residual",
+      "stabilizationBucket": "watchlist",
+      "lowEndRiskState": "low_end_risk_possible",
+      "operationalStability": true,
+      "productSafety": false,
+      "additionalFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case3",
+      "latestLockedStatus": "refresh_unchanged_partial_match",
+      "dominantResidualIssue": "minor_date_missing_residual",
+      "stabilizationBucket": "tail_risk",
+      "lowEndRiskState": "low_end_risk_present",
+      "operationalStability": true,
+      "productSafety": false,
+      "additionalFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": false
+    },
+    {
+      "caseName": "Case17",
+      "latestLockedStatus": "refresh_improved_partial_match",
+      "dominantResidualIssue": "minor_date_noise_residual",
+      "stabilizationBucket": "product_safe",
+      "lowEndRiskState": "low_end_risk_cleared",
+      "operationalStability": true,
+      "productSafety": true,
+      "additionalFixRecommended": false,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case2",
+      "latestLockedStatus": "refresh_unchanged_partial_match",
+      "dominantResidualIssue": "minor_institution_residual",
+      "stabilizationBucket": "watchlist",
+      "lowEndRiskState": "low_end_risk_possible",
+      "operationalStability": true,
+      "productSafety": false,
+      "additionalFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": false
+    },
+    {
+      "caseName": "Case20",
+      "latestLockedStatus": "refresh_unchanged_partial_match",
+      "dominantResidualIssue": "minor_bundle_density_residual",
+      "stabilizationBucket": "watchlist",
+      "lowEndRiskState": "low_end_risk_possible",
+      "operationalStability": true,
+      "productSafety": false,
+      "additionalFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case34",
+      "latestLockedStatus": "refresh_unchanged_partial_match",
+      "dominantResidualIssue": "medium_confidence_baseline_caution",
+      "stabilizationBucket": "product_safe",
+      "lowEndRiskState": "low_end_risk_cleared",
+      "operationalStability": true,
+      "productSafety": true,
+      "additionalFixRecommended": false,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case12",
+      "latestLockedStatus": "refresh_improved_partial_match",
+      "dominantResidualIssue": "minor_date_noise_residual",
+      "stabilizationBucket": "watchlist",
+      "lowEndRiskState": "low_end_risk_possible",
+      "operationalStability": true,
+      "productSafety": false,
+      "additionalFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    },
+    {
+      "caseName": "Case10",
+      "latestLockedStatus": "refresh_unchanged_partial_match",
+      "dominantResidualIssue": "minor_date_noise_residual",
+      "stabilizationBucket": "tail_risk",
+      "lowEndRiskState": "low_end_risk_present",
+      "operationalStability": true,
+      "productSafety": false,
+      "additionalFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": false
+    },
+    {
+      "caseName": "Case36",
+      "latestLockedStatus": "refresh_unchanged_partial_match",
+      "dominantResidualIssue": "minor_date_noise_residual",
+      "stabilizationBucket": "tail_risk",
+      "lowEndRiskState": "low_end_risk_present",
+      "operationalStability": true,
+      "productSafety": false,
+      "additionalFixRecommended": true,
+      "mediumConfidenceFromFrozenBaseline": true
+    }
+  ],
+  "stabilizationBucketCounts": {
+    "product_safe": 2,
+    "watchlist": 4,
+    "tail_risk": 3,
+    "needs_human_review": 0
+  },
+  "lowEndRiskCounts": {
+    "low_end_risk_cleared": 2,
+    "low_end_risk_possible": 4,
+    "low_end_risk_present": 3
+  },
+  "case7Included": false,
+  "nextStepDecision": "Another targeted fix cycle is needed before productization"
+}

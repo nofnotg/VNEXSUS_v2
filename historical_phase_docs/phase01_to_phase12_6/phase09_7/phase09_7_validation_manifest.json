@@ -1,0 +1,46 @@
+{
+  "phase": "Phase 9.7",
+  "attemptedCases": [
+    "Case2",
+    "Case16",
+    "Case34"
+  ],
+  "successfulValidationCases": [
+    "Case2",
+    "Case16",
+    "Case34"
+  ],
+  "failedValidationCases": [],
+  "perCaseStatus": [
+    {
+      "caseName": "Case2",
+      "status": "track2_improved_partial_match"
+    },
+    {
+      "caseName": "Case16",
+      "status": "track2_improved_partial_match"
+    },
+    {
+      "caseName": "Case34",
+      "status": "track2_resolved"
+    }
+  ],
+  "case2RegressionState": "reduced",
+  "case16StayedNonRegressed": true,
+  "case34StayedNonRegressed": true,
+  "track2SafeEnoughForBroaderRerun": true,
+  "anyHighRiskInstitutionException": false,
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "anyRegression": false,
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_runtime\\Case2_runtime_track2fix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_runtime\\Case16_runtime_track2fix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_runtime\\Case34_runtime_track2fix.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_compare\\Case2_compare_track2fix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_compare\\Case16_compare_track2fix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_7_compare\\Case34_compare_track2fix.json"
+  ],
+  "generatedAt": "2026-03-22T11:21:43.824Z"
+}

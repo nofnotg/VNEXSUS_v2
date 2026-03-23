@@ -1,0 +1,143 @@
+{
+  "phase": "Phase 10",
+  "attemptedCases": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case36"
+  ],
+  "successfulValidationCases": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case36"
+  ],
+  "failedValidationCases": [],
+  "perCaseStatus": [
+    {
+      "caseName": "Case16",
+      "status": "refresh_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "status": "refresh_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case17",
+      "status": "refresh_improved_partial_match"
+    },
+    {
+      "caseName": "Case2",
+      "status": "refresh_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case20",
+      "status": "refresh_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case34",
+      "status": "refresh_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case12",
+      "status": "refresh_improved_partial_match"
+    },
+    {
+      "caseName": "Case10",
+      "status": "refresh_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case36",
+      "status": "refresh_unchanged_partial_match"
+    }
+  ],
+  "perCaseImprovementVsLatestLockedBaseline": [
+    {
+      "caseName": "Case16",
+      "status": "refresh_unchanged_partial_match",
+      "relativeToLatestLockedBaseline": "same"
+    },
+    {
+      "caseName": "Case3",
+      "status": "refresh_unchanged_partial_match",
+      "relativeToLatestLockedBaseline": "same"
+    },
+    {
+      "caseName": "Case17",
+      "status": "refresh_improved_partial_match",
+      "relativeToLatestLockedBaseline": "better"
+    },
+    {
+      "caseName": "Case2",
+      "status": "refresh_unchanged_partial_match",
+      "relativeToLatestLockedBaseline": "same"
+    },
+    {
+      "caseName": "Case20",
+      "status": "refresh_unchanged_partial_match",
+      "relativeToLatestLockedBaseline": "same"
+    },
+    {
+      "caseName": "Case34",
+      "status": "refresh_unchanged_partial_match",
+      "relativeToLatestLockedBaseline": "same"
+    },
+    {
+      "caseName": "Case12",
+      "status": "refresh_improved_partial_match",
+      "relativeToLatestLockedBaseline": "better"
+    },
+    {
+      "caseName": "Case10",
+      "status": "refresh_unchanged_partial_match",
+      "relativeToLatestLockedBaseline": "same"
+    },
+    {
+      "caseName": "Case36",
+      "status": "refresh_unchanged_partial_match",
+      "relativeToLatestLockedBaseline": "same"
+    }
+  ],
+  "perTrackBroaderScaleEffectivenessSummary": {
+    "dateNormalization": "improved",
+    "institutionNormalization": "unchanged",
+    "bundleGrouping": "unchanged"
+  },
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "highRiskRemainingCases": [],
+  "recoverableSetReadyForFinalConvergenceReview": true,
+  "anyRegression": false,
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case16_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case3_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case17_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case2_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case20_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case34_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case12_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case10_runtime_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_runtime\\Case36_runtime_refresh.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case16_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case3_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case17_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case2_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case20_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case34_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case12_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case10_compare_refresh.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase10_compare\\Case36_compare_refresh.json"
+  ],
+  "generatedAt": "2026-03-22T11:55:51.208Z"
+}

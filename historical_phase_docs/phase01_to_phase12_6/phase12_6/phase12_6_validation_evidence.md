@@ -1,0 +1,52 @@
+# Phase 12.6 Focused Validation Evidence
+
+- targetBranch: `codex/phase12-6-tailrisk-date-fix`
+- validationScript: `scripts/validation/phase12_6_validate.ts`
+- addendumFixCommitsVerified:
+  - `dd6e36a`
+  - `3acc813`
+- validationCommitShas:
+  - `ce8511e`
+- attemptedCases:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+- validationOrder:
+  - `Case3`
+  - `Case10`
+  - `Case36`
+- targetedTestsRerun:
+  - `pnpm exec vitest run packages/domain/src/dates/date-extraction.test.ts`
+  - `pnpm exec vitest run apps/web/lib/server/services/date-extraction-service.test.ts`
+- focusedValidationArtifacts:
+  - `phase12_6_runtime/Case3_runtime_tailrisk.json`
+  - `phase12_6_runtime/Case10_runtime_tailrisk.json`
+  - `phase12_6_runtime/Case36_runtime_tailrisk.json`
+  - `phase12_6_compare/Case3_compare_tailrisk.json`
+  - `phase12_6_compare/Case10_compare_tailrisk.json`
+  - `phase12_6_compare/Case36_compare_tailrisk.json`
+  - `phase12_6_validation_manifest.json`
+  - `phase12_6_validation_evidence.md`
+- perCaseStatus:
+  - `Case3=tailrisk_improved_partial_match`
+  - `Case10=tailrisk_improved_partial_match`
+  - `Case36=tailrisk_improved_partial_match`
+- perCaseLowEndRiskState:
+  - `Case3=low_end_risk_possible`
+  - `Case10=low_end_risk_possible`
+  - `Case36=low_end_risk_possible`
+- targetedSymptomNotes:
+  - `Case3=non-regression held and compare status improved; currentMissingDates=8 vs previousMissingDates=7, currentExtraDates=6 vs previousExtraDates=8, currentBundleCount=11 vs previousBundleCount=14`
+  - `Case10=Case10 protection held; 2024-10-25 and 2024-10-30 do not appear in the runtime date set, comparisonStatus remained tailrisk_improved_partial_match, and bundle count stayed 34`
+  - `Case36=2025-08-06 no longer appears in the runtime date set after the authored outpatient header suppression guardrail; comparisonStatus moved from tailrisk_regressed to tailrisk_improved_partial_match, currentExtraDates dropped from 54 to 42, and currentBundleCount dropped from prior regressed 96 / locked baseline 95 to 80`
+- case36RequiredNote:
+  - `runtimeContains2025-08-06=false`
+  - `removalGuardrail=authored outpatient header + parenthesized date + no stronger clinical label suppression at candidate stage`
+  - `bundleCountChange=96_to_80_and_below_locked_baseline_95`
+- timeoutLikeRuntimeFailureRecurred: `false`
+- anyRegression: `false`
+- broaderRerunStarted: `false`
+- renewedStabilizationReviewStarted: `false`
+- case7Included: `false`
+- frozenEarlierArtifactsModified: `false`
+- nextStepDecision: `Ready for renewed stabilization review decision`

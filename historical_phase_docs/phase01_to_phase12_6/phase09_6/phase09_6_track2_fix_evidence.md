@@ -1,0 +1,33 @@
+# Phase 9.6 Track 2 Fix Evidence
+
+- targetBranch: `main`
+- implementationScope: `Phase 9.6 Track 2 institution targeted-fix only`
+- filesChanged:
+  - `packages/domain/src/entities/hospital-normalization.ts`
+  - `packages/domain/src/windows/date-centered-window.ts`
+  - `packages/domain/src/bundles/event-bundle-builder.ts`
+  - `packages/domain/src/entities/hospital-normalization.test.ts`
+  - `packages/domain/src/entities/entity-extraction.test.ts`
+  - `packages/domain/src/windows/date-centered-window.test.ts`
+  - `packages/domain/src/bundles/event-bundle-builder.test.ts`
+  - `phase09_6_track2_fix_plan.md`
+  - `phase09_6_track2_fix_evidence.md`
+- implementationCommitShas:
+  - `cdd3a02`
+  - `5b3565f`
+- directRemoteVerificationChecklist:
+  - `Verify changed Track 2 code files on origin/main`
+  - `Verify phase09_6_track2_fix_plan.md on origin/main`
+  - `Verify phase09_6_track2_fix_evidence.md on origin/main`
+  - `Confirm frozen Phase 0.5 through Phase 9.5 artifacts were not modified`
+  - `Confirm Case7 remained outside this fix track`
+  - `Confirm no broader rerun artifact was created`
+  - `Confirm no Phase 10 artifact exists`
+- frozenArtifactsModified: `false`
+- case7Included: `false`
+- broaderRerunStarted: `false`
+- tinyValidationChecksRun:
+  - `pnpm exec vitest run packages/domain/src/entities/hospital-normalization.test.ts packages/domain/src/entities/entity-extraction.test.ts packages/domain/src/windows/date-centered-window.test.ts packages/domain/src/bundles/event-bundle-builder.test.ts`
+  - `pnpm typecheck`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`

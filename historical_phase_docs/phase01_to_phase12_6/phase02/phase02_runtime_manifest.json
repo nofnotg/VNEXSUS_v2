@@ -1,0 +1,149 @@
+{
+  "phase": "Phase 2",
+  "frozenPilotCases": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case7",
+    "Case36"
+  ],
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case16_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case3_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case17_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case2_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case20_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case34_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case12_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case10_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case7_runtime.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_runtime\\Case36_runtime.json"
+  ],
+  "runtimeGenerationMethodSummary": "Limited Phase 2 service-runner execution using real local env, real DB, real storage/OCR path via createCaseForUser + upsertPatientInput + uploadDocumentFile + createOcrJob; read-only Prisma inspection used for runtime normalization.",
+  "casesFailedOrPartiallyGenerated": [
+    {
+      "caseName": "Case16",
+      "caseId": "cmmzwannc0001me5wrgb22z3a",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case3",
+      "caseId": "cmmzwaqgc000bme5w5q1yh38o",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case17",
+      "caseId": "cmmzwasqh000ime5wijyb4o5q",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case2",
+      "caseId": "cmmzwauyz000pme5wpvjp69vh",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case20",
+      "caseId": "cmmzwb0y30012me5w5ie1usbo",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case34",
+      "caseId": "cmmzwb3cd0019me5whwr8hyz1",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case12",
+      "caseId": "cmmzwb5l0001gme5wn4jla92y",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case10",
+      "caseId": "cmmzwb8ru001tme5wq3msrbun",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case7",
+      "caseId": "cmmzwbbnh0023me5wduor89u3",
+      "failureTaxonomy": "Intake",
+      "extractionWarnings": [
+        "runtime_error:File too large",
+        "no_date_candidates"
+      ]
+    },
+    {
+      "caseName": "Case36",
+      "caseId": "cmmzwbdwe002bme5wbfuk0fpx",
+      "failureTaxonomy": "OCR",
+      "extractionWarnings": [
+        "runtime_error:Google Vision OCR request failed",
+        "runtime_error_detail:ENOENT: no such file or directory, open 'C:\\VisionKeys\\medreport-assistant-2d733c1156cb.json'",
+        "ocr_job_failed:Google Vision OCR request failed",
+        "no_date_candidates"
+      ]
+    }
+  ],
+  "allRuntimeArtifactsExist": true,
+  "budget": {
+    "totalBudgetCap": 10,
+    "softStopThreshold": 8,
+    "hardStopThreshold": 10,
+    "projectedSpendAtStart": 1.8210000000000002,
+    "actualEstimatedSpendConsumed": 1.821,
+    "budgetStopTriggered": false
+  },
+  "investigatorExecutionUser": "charmorzr@gmail.com",
+  "generatedAt": "2026-03-21T05:36:22.578Z"
+}

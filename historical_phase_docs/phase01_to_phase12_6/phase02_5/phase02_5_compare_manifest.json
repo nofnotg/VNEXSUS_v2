@@ -1,0 +1,78 @@
+{
+  "phase": "Phase 2.5",
+  "comparisonFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_compare\\Case16_compare_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_compare\\Case3_compare_rerun.json"
+  ],
+  "caseStatuses": [
+    {
+      "caseName": "Case16",
+      "comparisonStatus": "runtime_recovered_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "comparisonStatus": "runtime_recovered_partial_match"
+    },
+    {
+      "caseName": "Case17",
+      "comparisonStatus": "rerun_failed"
+    },
+    {
+      "caseName": "Case2",
+      "comparisonStatus": "rerun_failed"
+    },
+    {
+      "caseName": "Case20",
+      "comparisonStatus": "rerun_failed"
+    },
+    {
+      "caseName": "Case34",
+      "comparisonStatus": "rerun_failed"
+    },
+    {
+      "caseName": "Case12",
+      "comparisonStatus": "rerun_failed"
+    },
+    {
+      "caseName": "Case10",
+      "comparisonStatus": "rerun_failed"
+    },
+    {
+      "caseName": "Case36",
+      "comparisonStatus": "rerun_failed"
+    },
+    {
+      "caseName": "Case7",
+      "comparisonStatus": "deferred",
+      "reason": "upload_limit_conflict:서울성모병원.pdf=25432858>UPLOAD_MAX_FILE_SIZE_MB(20)"
+    }
+  ],
+  "statusCounts": {
+    "runtime_recovered_match": 0,
+    "runtime_recovered_partial_match": 2,
+    "runtime_recovered_mismatch": 0,
+    "needs_human_review": 0,
+    "rerun_failed": 7,
+    "deferred": 1
+  },
+  "mediumConfidenceCases": [
+    "Case12",
+    "Case16",
+    "Case17",
+    "Case20",
+    "Case34",
+    "Case36"
+  ],
+  "highestRiskRemainingCases": [
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case36",
+    "Case7"
+  ],
+  "comparisonQuality": "execution-limited",
+  "generatedAt": "2026-03-21T06:18:11.667Z"
+}

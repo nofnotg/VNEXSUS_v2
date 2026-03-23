@@ -1,0 +1,93 @@
+{
+  "phase": "Phase 2",
+  "comparisonFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case2_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case3_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case7_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case10_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case12_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case16_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case17_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case20_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case34_compare.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_compare\\Case36_compare.json"
+  ],
+  "caseStatuses": [
+    {
+      "caseName": "Case2",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case3",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case7",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "Intake"
+    },
+    {
+      "caseName": "Case10",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case12",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case16",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case17",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case20",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case34",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    },
+    {
+      "caseName": "Case36",
+      "comparisonStatus": "mismatch",
+      "failureTaxonomy": "OCR"
+    }
+  ],
+  "statusCounts": {
+    "match": 0,
+    "partial_match": 0,
+    "mismatch": 10,
+    "needs_human_review": 0
+  },
+  "mediumConfidenceCases": [
+    "Case12",
+    "Case16",
+    "Case17",
+    "Case20",
+    "Case34",
+    "Case36"
+  ],
+  "highestRiskCasesForFollowUp": [
+    "Case2",
+    "Case3",
+    "Case7",
+    "Case10",
+    "Case12",
+    "Case16",
+    "Case17",
+    "Case20",
+    "Case34",
+    "Case36"
+  ]
+}

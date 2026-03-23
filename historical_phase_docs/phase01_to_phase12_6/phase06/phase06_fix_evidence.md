@@ -1,0 +1,34 @@
+# Phase 6 Fix Evidence
+
+- targetBranch: `main`
+- implementationCommitShas:
+  - `fba67d6`
+- documentationCommitShas:
+  - `e3b0100`
+- filesChanged:
+  - `packages/domain/src/dates/date-extraction.ts`
+  - `packages/domain/src/dates/date-extraction.test.ts`
+  - `packages/domain/src/entities/hospital-normalization.ts`
+  - `packages/domain/src/entities/entity-extraction.ts`
+  - `packages/domain/src/entities/entity-extraction.test.ts`
+  - `packages/domain/src/windows/date-centered-window.ts`
+  - `packages/domain/src/windows/date-centered-window.test.ts`
+  - `packages/domain/src/bundles/event-bundle-builder.ts`
+  - `packages/domain/src/bundles/event-bundle-builder.test.ts`
+  - `phase06_fix_plan.md`
+  - `phase06_fix_evidence.md`
+- directRemoteVerificationChecklist:
+  - `origin/main:packages/domain/src/dates/date-extraction.ts`
+  - `origin/main:packages/domain/src/entities/hospital-normalization.ts`
+  - `origin/main:packages/domain/src/bundles/event-bundle-builder.ts`
+  - `origin/main:phase06_fix_plan.md`
+  - `origin/main:phase06_fix_evidence.md`
+- frozenEarlierArtifactsModified: `no`
+- tinyValidationCheckRun: `yes`
+- validationChecks:
+  - `pnpm exec vitest run packages/domain/src/dates/date-extraction.test.ts packages/domain/src/entities/entity-extraction.test.ts packages/domain/src/windows/date-centered-window.test.ts packages/domain/src/bundles/event-bundle-builder.test.ts`
+  - `pnpm typecheck`
+- broadRerunStarted: `no`
+- case7InsideFixTrack: `no`
+- remoteVerifiedAtCommit: `0bfc4e1`
+- answerVsRepoMatch: `matched`

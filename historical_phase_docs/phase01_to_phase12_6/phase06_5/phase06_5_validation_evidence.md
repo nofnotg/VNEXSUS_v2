@@ -1,0 +1,45 @@
+# Phase 6.5 Validation Evidence
+
+- targetBranch: `main`
+- validationRuntimeCommit: `9d1f374`
+- validationCompareCommit: `9d1f374`
+- validationEvidenceCommit: `2e78175`
+- pushedCommitShas:
+  - `9d1f374`
+  - `2e78175`
+- attemptedCases:
+  - `Case17`
+  - `Case10`
+  - `Case2`
+  - `Case34`
+  - `Case20`
+- validationOrder:
+  - `Case17`
+  - `Case10`
+  - `Case2`
+  - `Case34`
+  - `Case20`
+- perTrackEffectivenessSummary:
+  - `dateNormalization: improved`
+  - `institutionNormalization: improved`
+  - `bundleGrouping: improved`
+- timeoutLikeRuntimeFailureRecurred: `no`
+- broaderPostFixRerunRecommended: `yes`
+- frozenEarlierArtifactsModified: `no`
+- case7InsideValidationTrack: `no`
+- broadPostFixRerunStarted: `no`
+- directRemoteVerificationChecklist:
+  - `origin/main:phase06_5_validation_manifest.json`
+  - `origin/main:phase06_5_runtime/Case17_runtime_postfix.json`
+  - `origin/main:phase06_5_runtime/Case10_runtime_postfix.json`
+  - `origin/main:phase06_5_runtime/Case2_runtime_postfix.json`
+  - `origin/main:phase06_5_runtime/Case34_runtime_postfix.json`
+  - `origin/main:phase06_5_runtime/Case20_runtime_postfix.json`
+  - `origin/main:phase06_5_compare/Case17_compare_postfix.json`
+  - `origin/main:phase06_5_compare/Case10_compare_postfix.json`
+  - `origin/main:phase06_5_compare/Case2_compare_postfix.json`
+  - `origin/main:phase06_5_compare/Case34_compare_postfix.json`
+  - `origin/main:phase06_5_compare/Case20_compare_postfix.json`
+  - `origin/main:phase06_5_validation_evidence.md`
+- remoteVerifiedAtCommit: `2e78175`
+- answerVsRepoMatch: `matched`

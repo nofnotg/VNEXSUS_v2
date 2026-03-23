@@ -1,0 +1,80 @@
+# Phase 10 Broader Post-Fix Rerun Refresh Evidence
+
+- targetBranch: `main`
+- validationScope: `Phase 10 broader post-fix rerun refresh only`
+- attemptedCases:
+  - `Case16`
+  - `Case3`
+  - `Case17`
+  - `Case2`
+  - `Case20`
+  - `Case34`
+  - `Case12`
+  - `Case10`
+  - `Case36`
+- exactRerunOrder:
+  - `Case16`
+  - `Case3`
+  - `Case17`
+  - `Case2`
+  - `Case20`
+  - `Case34`
+  - `Case12`
+  - `Case10`
+  - `Case36`
+- perCaseStatus:
+  - `Case16: refresh_unchanged_partial_match`
+  - `Case3: refresh_unchanged_partial_match`
+  - `Case17: refresh_improved_partial_match`
+  - `Case2: refresh_unchanged_partial_match`
+  - `Case20: refresh_unchanged_partial_match`
+  - `Case34: refresh_unchanged_partial_match`
+  - `Case12: refresh_improved_partial_match`
+  - `Case10: refresh_unchanged_partial_match`
+  - `Case36: refresh_unchanged_partial_match`
+- perTrackBroaderScaleEffectivenessSummary:
+  - `dateNormalization: improved`
+  - `institutionNormalization: unchanged`
+  - `bundleGrouping: unchanged`
+- timeoutLikeRuntimeFailureRecurred: `false`
+- recoverableSetReadyForFinalConvergenceReview: `true`
+- nextStepDecision: `Proceed to final convergence / stabilization review`
+- frozenArtifactsModified: `false`
+- case7Included: `false`
+- validationArtifacts:
+  - `phase10_runtime/Case16_runtime_refresh.json`
+  - `phase10_runtime/Case3_runtime_refresh.json`
+  - `phase10_runtime/Case17_runtime_refresh.json`
+  - `phase10_runtime/Case2_runtime_refresh.json`
+  - `phase10_runtime/Case20_runtime_refresh.json`
+  - `phase10_runtime/Case34_runtime_refresh.json`
+  - `phase10_runtime/Case12_runtime_refresh.json`
+  - `phase10_runtime/Case10_runtime_refresh.json`
+  - `phase10_runtime/Case36_runtime_refresh.json`
+  - `phase10_compare/Case16_compare_refresh.json`
+  - `phase10_compare/Case3_compare_refresh.json`
+  - `phase10_compare/Case17_compare_refresh.json`
+  - `phase10_compare/Case2_compare_refresh.json`
+  - `phase10_compare/Case20_compare_refresh.json`
+  - `phase10_compare/Case34_compare_refresh.json`
+  - `phase10_compare/Case12_compare_refresh.json`
+  - `phase10_compare/Case10_compare_refresh.json`
+  - `phase10_compare/Case36_compare_refresh.json`
+  - `phase10_validation_manifest.json`
+- validationRuntimeCommit: `16dd945`
+- validationCompareCommit: `16dd945`
+- validationEvidenceCommit: `0b68024`
+- remoteVerifiedCommit: `0b68024`
+- pushedCommitShas:
+  - `16dd945`
+  - `0b68024`
+- directRemoteVerificationChecklist:
+  - `Verify phase10_validation_manifest.json on origin/main`
+  - `Verify phase10_validation_evidence.md on origin/main`
+  - `Verify all attempted runtime refresh files on origin/main`
+  - `Verify all attempted compare refresh files on origin/main`
+  - `Confirm frozen earlier artifacts were not modified`
+  - `Confirm Case7 remained outside this rerun`
+  - `Confirm no Phase 11 artifact exists`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`

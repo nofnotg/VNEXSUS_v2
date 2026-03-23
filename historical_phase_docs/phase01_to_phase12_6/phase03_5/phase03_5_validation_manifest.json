@@ -1,0 +1,41 @@
+{
+  "phase": "Phase 3.5",
+  "attemptedCases": [
+    "Case16",
+    "Case3",
+    "Case17"
+  ],
+  "successfulValidationCases": [
+    "Case16",
+    "Case3",
+    "Case17"
+  ],
+  "failedValidationCases": [],
+  "perCaseStatus": [
+    {
+      "caseName": "Case16",
+      "comparisonStatus": "validation_partial_match"
+    },
+    {
+      "caseName": "Case3",
+      "comparisonStatus": "validation_partial_match"
+    },
+    {
+      "caseName": "Case17",
+      "comparisonStatus": "validation_partial_match"
+    }
+  ],
+  "timeoutFixEffectivenessProven": true,
+  "broadRerunJustified": true,
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_runtime\\Case16_runtime_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_runtime\\Case3_runtime_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_runtime\\Case17_runtime_validation.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_compare\\Case16_compare_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_compare\\Case3_compare_validation.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase03_5_compare\\Case17_compare_validation.json"
+  ],
+  "generatedAt": "2026-03-21T10:24:15.742Z"
+}

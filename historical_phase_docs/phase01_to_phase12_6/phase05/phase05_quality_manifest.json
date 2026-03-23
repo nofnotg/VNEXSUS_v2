@@ -1,0 +1,110 @@
+{
+  "phase": "Phase 5",
+  "diagnosedCases": [
+    {
+      "caseName": "Case16",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "institution_normalization_gap",
+      "secondaryQualityBlocker": "date_false_positive_noise",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": true,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case3",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "date_false_negative_missing",
+      "secondaryQualityBlocker": "institution_alias_resolution_gap",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": false,
+      "mediumConfidenceFromBaseline": false
+    },
+    {
+      "caseName": "Case17",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "date_false_positive_noise",
+      "secondaryQualityBlocker": "date_false_negative_missing",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": true,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case2",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "institution_alias_resolution_gap",
+      "secondaryQualityBlocker": "date_false_positive_noise",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": false,
+      "mediumConfidenceFromBaseline": false
+    },
+    {
+      "caseName": "Case20",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "bundle_over-segmentation",
+      "secondaryQualityBlocker": "institution_normalization_gap",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": true,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case34",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "institution_alias_resolution_gap",
+      "secondaryQualityBlocker": "date_false_positive_noise",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": true,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case12",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "date_false_positive_noise",
+      "secondaryQualityBlocker": "institution_normalization_gap",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": true,
+      "mediumConfidenceFromBaseline": true
+    },
+    {
+      "caseName": "Case10",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "date_false_positive_noise",
+      "secondaryQualityBlocker": "date_false_negative_missing",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": false,
+      "mediumConfidenceFromBaseline": false
+    },
+    {
+      "caseName": "Case36",
+      "phase04Status": "broad_partial_match",
+      "dominantQualityBlocker": "date_false_positive_noise",
+      "secondaryQualityBlocker": "institution_normalization_gap",
+      "scope": "global",
+      "immediateCodeFixRecommended": true,
+      "humanReviewRuleTuningRecommended": true,
+      "mediumConfidenceFromBaseline": true
+    }
+  ],
+  "dominantBlockerCounts": {
+    "date_false_positive_noise": 4,
+    "date_false_negative_missing": 1,
+    "institution_normalization_gap": 1,
+    "institution_alias_resolution_gap": 2,
+    "bundle_over-segmentation": 1
+  },
+  "topGlobalProblems": [
+    "date_false_positive_noise",
+    "institution_normalization_gap_and_alias_resolution",
+    "bundle_over-segmentation"
+  ],
+  "phase6ImplementationRecommended": true,
+  "case7Included": false,
+  "generatedAt": "2026-03-21T12:20:00+09:00"
+}

@@ -1,0 +1,70 @@
+{
+  "phase": "Phase 2.5",
+  "attemptedCases": [
+    "Case16",
+    "Case3",
+    "Case17",
+    "Case2",
+    "Case20",
+    "Case34",
+    "Case12",
+    "Case10",
+    "Case36"
+  ],
+  "successfulRuntimeRerunCases": [
+    "Case16",
+    "Case3"
+  ],
+  "failedRerunCases": [
+    {
+      "caseName": "Case17",
+      "reason": "Semantic"
+    },
+    {
+      "caseName": "Case2",
+      "reason": "Semantic"
+    },
+    {
+      "caseName": "Case20",
+      "reason": "Semantic"
+    },
+    {
+      "caseName": "Case34",
+      "reason": "Semantic"
+    },
+    {
+      "caseName": "Case12",
+      "reason": "Semantic"
+    },
+    {
+      "caseName": "Case10",
+      "reason": "Semantic"
+    },
+    {
+      "caseName": "Case36",
+      "reason": "Semantic"
+    }
+  ],
+  "deferredCases": [
+    {
+      "caseName": "Case7",
+      "reason": "file_too_large:서울성모병원.pdf=25432858"
+    }
+  ],
+  "runtimeGenerationMethodSummary": "Limited Phase 2.5 service-runner execution using real local env with .env.local override, real DB, and real storage/OCR path via createCaseForUser + upsertPatientInput + uploadDocumentFile + createOcrJob; frozen Phase 0.5/1 artifacts preserved.",
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case16_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case3_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case17_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case2_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case20_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case34_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case12_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case10_runtime_rerun.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase02_5_runtime\\Case36_runtime_rerun.json"
+  ],
+  "allRuntimeArtifactsExist": true,
+  "ocrRecoveryProven": true,
+  "smokeTestCase": "Case16",
+  "generatedAt": "2026-03-21T06:18:11.663Z"
+}

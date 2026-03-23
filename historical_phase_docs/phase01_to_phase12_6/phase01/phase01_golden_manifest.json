@@ -1,0 +1,111 @@
+{
+  "phase": "Phase 1",
+  "frozenPilotCases": [
+    "Case2",
+    "Case3",
+    "Case7",
+    "Case10",
+    "Case12",
+    "Case16",
+    "Case17",
+    "Case20",
+    "Case34",
+    "Case36"
+  ],
+  "generatedGoldenFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case2_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case3_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case7_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case10_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case12_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case16_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case17_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case20_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case34_golden.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase01_golden\\Case36_golden.json"
+  ],
+  "mediumConfidenceCases": [
+    "Case12",
+    "Case16",
+    "Case17",
+    "Case20",
+    "Case34",
+    "Case36"
+  ],
+  "generatedArtifactCount": 10,
+  "caseReviewCautionFlags": [
+    {
+      "caseName": "Case2",
+      "cautionFlags": [
+        "replacement for Case13"
+      ]
+    },
+    {
+      "caseName": "Case3",
+      "cautionFlags": [
+        "direct keep"
+      ]
+    },
+    {
+      "caseName": "Case7",
+      "cautionFlags": [
+        "direct keep"
+      ]
+    },
+    {
+      "caseName": "Case10",
+      "cautionFlags": [
+        "direct keep"
+      ]
+    },
+    {
+      "caseName": "Case12",
+      "cautionFlags": [
+        "medium-confidence mapping; human review required during comparison",
+        "kept with moderate confidence"
+      ]
+    },
+    {
+      "caseName": "Case16",
+      "cautionFlags": [
+        "medium-confidence mapping; human review required during comparison",
+        "kept with moderate confidence"
+      ]
+    },
+    {
+      "caseName": "Case17",
+      "cautionFlags": [
+        "medium-confidence mapping; human review required during comparison",
+        "kept with moderate confidence"
+      ]
+    },
+    {
+      "caseName": "Case20",
+      "cautionFlags": [
+        "medium-confidence mapping; human review required during comparison",
+        "kept with moderate confidence"
+      ]
+    },
+    {
+      "caseName": "Case34",
+      "cautionFlags": [
+        "medium-confidence mapping; human review required during comparison",
+        "no coordinate reference support in frozen baseline",
+        "kept without coordinate reference"
+      ]
+    },
+    {
+      "caseName": "Case36",
+      "cautionFlags": [
+        "medium-confidence mapping; human review required during comparison",
+        "kept with moderate confidence"
+      ]
+    }
+  ],
+  "phase05ArtifactsUnchanged": [
+    "pilot10_manifest.json",
+    "pilot10_budget_plan.json",
+    "pilot10_mapping_review.json",
+    "phase05_closure_evidence.md"
+  ]
+}

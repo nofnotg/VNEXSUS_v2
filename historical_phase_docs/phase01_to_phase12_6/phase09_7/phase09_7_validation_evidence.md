@@ -1,0 +1,54 @@
+# Phase 9.7 Track 2 Validation Evidence
+
+- targetBranch: `main`
+- validationScope: `Phase 9.7 Track 2 focused validation only`
+- attemptedCases:
+  - `Case2`
+  - `Case16`
+  - `Case34`
+- exactValidationOrder:
+  - `Case2`
+  - `Case16`
+  - `Case34`
+- perCaseStatus:
+  - `Case2: track2_improved_partial_match`
+  - `Case16: track2_improved_partial_match`
+  - `Case34: track2_resolved`
+- case2Judgment: `improved`
+- case16StayedNonRegressed: `true`
+- case34StayedNonRegressed: `true`
+- focusedTrack2EffectivenessSummary:
+  - `Case2 regression reduced with smaller institution gap and no extra institution variants`
+  - `Case16 remained non-regressed and improved on canonical identity stability`
+  - `Case34 resolved the remaining institution gap without introducing false merges`
+- timeoutLikeRuntimeFailureRecurred: `false`
+- broaderPostFixRerunRecommended: `true`
+- broaderPostFixRerunDecision: `Proceed to broader post-fix rerun`
+- frozenArtifactsModified: `false`
+- case7Included: `false`
+- validationArtifacts:
+  - `phase09_7_runtime/Case2_runtime_track2fix.json`
+  - `phase09_7_runtime/Case16_runtime_track2fix.json`
+  - `phase09_7_runtime/Case34_runtime_track2fix.json`
+  - `phase09_7_compare/Case2_compare_track2fix.json`
+  - `phase09_7_compare/Case16_compare_track2fix.json`
+  - `phase09_7_compare/Case34_compare_track2fix.json`
+  - `phase09_7_validation_manifest.json`
+- validationRuntimeCommit: `2bc02f0`
+- validationCompareCommit: `2bc02f0`
+- validationEvidenceCommit: `6ee6d01`
+- remoteVerifiedCommit: `6ee6d01`
+- pushedCommitShas:
+  - `2bc02f0`
+  - `6ee6d01`
+- directRemoteVerificationChecklist:
+  - `Verify phase09_7_validation_manifest.json on origin/main`
+  - `Verify phase09_7_validation_evidence.md on origin/main`
+  - `Verify all attempted runtime track2fix files on origin/main`
+  - `Verify all attempted compare track2fix files on origin/main`
+  - `Confirm frozen earlier artifacts were not modified`
+  - `Confirm Case7 remained outside this validation track`
+  - `Confirm no broader rerun artifact was created`
+  - `Confirm no Phase 10 artifact exists`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_main`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_main`

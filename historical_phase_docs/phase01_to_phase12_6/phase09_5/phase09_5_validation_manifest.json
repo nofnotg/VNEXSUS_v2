@@ -1,0 +1,80 @@
+{
+  "phase": "Phase 9.5",
+  "attemptedCases": [
+    "Case3",
+    "Case10",
+    "Case36",
+    "Case16",
+    "Case2",
+    "Case34",
+    "Case20"
+  ],
+  "successfulValidationCases": [
+    "Case3",
+    "Case10",
+    "Case36",
+    "Case16",
+    "Case34",
+    "Case20"
+  ],
+  "failedValidationCases": [
+    "Case2"
+  ],
+  "perCaseStatus": [
+    {
+      "caseName": "Case3",
+      "status": "phase09_5_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case10",
+      "status": "phase09_5_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case36",
+      "status": "phase09_5_improved_partial_match"
+    },
+    {
+      "caseName": "Case16",
+      "status": "phase09_5_unchanged_partial_match"
+    },
+    {
+      "caseName": "Case2",
+      "status": "phase09_5_regressed"
+    },
+    {
+      "caseName": "Case34",
+      "status": "phase09_5_improved_partial_match"
+    },
+    {
+      "caseName": "Case20",
+      "status": "phase09_5_unchanged_partial_match"
+    }
+  ],
+  "perTrackImprovementJudgment": {
+    "dateNormalization": "improved",
+    "institutionNormalization": "regressed",
+    "bundleGrouping": "unchanged"
+  },
+  "timeoutLikeRuntimeFailureRecurred": false,
+  "broaderPostFixRerunRecommended": false,
+  "anyRegression": true,
+  "generatedRuntimeFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case3_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case10_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case36_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case16_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case2_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case34_runtime_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_runtime\\Case20_runtime_postfix.json"
+  ],
+  "generatedCompareFiles": [
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_compare\\Case3_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_compare\\Case10_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_compare\\Case36_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_compare\\Case16_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_compare\\Case2_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_compare\\Case34_compare_postfix.json",
+    "C:\\VNEXSUS\\VNEXSUS_v2\\phase09_5_compare\\Case20_compare_postfix.json"
+  ],
+  "generatedAt": "2026-03-22T05:52:56.940Z"
+}
