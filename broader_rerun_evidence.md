@@ -32,5 +32,9 @@
   - `Case10=repeated_later_seeds_2024-10-25_and_2024-10-30_remained_absent`
   - `Case36=2025-08-06_remained_absent_and_prior_blocker_did_not_reappear`
 - broaderRerunCompleted: `true`
+- broaderRerunCommitShas:
+  - `18a1ca0`
 - productizationStarted: `false`
 - phase13Started: `false`
+- remoteVerificationStatus: `matched_after_direct_fetch_on_origin_branch`
+- answerVsRepoMatch: `matched_after_direct_fetch_on_origin_branch`
